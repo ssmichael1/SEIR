@@ -1,0 +1,342 @@
+<html>
+
+<head>
+    <title>Yet Another SEIR Calculator</title>
+
+    <style>
+        .bar {
+            fill: lightsteelblue;
+        }
+
+        .bar:hover {
+            fill: steelblue;
+        }
+
+        .axis-label {
+            font: 20px sans-serif;
+            fill: steelblue;
+        }
+
+        .myradio {
+            font-family: sans-serif;
+            font-size: 15px;
+            color: darkslategray;
+        }
+
+        .axis {
+            font: 16px sans-serif;
+            color: lightslategrey;
+        }
+
+        .grid line {
+            stroke: lightgrey;
+            stroke-opacity: 0.7;
+            shape-rendering: crispEdges;
+            stroke-width: 0.5;
+        }
+
+        .grid path {
+            stroke-width: 0;
+        }
+
+        .minorTitle {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            margin: auto;
+            display: flex;
+            width: 950px;
+            font-size: 17px;
+            color: #666;
+        }
+
+        .minorTitleColumn {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            flex: 60px;
+            padding: 3px;
+            border-bottom: 2px solid #999;
+        }
+
+        select[disabled=true] {
+            color: #ccc;
+            background-color: #eee;
+        }
+
+        .h2 {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            font-size: 24px;
+            color: darkslategray;
+            padding: 3px;
+            flex: 60px;
+            padding-left: 10px;
+            padding-bottom: 30px;
+        }
+
+        .column {
+            float: left;
+            width: 770px;
+            padding: 10px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="h2">
+        COVID-19 Model Fit
+    </div>
+    <div class="row">
+        <div class="column">
+            <div style="height: 220px;">
+                <div class="MinorTitleColumn">Location</div>
+                <table width="100%" style="padding-top: 10px;table-layout: fixed;">
+                    <tr>
+                        <td><label class="myradio">
+                                <input type="radio" name="sourcetype" value="radio_country" checked>Country</input>
+                            </label>
+                        </td>
+                        <td><label class="myradio">
+                                <input type="radio" name="sourcetype" value="radio_states">US States</input>
+                            </label>
+                        </td>
+                        <td><label class="myradio">
+                                <input type="radio" name="sourcetype" value="radio_special">Special</input>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 10px;">
+                            <div id="countries"></div>
+                        </td>
+                        <td style="padding-top: 10px;">
+                            <div id="states"></div>
+                        </td>
+                        <td>
+                            <div id="special"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="column">
+            <div>
+                <div class="MinorTitleColumn">SEIR Model Parameters</div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <div class="MinorTitleColumn">Deaths</div>
+            <div id="deaths_plot"></div>
+        </div>
+        <div class="column">
+            <div class="MinorTitleColumn">Confirmed Cases</div>
+            <div id="cases_plot"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class=column>
+            <div class="MinorTitleColumn" style="width: 1550px;">Notes</div>
+        </div>
+    </div>
+</body>
+<script src="/js/d3/dist/d3.min.js"></script>
+<script src="js/moment/min/moment.min.js"></script>
+
+<script>
+
+    var plot_width = 750;
+    var plot_height = 400;
+    var svg = d3.select("#deaths_plot")
+        .attr("width", plot_width)
+        .append("svg")
+        .attr("width", plot_width)
+        .attr("height", plot_height)
+    //.attr('viewBox', '0 0 '+ width * 1.1 + ' ' + height * 1.2)
+    //.attr('preserveAspectRatio', 'xMinYMin');
+    var margin = {
+        top: 20,
+        right: 30,
+        bottom: 30,
+        left: 100
+    };
+    var width = +svg.attr("width") - margin.left - margin.right
+    var height = +svg.attr("height") - margin.top - margin.bottom;
+
+    // Main group holding the deaths plot
+    var g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("width", width)
+        .attr("height", height);
+
+
+    // SVG for the confirmed cases plot
+    var svg2 = d3.select("#cases_plot").append("svg")
+        .attr("width", plot_width)
+        .attr("height", plot_height)
+
+    width = +svg.attr("width") - margin.left - margin.right
+    height = +svg.attr("height") - margin.top - margin.bottom;
+
+    // Main group holding the confirmed cases plot
+    var g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    // Functions to scale axes
+    var x = d3.scaleBand()
+        .rangeRound([0, width])
+        .padding(0.1);
+
+    var y = d3.scaleLinear()
+        .rangeRound([height, 0]);
+
+    // Get a list of states
+    const baseurl = window.location.origin;
+    d3.json(baseurl + "/data/statelist").then(function (stateslist) {
+        var s = d3.select("#states")
+            .insert("select")
+        s
+            .attr("id", "states_dropdown")
+            .attr("disabled", true)
+            .selectAll("option")
+            .data(stateslist)
+            .enter()
+            .append("option")
+            .attr("value", d => d)
+            .text(d => d);
+        s.on("change", () => {
+            UpdatePlotState(s.property("value"));
+        });
+
+    });
+    d3.json(baseurl + "/data/countrylist").then(function (countrylist) {
+        var s = d3.select("#countries")
+            .insert("select")
+
+        s
+            .attr("id", "countries_dropdown")
+            .selectAll("option")
+            .data(countrylist)
+            .enter()
+            .append("option")
+            .attr("value", d => d)
+            .text(d => d);
+        s.on("change", () => {
+            UpdatePlotCountry(s.property("value"));
+        });
+    });
+
+    d3.selectAll("input[name='sourcetype']").on("change", function (d) {
+        console.log(this.value);
+        var cntry = d3.selectAll("#countries_dropdown");
+        var states = d3.selectAll("#states_dropdown");
+        if (this.value == "radio_states") {
+            cntry.attr("disabled", true);
+            states.attr("disabled", null);
+            UpdatePlotState(states.property("value"));
+        }
+        else if (this.value == "radio_country") {
+            cntry.attr("disabled", null);
+            states.attr("disabled", true);
+            UpdatePlotCountry(cntry.property("value"));
+        }
+    });
+
+    function UpdatePlotState(statename) {
+        d3.json(baseurl + "/data/state/" + statename).then(d => updatePlots(d, statename));
+    }
+    function UpdatePlotCountry(countryname) {
+        d3.json(baseurl + "/data/country/" + countryname).then(d => updatePlots(d, countryname));
+    }
+
+    function updatePlots(data, name) {
+        updatePlot(g, data, name, "COVID-19 Related Deaths", "deaths");
+        updatePlot(g2, data, name, "COVID-19 Confirmed Cases", "confirmed");
+    }
+
+    function updatePlot(grp, data, name, titlestring, fieldname) {
+        // re-draw plot
+        grp.selectAll('*').remove();
+
+        // Remove data before March 1
+        // (months are zero based in moment)
+        mindate = moment([2020, 2, 1]);
+        data = data.filter(d => { return (moment(d.date) > mindate); });
+
+        x.domain(data.map(function (d) {
+            return moment(d.date)
+        }));
+        y.domain([0, d3.max(data, function (d) {
+            return d[fieldname];
+        })]);
+
+
+        // gridlines in y axis function
+        function make_y_gridlines() {
+            return d3.axisLeft(y)
+                .ticks(10)
+        }
+
+        // add the Y gridlines
+        grp.append("g")
+            .attr("class", "grid")
+            .call(make_y_gridlines()
+                .tickSize(-width)
+                .tickFormat("")
+            )
+        grp.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "axis")
+            .call(d3.axisBottom(x)
+                .tickFormat(d => { return d.get("month") + 1 + "/" + d.get("date") })
+                .tickValues(x.domain().filter(function (d, i) { return !(d.dayOfYear() % 7) }))
+                .ticks(4));
+
+        var yaxis = grp.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(y));
+
+        yaxis
+            .append("text")
+            .attr("class", "axis-label")
+            //.attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("dx", "1.0em")
+            .attr("text-anchor", "start")
+            .text(titlestring)
+        var namelabel = yaxis
+            .append("text")
+            .attr("class", "axis-label")
+            .attr("y", 6)
+            .attr("dy", "1.8em")
+            .attr("dx", "1.0em")
+            .attr("text-anchor", "start")
+            .text("Alabama");
+        grp.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) {
+                return x(moment(d.date));
+            })
+            .attr("y", function (d) {
+                return y(d[fieldname]);
+            })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) {
+                return height - y(Number(d[fieldname]));
+            });
+        namelabel.text(name);
+    };
+    // Default
+    UpdatePlotCountry("United States")
+</script>
+
+</html>

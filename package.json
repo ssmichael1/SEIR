@@ -1,0 +1,27 @@
+{
+  "name": "seir",
+  "version": "1.0.0",
+  "description": "SEIR modeling",
+  "main": "webserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenSamirMichael/SEIR.git"
+  },
+  "keywords": [
+    "SEIR"
+  ],
+  "author": "Steven Michael",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StevenSamirMichael/SEIR/issues"
+  },
+  "homepage": "https://github.com/StevenSamirMichael/SEIR#readme",
+  "dependencies": {
+    "d3": "^5.15.1",
+    "express": "^4.17.1",
+    "moment": "^2.24.0"
+  }
+}
