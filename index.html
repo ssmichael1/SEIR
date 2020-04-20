@@ -1,14 +1,14 @@
 <html>
 
 <head>
-    <title>Yet Another SEIR Calculator</title>
-
+    <title>Yet Another COVID-919 SEIR Calculator</title>
+    <link rel="shortcut icon" href="/favicon.ico">
     <style>
         .bar {
             fill: lightsteelblue;
         }
 
-        .bar:hover {
+        .bar[myhover] {
             fill: steelblue;
         }
 
@@ -60,6 +60,20 @@
             background-color: #eee;
         }
 
+        .notestext {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            font-size: 14px;
+            color: darkslategrey;
+            padding-top: 8px;
+        }
+
+        .loctext {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            font-size: 14px;
+            color: darkslategrey;
+            padding-top: 20px;
+        }
+
         .h2 {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
             font-size: 24px;
@@ -87,11 +101,11 @@
 
 <body>
     <div class="h2">
-        COVID-19 Model Fit
+        Yet Another COVID-19 SEIR Model
     </div>
     <div class="row">
         <div class="column">
-            <div style="height: 220px;">
+            <div>
                 <div class="MinorTitleColumn">Location</div>
                 <table width="100%" style="padding-top: 10px;table-layout: fixed;">
                     <tr>
@@ -121,6 +135,29 @@
                     </tr>
                 </table>
             </div>
+
+            <div>
+                <table style="padding-top: 10px" cellspacing="10">
+                    <tr>
+                        <td align="right">Population: </td>
+                        <td align="left" id="namefield"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Date: </td>
+                        <td align="left" id="deathsdate"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Deaths: </td>
+                        <td align="left" id="deathsfield"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Confirmed Cases: </td>
+                        <td align="left" id="casesfield"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="loctext" id="namefield"></div>
         </div>
         <div class="column">
             <div>
@@ -143,11 +180,31 @@
     <div class="row">
         <div class=column>
             <div class="MinorTitleColumn" style="width: 1550px;">Notes</div>
+            <div class="notestext">
+                Data source: Johns Hopkins Coronavirus Research Center: <a
+                    href="https://github.com/CSSEGISandData/COVID-19">https://github.com/CSSEGISandData/COVID-19</a>
+            </div>
+            <div id="author" class="notestext">
+                <table class="notestext">
+                    <tr>
+                        <td>Author:</td>
+                        <td>Steven Michael <a href="mailto:ssmichael@gmail.com">ssmichael@gmail.com</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><a href="https://github.com/StevenSamirMichael/">https://github.com/StevenSamirMichael/</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </body>
+
+
 <script src="/js/d3/dist/d3.min.js"></script>
 <script src="js/moment/min/moment.min.js"></script>
+<script src="js/mathjax/es5/tex-mml-chtml.js"></script>
 
 <script>
 
@@ -249,20 +306,26 @@
     });
 
     function UpdatePlotState(statename) {
-        d3.json(baseurl + "/data/state/" + statename).then(d => updatePlots(d, statename));
+        d3.json(baseurl + "/data/state/" + statename).then(d => updatePlots(d));
     }
     function UpdatePlotCountry(countryname) {
-        d3.json(baseurl + "/data/country/" + countryname).then(d => updatePlots(d, countryname));
+        d3.json(baseurl + "/data/country/" + countryname).then(d => updatePlots(d));
     }
 
-    function updatePlots(data, name) {
-        updatePlot(g, data, name, "COVID-19 Related Deaths", "deaths");
-        updatePlot(g2, data, name, "COVID-19 Confirmed Cases", "confirmed");
+    function updatePlots(data) {
+        updatePlot(g, g2, data, "COVID-19 Related Deaths", "deaths");
+        updatePlot(g2, g, data, "COVID-19 Confirmed Cases", "confirmed");
+        d3.select("#namefield").text(data.population);
+        d3.select("#deathsfield").html("");
+        d3.select("#casesfield").html("");
     }
 
-    function updatePlot(grp, data, name, titlestring, fieldname) {
+    function updatePlot(grp, grp2, alldata, titlestring, fieldname) {
         // re-draw plot
         grp.selectAll('*').remove();
+
+        var name = alldata['name'];
+        var data = alldata['series'];
 
         // Remove data before March 1
         // (months are zero based in moment)
@@ -323,6 +386,7 @@
             .data(data)
             .enter().append("rect")
             .attr("class", "bar")
+            .attr("date", function (d) { return d.date; })
             .attr("x", function (d) {
                 return x(moment(d.date));
             })
@@ -332,6 +396,39 @@
             .attr("width", x.bandwidth())
             .attr("height", function (d) {
                 return height - y(Number(d[fieldname]));
+            })
+            .on("mouseover", function (d, i) {
+                d3.select(this).attr("myhover", true);
+
+                // Highlight same date in other plot
+                grp2.selectAll(".bar")
+                    .filter(function (d2) {
+                        return (d2.date == d.date);
+                    })
+                    .attr("myhover", true);
+                var deltaDeaths = 0;
+                var deltaConfirmed = 0;
+                if (i > 0) {
+                    deltaDeaths = data[i].deaths - data[i - 1].deaths;
+                    deltaConfirmed = data[i].confirmed - data[i - 1].confirmed;
+                }
+
+                console.log(deltaDeaths)
+                // Update statistics text
+                var dm = moment(d.date);
+                d3.select("#deathsdate").html(String(dm.month() + 1).padStart(2, '0') + "/" + String(dm.date()).padStart(2, '0'));
+                d3.select("#deathsfield").html("&#8721  " + d.deaths + "  ( " + (d.deaths / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " + deltaDeaths);
+                d3.select("#casesfield").html("&#8721  " + d.confirmed + "  ( " + (d.confirmed / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " + deltaConfirmed);
+            })
+            .on("mouseout", function (d) {
+                d3.select(this).attr("myhover", null);
+
+                // Highlight same date in other plot
+                grp2.selectAll(".bar")
+                    .filter(function (d2) {
+                        return (d2.date == d.date);
+                    })
+                    .attr("myhover", null);
             });
         namelabel.text(name);
     };

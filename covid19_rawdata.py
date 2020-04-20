@@ -80,6 +80,21 @@ def daily_to_dict(data, date):
     }
 
 
+def country_population(countryname):
+    if countryname == "United States":
+        countryname = "US"
+    cdata = uid_table.loc[(uid_table["Combined_Key"] == countryname)]
+    population = int(cdata["Population"].values)
+    return population
+
+
+def state_population(statename):
+    uid = statename + ", US"
+    cdata = uid_table.loc[(uid_table["Combined_Key"] == uid)]
+    population = int(cdata["Population"].values)
+    return population
+
+
 def extract_country(countryname):
     if countryname == "United States":
         countryname = "US"
@@ -101,8 +116,25 @@ def extract_state(statename):
         yield daily_to_dict(state, date)
 
 
+def countrydata(countryname):
+    return {
+        "name": countryname,
+        "population": country_population(countryname),
+        "series": list(extract_country(countryname)),
+    }
+
+
+def statedata(statename):
+    return {
+        "name": statename,
+        "population": state_population(statename),
+        "series": list(extract_state(statename)),
+    }
+
+
 if __name__ == "__main__":
     print("testing loading of data")
     d = daily_reports[datetime.date(2020, 4, 15)]
     # d = d.loc[(d["FIPS"] == 840)]
-    print(us_deaths.loc[1003])
+    # print(us_deaths.loc[1003])
+    print(country_population("Sweden"))

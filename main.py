@@ -7,21 +7,22 @@ import covid19_rawdata
 # keep everything local for simplicity
 app = Flask(__name__, static_folder="./", template_folder="./")
 
-
+# Default route
 @app.route("/")
 def base_route():
     return render_template("index.html")
 
 
-# Serve data files from data directory
-@app.route("/testdata/<path:filename>")
-def datadownload(filename):
-    return send_from_directory("data", filename)
+# Serve icon
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(".", "favicon.ico")
 
 
 # Serve data by state
 @app.route("/data/state/<statename>")
 def statedata(statename):
+    return jsonify(covid19_rawdata.statedata(statename))
     print(statename)
     stateinfo = list(covid19_rawdata.extract_state(statename))
     return jsonify(stateinfo)
@@ -30,17 +31,16 @@ def statedata(statename):
 # Serve data by country
 @app.route("/data/country/<countryname>")
 def countrydata(countryname):
-    print(countryname)
-    countryinfo = list(covid19_rawdata.extract_country(countryname))
-    return jsonify(countryinfo)
+    return jsonify(covid19_rawdata.countrydata(countryname))
 
 
-# Server statelist
+# return list of states
 @app.route("/data/statelist")
 def statelist():
     return jsonify(covid19_rawdata.statelist())
 
 
+# return list of countries
 @app.route("/data/countrylist")
 def countrylist():
     return jsonify(covid19_rawdata.countrylist())
@@ -54,5 +54,6 @@ def jsdownload(filename):
 
 
 # Start the app
+# Will only be used when running locally in debug mode
 if __name__ == "__main__":
     app.run(port=5005, host="0.0.0.0", debug=True)
