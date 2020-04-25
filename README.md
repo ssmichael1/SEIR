@@ -1,9 +1,16 @@
 # Yet Another SEIR Model
-Source code for website: https://yetanotherseirmodel.com
 
-## Author: Steven Michael (ssmichael@gmail.com)
+## Source code for website: https://yetanotherseirmodel.com
 
-## Description
+___
+
+### Author: Steven Michael (ssmichael@gmail.com)
+___
+
+### Description
+
+___
+
 
 This web site represents a standard **SEIR** -- **S**usceptible **E**xposed **I**nfectious **R**emoved -- model for the spread of coummnicable disesase.  The model has some small additions to the basic SEIR model:
 
