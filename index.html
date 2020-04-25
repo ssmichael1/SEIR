@@ -185,6 +185,7 @@
     <div class="row">
         <div class="h2 column third">
             Yet Another COVID-19 SEIR Model
+            <div style="font-size: 14px;">(with overlay on reported statistics)</div>
         </div>
     </div>
 
@@ -803,7 +804,9 @@
         // Reformat data to accommodate plotting
         let datagen = function* (raw) {
             i = 0;
-            while (i < raw.size()) {
+            // Leave out last point to get nice round number for # of points
+            // (i.e., 200 instead of 201)
+            while (i < raw.size() - 1) {
                 r = {
                     time: raw.get(i).get(8),
                     exposed: d3.max([raw.get(i).get(1), 0]),
@@ -821,7 +824,7 @@
         // Get maximum value on y axis
         y.domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
 
-        let pointsToPlot = 180;
+        let pointsToPlot = 200;
         //console.log(data.length)
         // Plot points to skip
         let skip = Math.ceil(data.length / pointsToPlot)
@@ -923,6 +926,7 @@
                 keys.forEach(k => {
                     svg.selectAll("#" + k).selectAll("rect.vidx" + i).attr("fill", zhighlight(k))
                 })
+                d3.selectAll("#seir-day-text").html("Day: " + d.data.time)
 
                 let index = data.findIndex(dd => { return (dd.time == d.data.time) })
                 barnames.forEach(name => {
@@ -953,7 +957,7 @@
 
 
 
-    function create_slider(at, range, val, format, field) {
+    function create_slider(at, range, val, format, field, step) {
 
         slider = d3
             .sliderBottom()
@@ -967,6 +971,9 @@
                 seirinput[field] = value
                 update_seir()
             })
+        if (!(step == undefined)) {
+            slider.step(step)
+        }
 
         at
             .append("svg")
@@ -1023,6 +1030,15 @@
         .html("Hospital Capacity: ")
         .attr("style", "padding-bottom: 10px;")
         .attr("id", "hospital-capacity-text")
+
+    d3.selectAll("#seirdata")
+        .append("div")
+        .classed("row", true)
+        .append("div")
+        .classed("column", true)
+        .html("Day: ")
+        .attr("style", "padding-bottom: 10px;")
+        .attr("id", "seir-day-text")
 
     plot_params.forEach(param => {
         let row = d3.selectAll("#seirdata")
@@ -1107,7 +1123,7 @@
 
                 {
                     label: "\\(T_{sim}\\)",
-                    args: [[200, 1000], seirinput.duration, "d", "duration"]
+                    args: [[200, 1000], seirinput.duration, "d", "duration", 100]
                 }
             ],
             [
@@ -1184,7 +1200,7 @@
                 paramrow.append("div")
                     .attr("class", "column")
                     .attr("style", "width: 80%;")
-                    .call(create_slider, pcol.args[0], pcol.args[1], pcol.args[2], pcol.args[3])
+                    .call(create_slider, pcol.args[0], pcol.args[1], pcol.args[2], pcol.args[3], pcol.args[4])
 
             })
         })
