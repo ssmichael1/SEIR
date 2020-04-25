@@ -36,7 +36,7 @@ class SEIR:
         """
 
         # Reproduction number
-        self.R0 = kwargs.get("R0", 4.2)
+        self.R0 = kwargs.get("R0", 3.2)
         # Time at public intervention
         self.T_intervention = kwargs.get("T_intervention", -1)
         # R0 reduction percentage at time of intervention
@@ -60,15 +60,15 @@ class SEIR:
         # Initial population size
         self.population = kwargs.get("population", 1000000)
         # Duration of simulatin in days
-        self.sim_duration = kwargs.get("duration", 200)
+        self.sim_duration = kwargs.get("duration", 300)
         # hospital capacity, as percent of population
-        self.Hc = kwargs.get("hospital_capacity", 0.01)
+        self.Hc = kwargs.get("hospital_capacity", 1)
         # probability of severe symptoms, given exposure
         self.p_severe = 1.0 - kwargs.get("p_mild", 0.8)
         self.p_severe = kwargs.get("p_severe", self.p_severe)
 
         # rate at which to compute output
-        self.dt = 2
+        self.dt = 1
 
     def __str__(self):
         s = "" + (
@@ -76,24 +76,37 @@ class SEIR:
             + "                                       R0: %.2f\n" % self.R0
         )
         if self.T_intervention > 0:
-            s = s + (""
-            + "                        Intervention Time: %d Days\n" % self.T_intervention
-            + "             R0 Reduction at Intervention: %.2f%%\n" % (self.R0_reduction*100)
+            s = s + (
+                ""
+                + "                        Intervention Time: %d Days\n"
+                % self.T_intervention
+                + "             R0 Reduction at Intervention: %.2f%%\n"
+                % (self.R0_reduction * 100)
             )
-        s = s + (""
-            + "                               Population: %d\n" % self.population
-            + "                        Incubation Period: %.2f Days\n" % self.T_inc
-            + "                        Infectious Period: %.2f Days\n" % self.T_inf
-            + "                            Mild recovery: %.2f Days\n" % self.T_mild_recovery
-            + "                          Severe recovery: %.2f Days\n" % self.T_severe_recovery
-            + "                    Probability of severe: %.2f\n" % self.p_severe
-            + "                     Probability of fatal: %.2f\n"  % self.p_fatal
-            + "    Probability of non-hospitalized fatal: %.2f\n" % self.p_fatal_nohos
-            + "                        Hospital capacity: %.2f%% of population\n" % (self.Hc * 100)
-            + "                      Simulation Duration: %d Days\n" % self.sim_duration
+        s = s + (
+            ""
+            + "                               Population: %d\n"
+            % self.population
+            + "                        Incubation Period: %.2f Days\n"
+            % self.T_inc
+            + "                        Infectious Period: %.2f Days\n"
+            % self.T_inf
+            + "                            Mild recovery: %.2f Days\n"
+            % self.T_mild_recovery
+            + "                          Severe recovery: %.2f Days\n"
+            % self.T_severe_recovery
+            + "                    Probability of severe: %.2f\n"
+            % self.p_severe
+            + "                     Probability of fatal: %.2f\n" % self.p_fatal
+            + "    Probability of non-hospitalized fatal: %.2f\n"
+            % self.p_fatal_nohos
+            + "                        Hospital capacity: %.2f%% of population\n"
+            % (self.Hc * 100)
+            + "                      Simulation Duration: %d Days\n"
+            % self.sim_duration
         )
         return s
-        
+
     @property
     def nsteps(self):
         return int(self.sim_duration / self.dt)
@@ -147,7 +160,7 @@ class SEIR:
             state0,
             t_eval=np.arange(0, self.sim_duration, self.dt),
             method="RK45"
-            #method="DOP853",  # Dormund-prince
+            # method="DOP853",  # Dormund-prince
         )
         # Return output as dictionary
         return self.dict_state(sol.y * self.population, sol.t)
@@ -239,5 +252,6 @@ if __name__ == "__main__":
     seir = SEIR()
     print(seir)
     d = seir.compute()
-    print(d["susceptible"])
-    print(d["fatal"])
+    print(d["susceptible"][-1])
+    print(d["fatal"][-1])
+    print(d["recovered"][-1])

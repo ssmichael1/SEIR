@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 from flask import Flask, render_template, send_from_directory, jsonify
-
+import json
 import covid19_rawdata
+from seir import SEIR
+
+seir = SEIR()
 
 # Create the FLASK web server
 # keep everything local for simplicity
@@ -13,10 +16,32 @@ def base_route():
     return render_template("index.html")
 
 
+@app.route("/seirplot.js")
+def seirplot():
+    return send_from_directory(".", "seirplot.js")
+
+
+@app.route("/seir/<string:seirdata>")
+def seirfunc(seirdata):
+    seir = SEIR()
+    jdata = json.loads(seirdata)
+    for key, value in jdata.items():
+        print(key)
+        print(value)
+        setattr(seir, key, value)
+    data = seir.compute()
+    return data
+
+
 # Serve icon
 @app.route("/favicon.ico")
 def favicon():
     return send_from_directory(".", "favicon.ico")
+
+
+@app.route("/customjs/<filename>")
+def example(filename):
+    return send_from_directory("./customjs", filename)
 
 
 # Serve data by state

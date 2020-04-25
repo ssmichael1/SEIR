@@ -3,7 +3,24 @@
 <head>
     <title>Yet Another COVID-919 SEIR Calculator</title>
     <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="author" content="Steven Michael">
+    <meta name="keywords" content="COVID,COVID19,COVID-19,Coronavirus,SEIR,SIR,Model,ModelFitting">
+    <meta name="description" content="Fit SEIR model to Johns Hopkins COVID-19 Database">
     <style>
+        *,
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box !important;
+            ;
+        }
+
+        body {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
         .bar {
             fill: lightsteelblue;
         }
@@ -12,19 +29,48 @@
             fill: steelblue;
         }
 
+        .seir-slider {
+            font: 29px sans-serif;
+        }
+
+        .intervention-label {
+            font-family: nyt-franklin, helvetica, arial, sans-serif;
+            font-size: 14px;
+            color: darkslategray;
+        }
+
         .axis-label {
-            font: 20px sans-serif;
+            font: 14px sans-serif;
             fill: steelblue;
         }
 
         .myradio {
             font-family: sans-serif;
-            font-size: 15px;
+            font-size: 12px;
             color: darkslategray;
         }
 
         .axis {
-            font: 16px sans-serif;
+            font: 14px sans-serif;
+            color: lightslategrey;
+        }
+
+        .xaxis-title {
+            font: 14px sans-serif;
+            fill: lightslategrey;
+        }
+
+        .seir-slider text {
+            font-size: 12px;
+        }
+
+        .x-axis {
+            font: 14px sans-serif;
+            color: lightslategrey;
+        }
+
+        .y-axis {
+            font: 14px sans-serif;
             color: lightslategrey;
         }
 
@@ -41,18 +87,28 @@
 
         .minorTitle {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
-            margin: auto;
-            display: flex;
-            width: 950px;
-            font-size: 17px;
+            margin-left: 0px;
+            padding-left: 0px;
+            width: 100%;
+            font-size: 18px;
             color: #666;
         }
 
         .minorTitleColumn {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
-            flex: 60px;
-            padding: 3px;
             border-bottom: 2px solid #999;
+        }
+
+        .paramcolumn {
+            font-family: nyt-franklin, helvetica, arial, sans-sarif;
+            padding-top: 20px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-bottom: 2px solid #999
+        }
+
+        select {
+            font-size: 9px;
         }
 
         select[disabled=true] {
@@ -84,57 +140,88 @@
             padding-bottom: 30px;
         }
 
-        .column {
-            float: left;
-            width: 770px;
-            padding: 10px;
-        }
+
 
         /* Clear floats after the columns */
+        .row {
+            margin: 0px;
+            padding: 0px;
+        }
+
         .row:after {
             content: "";
             display: table;
             clear: both;
         }
+
+        .column {
+            float: left;
+            padding-left: 20px;
+            padding-right: 0px;
+            margin: 0;
+        }
+
+        .left {
+            width: 26%;
+        }
+
+        .rightsplit {
+            width: 37%;
+        }
+
+        .right {
+            width: 74%;
+        }
+
+        .fullwidth {
+            width: 100%;
+        }
     </style>
 </head>
 
 <body>
-    <div class="h2">
-        Yet Another COVID-19 SEIR Model
-    </div>
+
+    <!-- "Title Block" -->
     <div class="row">
-        <div class="column">
-            <div>
-                <div class="MinorTitleColumn">Location</div>
-                <table width="100%" style="padding-top: 10px;table-layout: fixed;">
-                    <tr>
-                        <td><label class="myradio">
-                                <input type="radio" name="sourcetype" value="radio_country" checked>Country</input>
-                            </label>
-                        </td>
-                        <td><label class="myradio">
-                                <input type="radio" name="sourcetype" value="radio_states">US States</input>
-                            </label>
-                        </td>
-                        <td><label class="myradio">
-                                <input type="radio" name="sourcetype" value="radio_special">Special</input>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 10px;">
-                            <div id="countries"></div>
-                        </td>
-                        <td style="padding-top: 10px;">
-                            <div id="states"></div>
-                        </td>
-                        <td>
-                            <div id="special"></div>
-                        </td>
-                    </tr>
-                </table>
+        <div class="h2 column third">
+            Yet Another COVID-19 SEIR Model
+        </div>
+    </div>
+
+    <!-- Data Block -->
+    <div class="row">
+        <div class="column fullwidth">
+            <div class="MinorTitleColumn" style="font-size: 18px;">Reported COVID-19 Statistics from Johns Hopkins
+                University</div>
+        </div>
+    </div>
+    <div class="row notestext" style="padding-left: 20px;padding-right: 20px;padding-top: 20px;">
+        <div class="column left">
+            <div class="MinorTitleColumn">Location</div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="column" style="width: 40%;">
+                    <input type="radio" name="sourcetype" value="radio_country" checked>&nbsp Country</input>
+
+                </div>
+                <div class="column" style="width: 30%;">
+                    <input type="radio" name="sourcetype" value="radio_states">&nbsp US States</input>
+                </div>
+                <div class="column" style="width: 30%;">
+                    <input type="radio" name="sourcetype" value="radio_special">&nbsp Other</input>
+                </div>
             </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="column" style="width: 40%;">
+                    <div id="countries"></div>
+                </div>
+                <div class="column" style="width: 30%;">
+                    <div id="states"></div>
+                </div>
+                <div class="column" style="width: 30%;">
+                    <div id="special"></div>
+                </div>
+            </div>
+
 
             <div>
                 <table style="padding-top: 10px" cellspacing="10">
@@ -157,44 +244,131 @@
                 </table>
             </div>
 
-            <div class="loctext" id="namefield"></div>
-        </div>
-        <div class="column">
-            <div>
-                <div class="MinorTitleColumn">SEIR Model Parameters</div>
-                <div class="notestext" style="font-style: italic">
-                    Coming Soon...
-                </div>
+            <div style="padding-top: 20px;">
+                <input type="checkbox" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative</input>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="column">
+        </div>
+
+        <div class="column rightsplit">
             <div class="MinorTitleColumn">Deaths</div>
             <div id="deaths_plot"></div>
         </div>
-        <div class="column">
+        <div class="column rightsplit">
             <div class="MinorTitleColumn">Confirmed Cases</div>
             <div id="cases_plot"></div>
         </div>
     </div>
+    <!-- end of data block -->
+
+
+    <!-- SEIR Model Block -->
     <div class="row">
-        <div class=column>
-            <div class="MinorTitleColumn" style="width: 1550px;">Notes</div>
+
+        <!-- SEIR Model Parameters Set -->
+        <div class="column fullwidth" id="modelparams">
+            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Parameters</div>
+        </div>
+        <!-- END of SEIR Model Parameter Sensors-->
+
+    </div>
+
+
+    <div class="row">
+        <!-- START of SEIR Plot-->
+        <div class="column fullwidth">
+            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Plot</div>
+            <div class="row" sytle="width: 100%;">
+                <div class="column" style="width: 12%;" id="seirdata"></div>
+                <div class="column" id="seirplot" style="width: 85%;"> </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- END of SEIR plot-->
+
+
+
+    <!-- Description -->
+    <div class="row">
+        <div class="column fullwidth" style="padding-bottom: 25px;">
+            <div class="MinorTitleColumn">Description</div>
+            <div class="notestext" style="font-size: 18px;">
+                <p>
+                    This page presents reported COVID-19 diagnoses and related deaths by country
+                    and US state. The data is then fit to a standard SEIR model.
+                    <span style="color: #f00">Note that the fitting application is not yet complete,
+                        and so mapping the SEIR model to the availble data is not yet displayed.</span>
+                </p>
+                <br>
+                <br>
+                <p>
+                    <br>
+                    4/24/2020 Still to Complete:
+                    <br>
+                    1. Update true data plot on top to overlay SEIR model
+                    <br>
+                    2. Update SEIR color scheme (its terrible)
+                    <br>
+                    3. Complete Documentation below
+                </p>
+
+                <br><br>
+
+                The SEIR model categorizes a population according to the following:
+                <br><br>
+                <div style="padding-left: 30px">
+                    \(\mathcal{S}\) : Suceptible population. Assumed initially to be 100%.
+                    <br>
+                    \(\mathcal{E}\) : Exposed population. Not-yet symptomatic or infectious.
+                    <br>
+                    \(\mathcal{I}\) : Infectious population. Able to expose susceptible population.
+                    <br>
+                    \(\mathcal{M}\) : Mild or asymptomatic population. Has virus, no longer infectious
+                    <br>
+                    \(\mathcal{Se}\) : Severe symptomatic population. Has virus, no longer infectious.
+                    Symptoms will require hospitalization.
+                    <br>
+                    \(\mathcal{H}\) : Hospitalized population
+                    <br>
+                    \(\mathcal{Re}\) : Removed population. This population has been exposed and experienced mild
+                    severe symptoms and recovered. Assumed to be no longer susceptible. Excludes deaths.
+                    <br>
+                    \(\mathcal{D}\) : Deaths
+                </div>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Block -->
+    <div class="row">
+        <div class="column fullwidth">
+            <div class="MinorTitleColumn">Notes</div>
             <div class="notestext">
                 Data source: Johns Hopkins Coronavirus Research Center: <a
                     href="https://github.com/CSSEGISandData/COVID-19">https://github.com/CSSEGISandData/COVID-19</a>
             </div>
             <div id="author" class="notestext">
-                <table class="notestext">
+                <table class="notestext" sytle="border-top: 10px;">
                     <tr>
-                        <td>Author:</td>
+                        <td align="right">Author:</td>
                         <td>Steven Michael <a href="mailto:ssmichael@gmail.com">ssmichael@gmail.com</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td><a href="https://github.com/StevenSamirMichael/">https://github.com/StevenSamirMichael/</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="50px">Inspred By:</td>
+                        <td><a href="https://gabgoh.github.io/COVID/">https://gabgoh.github.io/COVID/</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" height="50px">Source Code:</td>
+                        <td><a
+                                href="https://github.com/StevenSamirMichael/SEIR">https://github.com/StevenSamirMichael/SEIR/</a>
                         </td>
                     </tr>
                 </table>
@@ -203,239 +377,841 @@
     </div>
 </body>
 
+<script src="/js/d3/dist/d3.min.js">
+</script>
+<script src="/js/moment/min/moment.min.js"></script>
+<script src="/js/mathjax/es5/tex-mml-chtml.js"></script>
+<script src="/js/d3-simple-slider/dist/d3-simple-slider.min.js"></script>
+<script>
+    function LightenDarkenColor(col, amt) {
 
-<script src="/js/d3/dist/d3.min.js"></script>
-<script src="js/moment/min/moment.min.js"></script>
-<script src="js/mathjax/es5/tex-mml-chtml.js"></script>
+        var usePound = false;
+
+        if (col[0] == "#") {
+            col = col.slice(1);
+            usePound = true;
+        }
+
+        var num = parseInt(col, 16);
+
+        var r = (num >> 16) + amt;
+
+        if (r > 255) r = 255;
+        else if (r < 0) r = 0;
+
+        var b = ((num >> 8) & 0x00FF) + amt;
+
+        if (b > 255) b = 255;
+        else if (b < 0) b = 0;
+
+        var g = (num & 0x0000FF) + amt;
+
+        if (g > 255) g = 255;
+        else if (g < 0) g = 0;
+
+        return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+
+    }
+</script>
+
+<!-- <script src="/seirplot.js"></script>-->
+<script>
+    // Set some globals
+    var seirinput = {
+        R0: 2.8,
+        Tinc: 2.5,
+        Tinf: 5,
+        Thos: 5,
+        Tmrec: 12,
+        Threc: 12,
+        Tfat: 5,
+        pMild: 0.8,
+        pFatal: 0.01,
+        duration: 200,
+        population: 30000,
+        dt: 0.5,
+        Tintervention: 100,
+        intervention_duration: 200,
+        R0_reduction: 0.67,
+        Hc: 0.01,
+        pfat_increase_nohos: 1.0
+    };
+    var runtime_initialized = false
+
+    var plot_deltas = false
+
+    var currentData = null
+
+    {
+        let plot_width = 500;
+        let plot_height = 320;
+        let svg = d3.select("#deaths_plot")
+            .attr("width", plot_width)
+            .append("svg")
+            .attr("width", plot_width)
+            .attr("height", plot_height)
+        //.attr('viewBox', '0 0 '+ width * 1.1 + ' ' + height * 1.2)
+        //.attr('preserveAspectRatio', 'xMinYMin');
+        let margin = {
+            top: 20,
+            right: 30,
+            bottom: 30,
+            left: 100
+        };
+        let width = +svg.attr("width") - margin.left - margin.right
+        let height = +svg.attr("height") - margin.top - margin.bottom;
+
+        // Main group holding the deaths plot
+        let g = svg.append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("width", width)
+            .attr("height", height);
+
+
+        // SVG for the confirmed cases plot
+        let svg2 = d3.select("#cases_plot").append("svg")
+            .attr("width", plot_width)
+            .attr("height", plot_height)
+
+        width = +svg2.attr("width") - margin.left - margin.right
+        height = +svg2.attr("height") - margin.top - margin.bottom;
+
+        // Main group holding the confirmed cases plot
+        let g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+        // Functions to scale axes
+        let x = d3.scaleBand()
+            .rangeRound([0, width])
+            .padding(0.15);
+
+        let y = d3.scaleLinear()
+            .rangeRound([height, 0]);
+
+        // Get a list of states
+        const baseurl = window.location.origin;
+        d3.json(baseurl + "/data/statelist").then(function (stateslist) {
+            let s = d3.select("#states")
+                .insert("select")
+
+            s
+                .attr("id", "states_dropdown")
+                .attr("disabled", true)
+                .selectAll("option")
+                .data(stateslist)
+                .enter()
+                .append("option")
+                .attr("value", d => d)
+                .text(d => d)
+            s.on("change", () => {
+                UpdatePlotState(s.property("value"))
+            });
+
+        });
+        d3.json(baseurl + "/data/countrylist").then(function (countrylist) {
+            let s = d3.select("#countries")
+                .insert("select")
+
+            s
+                .attr("id", "countries_dropdown")
+                .selectAll("option")
+                .data(countrylist)
+                .enter()
+                .append("option")
+                .attr("value", d => d)
+                .text(d => d);
+            s.on("change", () => {
+                UpdatePlotCountry(s.property("value"))
+            });
+        });
+
+
+
+        d3.selectAll("input[name='sourcetype']").on("change", function (d) {
+            cntry = d3.selectAll("#countries_dropdown");
+            states = d3.selectAll("#states_dropdown");
+            if (this.value == "radio_states") {
+                cntry.attr("disabled", true)
+                states.attr("disabled", null)
+                UpdatePlotState(states.property("value"))
+            }
+            else if (this.value == "radio_country") {
+                cntry.attr("disabled", null)
+                states.attr("disabled", true)
+                UpdatePlotCountry(cntry.property("value"))
+            }
+        });
+
+        function UpdatePlotState(statename) {
+            d3.json(baseurl + "/data/state/" + statename).then(d => {
+                currentData = d
+                updatePlots(d)
+            });
+        }
+        function UpdatePlotCountry(countryname) {
+            d3.json(baseurl + "/data/country/" + countryname).then(d => {
+                currentData = d
+                updatePlots(d)
+            }
+            )
+        }
+
+        d3.selectAll("input[name='plot_deltas']").on("click", () => {
+            plot_deltas = d3.selectAll("input[name='plot_deltas']").property("checked")
+            updatePlots(currentData)
+        })
+
+
+
+        function updatePlots(data) {
+            updatePlot(g, g2, data, "COVID-19 Related Deaths", "deaths");
+            updatePlot(g2, g, data, "COVID-19 Confirmed Cases", "confirmed")
+            d3.select("#namefield").text(d3.format(",")(data.population))
+            d3.select("#deathsfield").html("")
+            d3.select("#casesfield").html("")
+            seirinput.population = data.population
+            d3.select("#seir-population-text")
+                .html("Population: " + d3.format(",")(data.population))
+            update_seir()
+        }
+
+        function updatePlot(grp, grp2, alldata, titlestring, fieldname) {
+            // re-draw plot
+            grp.selectAll('*').remove();
+
+            let name = alldata['name'];
+            let data = alldata['series'];
+
+            // Remove data before March 1
+            // (months are zero based in moment)
+            let mindate = moment([2020, 2, 1]);
+            data = data.filter(d => { return (moment(d.date) > mindate); });
+
+            let plotdata = data
+            title2 = 'Cumulative'
+            if (plot_deltas) {
+                plotdata = plotdata.map((d, i, arr) => {
+                    let y = 0
+                    if (i > 0) {
+                        y = arr[i][fieldname] - arr[i - 1][fieldname]
+                    }
+                    let r = {
+                        date: d.date,
+                    }
+                    r[fieldname] = y
+                    return r
+                })
+                title2 = 'Daily Change'
+            }
+
+            x.domain(data.map(function (d) {
+                return moment(d.date)
+            }));
+            y.domain([0, d3.max(plotdata, function (d) {
+                return d[fieldname];
+            })]);
+
+
+            // gridlines in y axis function
+            function make_y_gridlines() {
+                return d3.axisLeft(y)
+                    .ticks(10)
+            }
+
+            // add the Y gridlines
+            grp.append("g")
+                .attr("class", "grid")
+                .call(make_y_gridlines()
+                    .tickSize(-width)
+                    .tickFormat("")
+                )
+            grp.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .attr("class", "axis")
+                .call(d3.axisBottom(x)
+                    .tickFormat(d => { return (d.get("month") + 1) + "/" + (d.get("date") + 1) })
+                    .tickValues(x.domain().filter(function (d, i) { return !(d.dayOfYear() % 7) }))
+                    .ticks(4));
+
+            yaxis = grp.append("g")
+                .attr("class", "axis")
+                .call(d3.axisLeft(y).ticks(null, "s"))
+
+            yaxis
+                .append("text")
+                .attr("class", "axis-label")
+                //.attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "0.71em")
+                .attr("dx", "1.0em")
+                .attr("text-anchor", "start")
+                .text(titlestring)
+            yaxis
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("y", 6)
+                .attr("dy", "1.75em")
+                .attr("dx", "1.0em")
+                .attr("text-anchor", "start")
+                .text(title2);
+            namelabel = yaxis
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("y", 6)
+                .attr("dy", "3.2em")
+                .attr("dx", "1.0em")
+                .attr("text-anchor", "start")
+                .text("Alabama");
+            grp.selectAll(".bar")
+                .data(plotdata)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("date", function (d) { return d.date; })
+                .attr("x", function (d) {
+                    return x(moment(d.date));
+                })
+                .attr("y", function (d) {
+                    return y(d[fieldname]);
+                })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) {
+                    return height - y(Number(d[fieldname]));
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this).attr("myhover", true);
+
+                    // Highlight same date in other plot
+                    grp2.selectAll(".bar")
+                        .filter(function (d2) {
+                            return (d2.date == d.date);
+                        })
+                        .attr("myhover", true);
+                    let deltaDeaths = 0;
+                    let deltaConfirmed = 0;
+                    if (i > 0) {
+                        deltaDeaths = data[i].deaths - data[i - 1].deaths;
+                        deltaConfirmed = data[i].confirmed - data[i - 1].confirmed;
+                    }
+
+
+                    // Update statistics text
+                    let dm = moment(d.date);
+                    d3.select("#deathsdate").html(String(dm.month() + 1).padStart(2, '0') + "/" + String(dm.date() + 1).padStart(2, '0'));
+                    d3.select("#deathsfield").html("&#8721  " + d3.format(",")(data[i].deaths) +
+                        "  ( " + (data[i].deaths / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " +
+                        d3.format(",")(deltaDeaths))
+                    d3.select("#casesfield").html("&#8721  " + d3.format(",")(data[i].confirmed) + "  ( " + (data[i].confirmed / alldata.population * 100.0).toPrecision(2) + "% )"
+                        + "<br>&#x394 " + d3.format(",")(deltaConfirmed))
+                })
+                .on("mouseout", function (d) {
+                    d3.select(this).attr("myhover", null);
+
+
+                    // Highlight same date in other plot
+                    grp2.selectAll(".bar")
+                        .filter(function (d2) {
+                            return (d2.date == d.date);
+                        })
+                        .attr("myhover", null);
+                });
+            namelabel.text(name);
+        };
+        // Default
+        UpdatePlotCountry("United States")
+    }
+</script>
+
 
 <script>
+    // Keys to plot
+    var allkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed"]
+    var plotkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed"]
 
-    var plot_width = 750;
-    var plot_height = 400;
-    var svg = d3.select("#deaths_plot")
-        .attr("width", plot_width)
-        .append("svg")
-        .attr("width", plot_width)
-        .attr("height", plot_height)
-    //.attr('viewBox', '0 0 '+ width * 1.1 + ' ' + height * 1.2)
-    //.attr('preserveAspectRatio', 'xMinYMin');
-    var margin = {
-        top: 20,
-        right: 30,
-        bottom: 30,
-        left: 100
-    };
-    var width = +svg.attr("width") - margin.left - margin.right
-    var height = +svg.attr("height") - margin.top - margin.bottom;
+    let seircolors = ['#DA5319', '#0072BE', '#77AD30', '#EEB220', '#7E2F8E']
 
-    // Main group holding the deaths plot
-    var g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("width", width)
-        .attr("height", height);
+    var z = d3.scaleOrdinal()
+        .range(seircolors.map(d => LightenDarkenColor(d, 40)))
 
+    var zhighlight = d3.scaleOrdinal()
+        .range(seircolors)
+        .domain(allkeys)
 
-    // SVG for the confirmed cases plot
-    var svg2 = d3.select("#cases_plot").append("svg")
-        .attr("width", plot_width)
-        .attr("height", plot_height)
+    var update_running = false
 
-    width = +svg.attr("width") - margin.left - margin.right
-    height = +svg.attr("height") - margin.top - margin.bottom;
+    {
 
-    // Main group holding the confirmed cases plot
-    var g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        // Create a local scope
+        // will move later
 
+        let plot_width = 1280;
+        let plot_height = 560;
+        let svg = d3.select("#seirplot")
+            .attr("width", plot_width)
+            .append("svg")
+            .attr("width", plot_width)
+            .attr("height", plot_height)
 
-    // Functions to scale axes
-    var x = d3.scaleBand()
-        .rangeRound([0, width])
-        .padding(0.1);
+        let margin = {
+            top: 30,
+            right: 30,
+            bottom: 30,
+            left: 100
+        };
+        let width = +svg.attr("width") - margin.left - margin.right
+        let height = +svg.attr("height") - margin.top - margin.bottom;
 
-    var y = d3.scaleLinear()
-        .rangeRound([height, 0]);
+        let bggroup = svg.append("g")
+        let bgrect = bggroup.append("rect")
 
-    // Get a list of states
-    const baseurl = window.location.origin;
-    d3.json(baseurl + "/data/statelist").then(function (stateslist) {
-        var s = d3.select("#states")
-            .insert("select")
-        s
-            .attr("id", "states_dropdown")
-            .attr("disabled", true)
-            .selectAll("option")
-            .data(stateslist)
-            .enter()
-            .append("option")
-            .attr("value", d => d)
-            .text(d => d);
-        s.on("change", () => {
-            UpdatePlotState(s.property("value"));
-        });
+        let xAxis = svg.append("g")
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .attr("class", "x-axis")
 
-    });
-    d3.json(baseurl + "/data/countrylist").then(function (countrylist) {
-        var s = d3.select("#countries")
-            .insert("select")
-
-        s
-            .attr("id", "countries_dropdown")
-            .selectAll("option")
-            .data(countrylist)
-            .enter()
-            .append("option")
-            .attr("value", d => d)
-            .text(d => d);
-        s.on("change", () => {
-            UpdatePlotCountry(s.property("value"));
-        });
-    });
-
-    d3.selectAll("input[name='sourcetype']").on("change", function (d) {
-        console.log(this.value);
-        var cntry = d3.selectAll("#countries_dropdown");
-        var states = d3.selectAll("#states_dropdown");
-        if (this.value == "radio_states") {
-            cntry.attr("disabled", true);
-            states.attr("disabled", null);
-            UpdatePlotState(states.property("value"));
-        }
-        else if (this.value == "radio_country") {
-            cntry.attr("disabled", null);
-            states.attr("disabled", true);
-            UpdatePlotCountry(cntry.property("value"));
-        }
-    });
-
-    function UpdatePlotState(statename) {
-        d3.json(baseurl + "/data/state/" + statename).then(d => updatePlots(d));
-    }
-    function UpdatePlotCountry(countryname) {
-        d3.json(baseurl + "/data/country/" + countryname).then(d => updatePlots(d));
-    }
-
-    function updatePlots(data) {
-        updatePlot(g, g2, data, "COVID-19 Related Deaths", "deaths");
-        updatePlot(g2, g, data, "COVID-19 Confirmed Cases", "confirmed");
-        d3.select("#namefield").text(data.population);
-        d3.select("#deathsfield").html("");
-        d3.select("#casesfield").html("");
-    }
-
-    function updatePlot(grp, grp2, alldata, titlestring, fieldname) {
-        // re-draw plot
-        grp.selectAll('*').remove();
-
-        var name = alldata['name'];
-        var data = alldata['series'];
-
-        // Remove data before March 1
-        // (months are zero based in moment)
-        mindate = moment([2020, 2, 1]);
-        data = data.filter(d => { return (moment(d.date) > mindate); });
-
-        x.domain(data.map(function (d) {
-            return moment(d.date)
-        }));
-        y.domain([0, d3.max(data, function (d) {
-            return d[fieldname];
-        })]);
+        let yAxis = svg.append("g")
+            .attr("transform", `translate(${margin.left},0)`)
+            .attr("class", "y-axis")
 
 
-        // gridlines in y axis function
-        function make_y_gridlines() {
-            return d3.axisLeft(y)
-                .ticks(10)
-        }
+        let x = d3.scaleBand()
+            .range([margin.left, width - margin.right])
+            .align(0.5)
+            .padding(.15)
 
-        // add the Y gridlines
-        grp.append("g")
-            .attr("class", "grid")
-            .call(make_y_gridlines()
-                .tickSize(-width)
-                .tickFormat("")
-            )
-        grp.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .attr("class", "axis")
-            .call(d3.axisBottom(x)
-                .tickFormat(d => { return d.get("month") + 1 + "/" + d.get("date") })
-                .tickValues(x.domain().filter(function (d, i) { return !(d.dayOfYear() % 7) }))
-                .ticks(4));
+        let y = d3.scaleLinear()
+            .rangeRound([height - margin.bottom, margin.top])
 
-        var yaxis = grp.append("g")
-            .attr("class", "axis")
-            .call(d3.axisLeft(y));
+        function update_seir() {
+            let keys = allkeys.filter(d => { return plotkeys.includes(d) })
 
-        yaxis
-            .append("text")
-            .attr("class", "axis-label")
-            //.attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", "0.71em")
-            .attr("dx", "1.0em")
-            .attr("text-anchor", "start")
-            .text(titlestring)
-        var namelabel = yaxis
-            .append("text")
-            .attr("class", "axis-label")
-            .attr("y", 6)
-            .attr("dy", "1.8em")
-            .attr("dx", "1.0em")
-            .attr("text-anchor", "start")
-            .text("Alabama");
-        grp.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("date", function (d) { return d.date; })
-            .attr("x", function (d) {
-                return x(moment(d.date));
-            })
-            .attr("y", function (d) {
-                return y(d[fieldname]);
-            })
-            .attr("width", x.bandwidth())
-            .attr("height", function (d) {
-                return height - y(Number(d[fieldname]));
-            })
-            .on("mouseover", function (d, i) {
-                d3.select(this).attr("myhover", true);
+            if (!runtime_initialized)
+                return
+            if (update_running == true)
+                return;
+            update_running = true
 
-                // Highlight same date in other plot
-                grp2.selectAll(".bar")
-                    .filter(function (d2) {
-                        return (d2.date == d.date);
-                    })
-                    .attr("myhover", true);
-                var deltaDeaths = 0;
-                var deltaConfirmed = 0;
-                if (i > 0) {
-                    deltaDeaths = data[i].deaths - data[i - 1].deaths;
-                    deltaConfirmed = data[i].confirmed - data[i - 1].confirmed;
+
+
+            // gridlines in y axis function
+            function make_y_gridlines() {
+                return d3.axisLeft(y)
+                    .ticks(10)
+            }
+
+            raw = Module.seir(seirinput)
+
+            if (!raw) {
+                return
+            }
+            dmap = undefined
+            // Reformat data to accommodate plotting
+            let datagen = function* (raw) {
+                i = 0;
+                while (i < raw.size()) {
+                    r = {
+                        time: raw.get(i).get(8),
+                        exposed: d3.max([raw.get(i).get(1), 0]),
+                        infectious: d3.max([raw.get(i).get(2), 0]),
+                        mild: d3.max([raw.get(i).get(3), 0]),
+                        hospitalized: d3.max([raw.get(i).get(4) + raw.get(i).get(5), 0]),
+                        fatal: d3.max([raw.get(i).get(6), 0]),
+                    };
+                    yield r;
+                    i++;
                 }
+            };
+            let data = Array.from(datagen(raw))
+            raw = undefined
+            // Get maximum value on y axis
+            y.domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
 
-                console.log(deltaDeaths)
-                // Update statistics text
-                var dm = moment(d.date);
-                d3.select("#deathsdate").html(String(dm.month() + 1).padStart(2, '0') + "/" + String(dm.date()).padStart(2, '0'));
-                d3.select("#deathsfield").html("&#8721  " + d.deaths + "  ( " + (d.deaths / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " + deltaDeaths);
-                d3.select("#casesfield").html("&#8721  " + d.confirmed + "  ( " + (d.confirmed / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " + deltaConfirmed);
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).attr("myhover", null);
+            let pointsToPlot = 180;
+            //console.log(data.length)
+            // Plot points to skip
+            let skip = Math.ceil(data.length / pointsToPlot)
 
-                // Highlight same date in other plot
-                grp2.selectAll(".bar")
-                    .filter(function (d2) {
-                        return (d2.date == d.date);
+
+            // Set x domain
+            x.domain(data.filter((d, i) => { return !(i % skip) }).map(d => d.time))
+            //console.log(data.length)
+            //x.domain(data.map(d => d.time))
+
+            // Create axes
+            svg.selectAll(".y-axis")
+                .call(d3.axisLeft(y).ticks(null, "s"))
+
+            let tickinterval = Math.floor(seirinput.duration / 5 / seirinput.dt / 10 / skip) * seirinput.dt * 5 * skip
+            svg.selectAll(".x-axis")
+                .call(d3.axisBottom(x).tickSizeOuter(0)
+                    .tickValues(x.domain().filter(function (d) { return !(d % tickinterval) }))
+                )
+
+            svg.selectAll(".y-axis")
+                .append("g")
+                .attr("class", "grid")
+                .call(d3.axisLeft(y)
+                    .ticks(null, "s")
+                    .tickSize(-width + margin.left + margin.right)
+                    .tickFormat("")
+                )
+
+            // text label for the x axis
+            svg.append("text")
+                .attr("transform",
+                    "translate(" + (width / 2) + " ," +
+                    (height + 10) + ")")
+                .style("text-anchor", "middle")
+                .attr("class", "xaxis-title")
+                .text("Days");
+
+            let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal"]
+
+            if (seirinput.R0_reduction > 0) {
+                let xbg = d3.scaleLinear()
+                    .range([margin.left, width - margin.right])
+                    .domain([0, seirinput.duration])
+                let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
+                bgrect.attr("style", "fill: #ccc;fill-opacity: 0.5")
+                    .attr("x", xbg(seirinput.Tintervention))
+                    .attr("width", xbg(seirinput.Tintervention + bgwidth) - xbg(seirinput.Tintervention))
+                    .attr("y", margin.bottom)
+                    .attr("height", height - margin.top - margin.bottom)
+                    .attr("y", margin.bottom)
+                    .attr("height", height - margin.top - margin.bottom)
+                    .attr("visibility", "visible")
+                let bg = ["Intervention Period", d3.format("d")(seirinput.R0_reduction * 100) + "% Reduction"]
+
+
+                let bgtext = bggroup.selectAll("text").data(bg)
+                bgtext.enter().append("text")
+                    .merge(bgtext)
+                    .attr("x", xbg(seirinput.Tintervention + bgwidth) - 10)
+                    .attr("y", (d, i) => margin.bottom + i * 16)
+                    .attr("dy", "1em")
+                    .attr("text-anchor", "end")
+                    .attr("visibility", "visible")
+                    .classed("intervention-label", true)
+                    .html(d => d)
+                bgtext.attr("visibility", "visible")
+            }
+            else {
+                bgrect.attr("visibility", "hidden")
+                let bgtext = bggroup.selectAll("text")
+                bgtext.exit().remove()
+                //bgtext.attr("visibility", "hidden")
+            }
+
+            let group = svg.selectAll("g.layer")
+                .data(d3.stack().keys(keys)(data), d => d.key)
+            group.exit().remove()
+
+            group.enter().append("g")
+                .classed("layer", true)
+                .attr("plotname", d => d.key)
+                .attr("fill", d => z(d.key))
+                .attr("id", function (d) { return d.key })
+
+            let bars = svg.selectAll("g.layer").selectAll("rect")
+                .data(d => d.filter((d, i) => !(i % skip)))
+
+            bars.exit().remove()
+
+            bars.enter().append("rect")
+                .attr("width", x.bandwidth())
+                .merge(bars)
+                .attr("class", function (d, i) { return "vidx" + i; })
+                .attr("x", d => x(d.data.time))
+                .attr("y", d => y(d[1]))
+                .attr("height", d => y(d[0]) - y(d[1]))
+                .on("mouseover", function (d, i) {
+                    keys.forEach(k => {
+                        svg.selectAll("#" + k).selectAll("rect.vidx" + i).attr("fill", zhighlight(k))
                     })
-                    .attr("myhover", null);
-            });
-        namelabel.text(name);
-    };
-    // Default
-    UpdatePlotCountry("United States")
+
+                    let index = data.findIndex(dd => { return (dd.time == d.data.time) })
+                    barnames.forEach(name => {
+                        let sumval = data[index][name]
+                        let diffval = 0
+                        if (index > 0)
+                            diffval = data[index][name] - data[index - 1][name]
+                        d3.select("#" + name + "-text")
+                            .html("&#8721 " + d3.format(',')(Math.floor(sumval)) +
+                                "<br> &#x394 " + d3.format(',')(Math.floor(diffval)))
+                    })
+                })
+                .on("mouseout", function (d, i) {
+                    keys.forEach(k => {
+                        svg.selectAll("#" + k).selectAll("rect.vidx" + i).attr("fill", z(k))
+                    })
+
+                })
+
+            d3.selectAll("#hospital-capacity-text")
+                .html("Hospital Capacity: " + d3.format(",")(Math.floor(seirinput.population * seirinput.Hc)))
+
+            update_running = false
+
+        } // end of update_seir
+
+
+
+
+
+        function create_slider(at, range, val, format, field) {
+
+            slider = d3
+                .sliderBottom()
+                .min(range[0])
+                .max(range[1])
+                .width(170)
+                .ticks(5)
+                .default(val)
+                .tickFormat(d3.format(format))
+                .on('onchange', value => {
+                    seirinput[field] = value
+                    update_seir()
+                })
+
+            at
+                .append("svg")
+                //.attr("width", 200)
+                .attr("height", 64)
+                .append("g")
+                .attr("transform", "translate(20,20)")
+                .attr("class", "seir-slider")
+                .attr("id", "slider_" + field)
+                .call(slider)
+        }
+
+        plot_params = [
+            {
+                name: "Exposed",
+                label: "\\(\\mathcal{E}xposed\\)",
+                fieldname: "exposed"
+            },
+            {
+                name: "Infectious",
+                label: "\\(\\mathcal{I}nfectious\\)",
+                fieldname: "infectious"
+            },
+            {
+                name: "Mild",
+                label: "\\(\\mathcal{M}ild\\)",
+                fieldname: "mild"
+            },
+            {
+                name: "Hospitalized",
+                label: "\\(\\mathcal{H}ospitalized\\)",
+                fieldname: "hospitalized"
+            },
+            {
+                name: "Fatal",
+                label: "\\(\\mathcal{D}eath\\)",
+                fieldname: "fatal"
+            }
+        ]
+        d3.selectAll("#seirdata")
+            .append("div")
+            .classed("row", true)
+            .append("div")
+            .classed("column", true)
+            .html("Population: ")
+            .attr("style", "padding-bottom: 10px;padding-top: 20px;")
+            .attr("id", "seir-population-text")
+
+        d3.selectAll("#seirdata")
+            .append("div")
+            .classed("row", true)
+            .append("div")
+            .classed("column", true)
+            .html("Hospital Capacity: ")
+            .attr("style", "padding-bottom: 10px;")
+            .attr("id", "hospital-capacity-text")
+
+        plot_params.forEach(param => {
+            let row = d3.selectAll("#seirdata")
+                .append("div")
+                .attr("class", "row")
+                .attr("style", "padding-top: 10px;")
+
+            row.append("div")
+                .attr("class", "row")
+                .append("div")
+                .attr("class", "column")
+                .call(d => d
+                    .append("input")
+                    .attr("type", "checkbox")
+                    .attr("id", "check_" + param.fieldname)
+                    .attr("checked", true)
+                    .on("click", d => {
+                        let checked = d3.selectAll("#check_" + param.fieldname).property("checked")
+                        if (!checked) {
+                            const index = plotkeys.indexOf(param.fieldname)
+                            if (index > -1) {
+                                plotkeys.splice(index, 1)
+                            }
+                        }
+                        else
+                            plotkeys.push(param.fieldname)
+                        update_seir()
+                    })
+                )
+                .call(d => d.append("label")
+                    .attr("style", "color: " + zhighlight(param.fieldname) + ";")
+                    .html(param.label))
+            row.append("div")
+                .classed("row", true)
+                .append("div")
+                .classed("column", true)
+                .attr("style", "height: 40px;")
+                .append("text")
+                .attr("id", param.fieldname + "-text")
+                .attr("style", "color: " + zhighlight(param.fieldname) + ";")
+                .html("&#8721 <br> &#x394")
+
+        })
+
+
+        model_params = [
+            {
+                title: "Infection Parameters",
+                width: "25%",
+                cosl: 1,
+                values: [[{
+                    label: "\\(\\mathcal{R}_0\\)",
+                    args: [[1, 8], seirinput.R0, ".3", "R0"]
+                }],
+                [{
+                    label: "\\(p_{mild}\\)",
+                    args: [[0, 1], seirinput.pMild, ".3", "pMild"]
+                }],
+                [{
+                    label: "\\(p_{fatal}\\)",
+                    args: [[0, 0.05], seirinput.pFatal, ".2%", "pFatal"]
+                },
+                {
+                    label: "\\(\\Delta p_{fatal}\\) \\(| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
+                    args: [[0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"]
+                },
+                ]]
+            },
+            {
+                title: "Time Constants",
+                width: "45%",
+                cols: 2,
+                values: [[
+                    {
+                        label: "\\(\\mathcal{T}_{inc}\\)",
+                        args: [[1, 14], seirinput.Tinc, 'd', "Tinc"]
+                    },
+                    {
+                        label: "\\(\\mathcal{T}_{inf}\\)",
+                        args: [[5, 28], seirinput.Tinf, 'd', "Tinf"]
+                    },
+
+                    {
+                        label: "\\(T_{sim}\\)",
+                        args: [[200, 1000], seirinput.duration, "d", "duration"]
+                    }
+                ],
+                [
+                    {
+                        label: "\\(\\mathcal{T}_{mrec}\\)",
+                        args: [[1, 21], seirinput.Tmrec, 'd', "Tmrec"]
+                    },
+                    {
+                        label: "\\(\\mathcal{T}_{hrec}\\)",
+                        args: [[1, 21], seirinput.Threc, 'd', "Threc"]
+                    },
+                    {
+                        label: "\\(\\mathcal{T}_{fatal}\\)",
+                        args: [[5, 28], seirinput.Tfat, 'd', "Tfat"]
+                    },
+                ]]
+            },
+            {
+                title: "Intervention",
+                width: "25%",
+                cols: 1,
+                values: [[
+                    {
+                        label: "\\(T_{start}\\)",
+                        args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"]
+                    },
+                    {
+                        label: "\\(\\Delta \\mathcal{R}_0\\)",
+                        args: [[0, 1], seirinput.R0_reduction, '.0%', "R0_reduction"]
+                    },
+                    {
+                        label: "\\(\\Delta_{int}\\)",
+                        args: [[0, 200], seirinput.intervention_duration, 'd', "intervention_duration"]
+                    },
+                    {
+                        label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
+                        args: [[.001, .02], seirinput.Hc, '.2%', "Hc"]
+                    }
+                ]]
+            }
+        ]
+
+        let pdiv = d3.select("#modelparams")
+            .attr("style", "padding-bottom: 20px;")
+            .append("div")
+            .attr("class", "row")
+
+        model_params.forEach(paramcol => {
+            let pcol = pdiv.append("div")
+                .attr("style", "width: " + paramcol.width + ";")
+                .attr("class", "column")
+            pcol.append("div")
+                .attr("class", "paramcolumn")
+                .html(paramcol.title)
+
+            let subrow = pcol.append("div")
+                .attr("class", "row")
+
+            paramcol.values.forEach(prow => {
+                subcol_length = Math.floor(100 / paramcol.cols)
+                let subcol = subrow
+                    .append("div")
+                    .attr("style", "width: " + subcol_length + "%;")
+                    .attr("class", "column")
+
+                let paramrow = subcol.append("div")
+                    .attr("class", "row")
+
+                prow.forEach(pcol => {
+                    paramrow.append("div")
+                        .attr("class", "column")
+                        .attr("style", "align: right;text-align: right;padding-top: 10px;width: 15%;color: slategray;")
+                        .html(pcol.label)
+                    paramrow.append("div")
+                        .attr("class", "column")
+                        .attr("style", "width: 80%;")
+                        .call(create_slider, pcol.args[0], pcol.args[1], pcol.args[2], pcol.args[3])
+
+                })
+            })
+        })
+
+        MathJax.typeset()
+
+    }
 </script>
+
+
+
+
+<script>
+    var Module = {
+        onRuntimeInitialized: function () {
+            runtime_initialized = true
+            update_seir()
+        }
+    }
+</script>
+<script src="/customjs/seirmodel3.js"></script>
+
+
+
 
 </html>

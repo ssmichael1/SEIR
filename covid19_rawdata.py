@@ -50,6 +50,7 @@ def statelist():
     # Set gets out the unique items
     statelist = set(states["Province_State"])
     statelist = list(statelist)
+    statelist.remove("Northern Mariana Islands")
     statelist.sort()
     # return set as a python list
     return statelist
@@ -63,6 +64,7 @@ def countrylist():
     countries = list(countries)
     countries.sort()
     countries.insert(0, "United States")
+    countries.remove("Saint Vincent and the Grenadines")
     return countries
 
 

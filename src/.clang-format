@@ -1,0 +1,8 @@
+BasedOnStyle: LLVM
+Language: Cpp
+IndentWidth: 4
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Linux
+ColumnLimit: 80
+CommentPragmas: '^\\.+'
+SortIncludes: false

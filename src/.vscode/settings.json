@@ -1,0 +1,6 @@
+{
+    "cmake.configureArgs": [
+        "-DBOOST_ROOT=/opt/boost"
+    ],
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
+}
