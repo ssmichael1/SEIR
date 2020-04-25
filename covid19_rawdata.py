@@ -13,9 +13,7 @@ def _load_daily_reports():
         if ext != ".csv":
             continue
         date = datetime.datetime.strptime(name, "%m-%d-%Y").date()
-        daily_reports[date] = pandas.read_csv(
-            world_dir + os.path.sep + file, header=0
-        )
+        daily_reports[date] = pandas.read_csv(world_dir + os.path.sep + file, header=0)
     return daily_reports
 
 
@@ -119,18 +117,22 @@ def extract_state(statename):
 
 
 def countrydata(countryname):
+    s = list(extract_country(countryname))
+    s.sort(reverse=False, key=lambda x: x["date"])
     return {
         "name": countryname,
         "population": country_population(countryname),
-        "series": list(extract_country(countryname)),
+        "series": s,
     }
 
 
 def statedata(statename):
+    s = list(extract_state(statename))
+    s.sort(reverse=False, key=lambda x: x["date"])
     return {
         "name": statename,
         "population": state_population(statename),
-        "series": list(extract_state(statename)),
+        "series": s,
     }
 
 
