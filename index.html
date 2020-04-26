@@ -21,8 +21,16 @@
             padding-right: 20px;
         }
 
+
+
         .bar {
             fill: lightsteelblue;
+            shape-rendering: geometricPrecision;
+        }
+
+        .seirarea {
+            fill: salmon;
+            fill-opacity: 0.2;
         }
 
         .bar[myhover] {
@@ -36,7 +44,11 @@
         .intervention-label {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
             font-size: 14px;
-            color: darkslategray;
+            fill: darkslategrey;
+        }
+
+        .intervention-rect {
+            fill: #eeeeee
         }
 
         .axis-label {
@@ -242,7 +254,10 @@
             </div>
 
             <div style="padding-top: 20px;">
-                <input type="checkbox" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative</input>
+                <input type="checkbox" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative
+            </div>
+            <div style="padding-top: 10px;">
+                <input type="checkbox" name="overlay_model">&nbsp Overlay SEIR Model
             </div>
 
         </div>
@@ -276,8 +291,8 @@
         <div class="column fullwidth">
             <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Plot</div>
             <div class="row" sytle="width: 100%;">
-                <div class="column" style="width: 12%;" id="seirdata"></div>
-                <div class="column" id="seirplot" style="width: 85%;"> </div>
+                <div class="column" style="width: 220px;" id="seirdata"></div>
+                <div class="column" id="seirplot"> </div>
             </div>
 
         </div>
@@ -301,13 +316,11 @@
                 <br>
                 <p>
                     <br>
-                    4/24/2020 Still to Complete:
+                    4/25/2020 Still to Complete:
                     <br>
-                    1. Update true data plot on top to overlay SEIR model
+                    1. Update SEIR color scheme (its terrible)
                     <br>
-                    2. Update SEIR color scheme (its terrible)
-                    <br>
-                    3. Complete Documentation below
+                    2. Complete Documentation below
                 </p>
 
                 <br><br>
@@ -323,15 +336,12 @@
                     <br>
                     \(\mathcal{M}\) : Mild or asymptomatic population. Has virus, no longer infectious
                     <br>
-                    \(\mathcal{Se}\) : Severe symptomatic population. Has virus, no longer infectious.
-                    Symptoms will require hospitalization.
-                    <br>
                     \(\mathcal{H}\) : Hospitalized population
+                    <br>
+                    \(\mathcal{D}\) : Deaths
                     <br>
                     \(\mathcal{Re}\) : Removed population. This population has been exposed and experienced mild
                     severe symptoms and recovered. Assumed to be no longer susceptible. Excludes deaths.
-                    <br>
-                    \(\mathcal{D}\) : Deaths
                 </div>
                 </p>
             </div>
@@ -426,21 +436,25 @@
         pFatal: 0.01,
         duration: 200,
         population: 30000,
-        dt: 0.5,
+        dt: 1,
         Tintervention: 100,
         intervention_duration: 200,
         R0_reduction: 0.67,
         Hc: 0.01,
-        pfat_increase_nohos: 1.0
+        pfat_increase_nohos: 1.0,
+        startdate: 0
     };
     var runtime_initialized = false
 
     var plot_deltas = false
+    var overlay_model = false
 
     var currentData = null
     var dataplot = {}
     var plot1 = {}
     var plot2 = {}
+    var seirdata = null
+    var mindate = moment([2020, 2, 1]);
 
 
     dataplot.plot_width = 500
@@ -456,7 +470,7 @@
         top: 20,
         right: 30,
         bottom: 30,
-        left: 100
+        left: 50
     };
     dataplot.width = +plot1.svg.attr("width") - dataplot.margin.left - dataplot.margin.right
     dataplot.height = +plot1.svg.attr("height") - dataplot.margin.top - dataplot.margin.bottom;
@@ -478,13 +492,7 @@
         "translate(" + dataplot.margin.left + "," + dataplot.margin.top + ")");
 
 
-    // Functions to scale axes
-    dataplot.x = d3.scaleBand()
-        .rangeRound([0, dataplot.width])
-        .padding(0.15);
 
-    dataplot.y = d3.scaleLinear()
-        .rangeRound([dataplot.height, 0]);
 
     // Get a list of states
     var baseurl = window.location.origin;
@@ -558,19 +566,73 @@
         plot_deltas = d3.selectAll("input[name='plot_deltas']").property("checked")
         updatePlots(currentData)
     })
+    d3.selectAll("input[name='overlay_model']").on("click", () => {
+        overlay_model = d3.selectAll("input[name='overlay_model']").property("checked")
+        updatePlots(currentData)
+    })
 
+    function draw_model_overlay(g, fieldname) {
+
+        let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
+        let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(1, 'days')
+
+        overlaydata =
+            seirdata
+                .map((d, i, a) => {
+                    yp = 0
+                    if (plot_deltas) {
+                        yp = 0
+                        if (i > 0) {
+                            yp = (a[i][fieldname] - a[i - 1][fieldname]) /
+                                (a[i].time - a[i - 1].time)
+                        }
+                    }
+                    else {
+                        yp = d[fieldname]
+                    }
+                    xp = date0.clone().add(d.time, 'day')
+                    return {
+                        x: xp,
+                        y: yp
+                    }
+                })
+                .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
+
+
+        const area = d3.area()
+            .x(d => dataplot.x(d.x))
+            .y1(d => dataplot.y(d3.max([d3.min([d.y, dataplot.y.domain()[1] - 1]), 0])))
+            .y0(dataplot.height)
+
+        g.selectAll(".seirarea")
+            .remove()
+
+        g.selectAll("#seirareagroup")
+            .append("path")
+            .data([overlaydata])
+            .classed("seirarea", true)
+            .attr("d", area)
+
+    }
 
 
     function updatePlots(data) {
         updatePlot(plot1.g, plot2.g, data, "COVID-19 Related Deaths", "deaths");
         updatePlot(plot2.g, plot1.g, data, "COVID-19 Confirmed Cases", "confirmed")
         d3.select("#namefield").text(d3.format(",")(data.population))
-        d3.select("#deathsfield").html("")
-        d3.select("#casesfield").html("")
-        seirinput.population = data.population
-        d3.select("#seir-population-text")
-            .html("Population: " + d3.format(",")(data.population))
-        update_seir()
+        d3.select("#deathsfield").html("&#8721<br>&#x394")
+        d3.select("#casesfield").html("&#8721<br>&#x394")
+        if (seirinput.population != data.population) {
+            seirinput.population = data.population
+            d3.select("#seir-population-text")
+                .html("Population: " + d3.format(",")(data.population))
+            update_seir()
+        }
+        if (overlay_model) {
+            draw_model_overlay(plot1.g, "fatal")
+            draw_model_overlay(plot2.g, "infectious")
+        }
+
     }
 
     function updatePlot(grp, grp2, alldata, titlestring, fieldname) {
@@ -580,9 +642,12 @@
         let name = alldata['name'];
         let data = alldata['series'];
 
+        // Add this group since we want seir bars to be
+        // in the background
+        grp.append("g").attr("id", "seirareagroup")
+
         // Remove data before March 1
         // (months are zero based in moment)
-        let mindate = moment([2020, 2, 1]);
         data = data.filter(d => { return (moment(d.date) > mindate); });
 
         let plotdata = data
@@ -601,10 +666,11 @@
             })
             title2 = 'Daily Change'
         }
-
-        dataplot.x.domain(data.map(function (d) {
-            return moment(d.date)
-        }));
+        dataplot.y = d3.scaleLinear()
+            .rangeRound([dataplot.height, 0]);
+        dataplot.x = d3.scaleLinear()
+            .range([0, dataplot.width])
+            .domain([mindate, moment(data[data.length - 1].date)])
         dataplot.y.domain([0, d3.max(plotdata, function (d) {
             return d[fieldname];
         })]);
@@ -627,9 +693,8 @@
             .attr("transform", "translate(0," + dataplot.height + ")")
             .attr("class", "axis")
             .call(d3.axisBottom(dataplot.x)
-                .tickFormat(d => { return (d.get("month") + 1) + "/" + (d.get("date") + 1) })
-                .tickValues(dataplot.x.domain().filter(function (d, i) { return !(d.dayOfYear() % 7) }))
-                .ticks(4));
+                .tickFormat(d => { return (d.utc().get("month") + 1) + "/" + (d.utc().get("date")) })
+                .tickValues(data.map(d => moment(d.date)).filter(d => !(d.dayOfYear() % 7))))
 
         yaxis = grp.append("g")
             .attr("class", "axis")
@@ -661,18 +726,29 @@
             .attr("text-anchor", "start")
             .text("Alabama");
 
+
+        let bwidth = dataplot.x(mindate.clone().add(1, 'day'))
+        let boffset = 0
+        if (overlay_model) {
+            bwidth = bwidth * .6
+            boffset = 0.2 * bwidth
+        }
+        else {
+            boffset = bwidth * .08
+            bwidth = bwidth * .84
+        }
         grp.selectAll(".bar")
             .data(plotdata)
             .enter().append("rect")
             .attr("class", "bar")
             .attr("date", function (d) { return d.date; })
             .attr("x", function (d) {
-                return dataplot.x(moment(d.date));
+                return dataplot.x(moment(d.date) + boffset);
             })
             .attr("y", function (d) {
                 return dataplot.y(d[fieldname]);
             })
-            .attr("width", dataplot.x.bandwidth())
+            .attr("width", bwidth)
             .attr("height", function (d) {
                 return dataplot.height - dataplot.y(Number(d[fieldname]));
             })
@@ -694,8 +770,9 @@
 
 
                 // Update statistics text
-                let dm = moment(d.date);
-                d3.select("#deathsdate").html(String(dm.month() + 1).padStart(2, '0') + "/" + String(dm.date() + 1).padStart(2, '0'));
+                let dm = moment.utc(d.date);
+
+                d3.select("#deathsdate").html(String(dm.utc().month() + 1).padStart(2, '0') + "/" + String(dm.utc().date()).padStart(2, '0'));
                 d3.select("#deathsfield").html("&#8721  " + d3.format(",")(data[i].deaths) +
                     "  ( " + (data[i].deaths / alldata.population * 100.0).toPrecision(2) + "% )" + "<br>&#x394 " +
                     d3.format(",")(deltaDeaths))
@@ -723,10 +800,10 @@
 
 <script>
     // Keys to plot
-    var allkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed"]
+    var allkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed", "removed"]
     var plotkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed"]
 
-    let seircolors = ['#DA5319', '#0072BE', '#77AD30', '#EEB220', '#7E2F8E']
+    let seircolors = ['#DA5319', '#0072BE', '#77AD30', '#EEB220', '#7E2F8E', '#888888']
 
     var z = d3.scaleOrdinal()
         .range(seircolors.map(d => LightenDarkenColor(d, 40)))
@@ -741,7 +818,7 @@
     // Create a local scope
     // will move later
 
-    let plot_width = 1280;
+    let plot_width = 1200;
     let plot_height = 560;
     let svg = d3.select("#seirplot")
         .attr("width", plot_width)
@@ -751,9 +828,9 @@
 
     let margin = {
         top: 30,
-        right: 30,
+        right: 0,
         bottom: 30,
-        left: 100
+        left: 50
     };
     let width = +svg.attr("width") - margin.left - margin.right
     let height = +svg.attr("height") - margin.top - margin.bottom;
@@ -770,13 +847,6 @@
         .attr("class", "y-axis")
 
 
-    let x = d3.scaleBand()
-        .range([margin.left, width - margin.right])
-        .align(0.5)
-        .padding(.15)
-
-    let y = d3.scaleLinear()
-        .rangeRound([height - margin.bottom, margin.top])
 
     function update_seir() {
         let keys = allkeys.filter(d => { return plotkeys.includes(d) })
@@ -787,7 +857,9 @@
             return;
         update_running = true
 
-
+        let x = d3.scaleLinear()
+            .range([margin.left, width - margin.right])
+            .domain([0, seirinput.duration])
 
         // gridlines in y axis function
         function make_y_gridlines() {
@@ -814,6 +886,7 @@
                     mild: d3.max([raw.get(i).get(3), 0]),
                     hospitalized: d3.max([raw.get(i).get(4) + raw.get(i).get(5), 0]),
                     fatal: d3.max([raw.get(i).get(6), 0]),
+                    removed: d3.max([raw.get(i).get(7), 0])
                 };
                 yield r;
                 i++;
@@ -821,28 +894,30 @@
         };
         let data = Array.from(datagen(raw))
         raw = undefined
+        seirdata = data
         // Get maximum value on y axis
-        y.domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
+
+        let y = d3.scaleLinear()
+            .rangeRound([height - margin.bottom, margin.top])
+            .domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
 
         let pointsToPlot = 200;
         //console.log(data.length)
         // Plot points to skip
         let skip = Math.ceil(data.length / pointsToPlot)
 
-
-        // Set x domain
-        x.domain(data.filter((d, i) => { return !(i % skip) }).map(d => d.time))
-        //console.log(data.length)
-        //x.domain(data.map(d => d.time))
-
         // Create axes
         svg.selectAll(".y-axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
 
-        let tickinterval = Math.floor(seirinput.duration / 5 / seirinput.dt / 10 / skip) * seirinput.dt * 5 * skip
+        date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
         svg.selectAll(".x-axis")
             .call(d3.axisBottom(x).tickSizeOuter(0)
-                .tickValues(x.domain().filter(function (d) { return !(d % tickinterval) }))
+                .ticks(10)
+                .tickFormat(d => {
+                    tickdate = date0.clone().add(d, 'day')
+                    return (tickdate.utc().get("month") + 1) + "/" + (tickdate.utc().get("date") + "/" + (tickdate.utc().get("year") - 2000))
+                })
             )
 
         svg.selectAll(".y-axis")
@@ -863,14 +938,14 @@
             .attr("class", "xaxis-title")
             .text("Days");
 
-        let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal"]
+        let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal", "removed"]
 
         if (seirinput.R0_reduction > 0) {
             let xbg = d3.scaleLinear()
                 .range([margin.left, width - margin.right])
                 .domain([0, seirinput.duration])
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
-            bgrect.attr("style", "fill: #ccc;fill-opacity: 0.5")
+            bgrect.classed("intervention-rect", true)
                 .attr("x", xbg(seirinput.Tintervention))
                 .attr("width", xbg(seirinput.Tintervention + bgwidth) - xbg(seirinput.Tintervention))
                 .attr("y", margin.bottom)
@@ -897,7 +972,6 @@
             bgrect.attr("visibility", "hidden")
             let bgtext = bggroup.selectAll("text")
             bgtext.exit().remove()
-            //bgtext.attr("visibility", "hidden")
         }
 
         let group = svg.selectAll("g.layer")
@@ -915,11 +989,15 @@
 
         bars.exit().remove()
 
+        let bwidth = x(seirinput.dt * skip) - x(0)
+        let boffset = bwidth * .1
+        bwidth = bwidth * .8
         bars.enter().append("rect")
-            .attr("width", x.bandwidth())
+            .attr("width", bwidth)
             .merge(bars)
             .attr("class", function (d, i) { return "vidx" + i; })
-            .attr("x", d => x(d.data.time))
+            .classed("seirbar", true)
+            .attr("x", d => x(d.data.time) + boffset)
             .attr("y", d => y(d[1]))
             .attr("height", d => y(d[0]) - y(d[1]))
             .on("mouseover", function (d, i) {
@@ -934,9 +1012,10 @@
                     let diffval = 0
                     if (index > 0)
                         diffval = data[index][name] - data[index - 1][name]
+                    ptext = d3.format(".2%")(sumval / seirinput.population)
                     d3.select("#" + name + "-text")
-                        .html("&#8721 " + d3.format(',')(Math.floor(sumval)) +
-                            "<br> &#x394 " + d3.format(',')(Math.floor(diffval)))
+                        .html("&#8721 " + d3.format(',')(Math.floor(sumval)) + " ( " + ptext + " )"
+                            + "<br> &#x394 " + d3.format(',')(Math.floor(diffval)))
                 })
             })
             .on("mouseout", function (d, i) {
@@ -949,6 +1028,10 @@
         d3.selectAll("#hospital-capacity-text")
             .html("Hospital Capacity: " + d3.format(",")(Math.floor(seirinput.population * seirinput.Hc)))
 
+        if (overlay_model) {
+            draw_model_overlay(plot1.g, "fatal")
+            draw_model_overlay(plot2.g, "infectious")
+        }
         update_running = false
 
     } // end of update_seir
@@ -1011,6 +1094,11 @@
             name: "Fatal",
             label: "\\(\\mathcal{D}eath\\)",
             fieldname: "fatal"
+        },
+        {
+            name: "Removed",
+            label: "\\(\\mathcal{R}emoved\\)",
+            fieldname: "removed"
         }
     ]
     d3.selectAll("#seirdata")
@@ -1054,7 +1142,10 @@
                 .append("input")
                 .attr("type", "checkbox")
                 .attr("id", "check_" + param.fieldname)
-                .attr("checked", true)
+                .attr("checked", () => {
+                    if (plotkeys.includes(param.fieldname)) { return true }
+                    return null
+                })
                 .on("click", d => {
                     let checked = d3.selectAll("#check_" + param.fieldname).property("checked")
                     if (!checked) {
@@ -1122,8 +1213,12 @@
                 },
 
                 {
-                    label: "\\(T_{sim}\\)",
-                    args: [[200, 1000], seirinput.duration, "d", "duration", 100]
+                    label: "\\(\\Delta_{sim}\\)",
+                    args: [[200, 1000], seirinput.duration, "d", "duration", 200]
+                },
+                {
+                    label: "\\(T_{start}\\)",
+                    args: [[-60, 60], seirinput.startdate, "d", "startdate", 1]
                 }
             ],
             [
