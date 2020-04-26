@@ -157,9 +157,11 @@ int main(int argc, char *argv[])
     seir.Hc_ = .001;
     auto results = seir.compute();
     auto lr = results[results.size() - 1];
+#if 0
     for (int i = 0; i < NSTATES; i++) {
         std::cout << lr[i] << std::endl;
     }
+#endif
     return 0;
 }
 #endif
