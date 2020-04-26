@@ -288,11 +288,11 @@
 
     <div class="row">
         <!-- START of SEIR Plot-->
-        <div class="column fullwidth">
+        <div class="column fullwidth" style="padding-bottom: 20px;">
             <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Plot</div>
-            <div class="row" sytle="width: 100%;">
-                <div class="column" style="width: 220px;" id="seirdata"></div>
-                <div class="column" id="seirplot"> </div>
+            <div class="row" sytle="width: 100%;" id="seirparent">
+                <div class="column" style="min-width: 220px;max-width: 15%;" id="seirdata"></div>
+                <div class="column" style="flex: 1;flex-grow: 1;" id="seirplot"> </div>
             </div>
 
         </div>
@@ -308,7 +308,10 @@
             <div class="notestext" style="font-size: 18px;">
                 <p>
                     This page presents reported COVID-19 diagnoses and related deaths by country
-                    and US state. The data is then fit to a standard SEIR model. Note that the fitting application is
+                    and US state. The data is then fit to a standard SEIR (<strong>S</strong>usceptible,
+                    <strong>E</strong>xposed, <strong>I</strong>nfectious, <strong>R</strong>emoved) model. Note that
+                    the
+                    fitting application is
                     not yet complete, but overlay of SEIR
                     model to data ca be manually performed.
                 </p>
@@ -316,7 +319,7 @@
                 <br>
                 <p>
                     <br>
-                    4/25/2020 Still to Complete:
+                    4/25/2020 <strong>Still to Complete:</strong>
                     <br>
                     1. Update SEIR color scheme (its terrible)
                     <br>
@@ -332,6 +335,14 @@
                 The model includes the following tunable paramaters:
                 <br><br>
                 <div id="seirparamtable" style="padding-left: 30px;"></div>
+                <div style="padding-bottom: 20px;"></div>
+                The model evolves according to the following set of differential equations:
+                <div style="padding-top: 20px;">
+                    <tspan style="font-style: italic">To do: Add documentation for differential
+                        equations</tspan>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -802,36 +813,50 @@
 
     var update_running = false
 
+    function resizeSeir() {
 
-    let plot_width = 1024;
-    let plot_height = 640;
-    let svg = d3.select("#seirplot")
-        .attr("width", plot_width)
-        .append("svg")
-        .attr("width", plot_width)
-        .attr("height", plot_height)
+        seirplot.plot_width = d3.select("#seirparent").node().getBoundingClientRect().width -
+            d3.select("#seirdata").node().getBoundingClientRect().width - 50
+        seirplot.plot_height = d3.max([560, seirplot.plot_width / 2])
+        seirplot.margin = {
+            top: 30,
+            right: 30,
+            bottom: 60,
+            left: 50
+        };
+        seirplot.width = seirplot.plot_width - seirplot.margin.left - seirplot.margin.right
+        seirplot.height = seirplot.plot_height - seirplot.margin.top - seirplot.margin.bottom;
 
-    let margin = {
-        top: 30,
-        right: 0,
-        bottom: 30,
-        left: 50
-    };
-    let width = +svg.attr("width") - margin.left - margin.right
-    let height = +svg.attr("height") - margin.top - margin.bottom;
-
-    let bggroup = svg.append("g")
-    let bgrect = bggroup.append("rect")
-
-    let xAxis = svg.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("class", "x-axis")
-
-    let yAxis = svg.append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .attr("class", "y-axis")
+        d3.selectAll("#seirplotsvg").remove()
+        d3.select("#seirplot")
+            .append("svg")
+            .attr("width", seirplot.plot_width)
+            .attr("height", seirplot.plot_height)
+            .attr("id", "seirplotsvg")
+            .append("g")
+            .attr("id", "seirplotarea")
+            .attr("transform", "translate(" + seirplot.margin.left + "," + seirplot.margin.top + ")")
+            .attr("width", seirplot.width)
+            .attr("height", seirplot.height)
 
 
+        d3.selectAll("#seirplotarea")
+            .append("g")
+            .classed("bggroup", true)
+            .append("rect")
+            .classed("bgrect", true)
+
+        d3.selectAll("#seirplotarea")
+            .append("g")
+            .attr("transform", "translate(0," + seirplot.height + ")")
+            .attr("class", "x-axis")
+
+        d3.selectAll("#seirplotarea")
+            .append("g")
+            .attr("class", "y-axis")
+
+    }
+    resizeSeir()
 
     function update_seir() {
         let keys = allkeys.filter(d => { return plotkeys.includes(d) })
@@ -842,15 +867,7 @@
             return;
         update_running = true
 
-        let x = d3.scaleLinear()
-            .range([margin.left, width - margin.right])
-            .domain([0, seirinput.duration])
 
-        // gridlines in y axis function
-        function make_y_gridlines() {
-            return d3.axisLeft(y)
-                .ticks(10)
-        }
 
         raw = Module.seir(seirinput)
 
@@ -882,20 +899,20 @@
         seirdata = data
         // Get maximum value on y axis
 
+        let x = d3.scaleLinear()
+            .range([0, seirplot.width])
+            .domain([0, seirinput.duration])
         let y = d3.scaleLinear()
-            .rangeRound([height - margin.bottom, margin.top])
+            .rangeRound([seirplot.plot_height - 90, 0])
             .domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
 
         let pointsToPlot = 200;
-        //console.log(data.length)
-        // Plot points to skip
         let skip = Math.ceil(data.length / pointsToPlot)
 
-        // Create axes
-        svg.selectAll(".y-axis")
-            .call(d3.axisLeft(y).ticks(null, "s"))
+        let svg = d3.selectAll("#seirplotarea")
 
         date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
+
         svg.selectAll(".x-axis")
             .call(d3.axisBottom(x).tickSizeOuter(0)
                 .ticks(10)
@@ -905,20 +922,23 @@
                 })
             )
 
+        // Create axes
+        svg.selectAll(".y-axis")
+            .call(d3.axisLeft(y).ticks(null, "s"))
         svg.selectAll(".y-axis")
             .append("g")
             .attr("class", "grid")
             .call(d3.axisLeft(y)
                 .ticks(null, "s")
-                .tickSize(-width + margin.left + margin.right)
+                .tickSize(-seirplot.width)
                 .tickFormat("")
             )
 
         // text label for the x axis
         svg.append("text")
             .attr("transform",
-                "translate(" + (width / 2) + " ," +
-                (height + 10) + ")")
+                "translate(" + (seirplot.width / 2) + " ," +
+                (seirplot.height + 36) + ")")
             .style("text-anchor", "middle")
             .attr("class", "xaxis-title")
             .text("Days");
@@ -926,26 +946,23 @@
         let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal", "removed"]
 
         if (seirinput.R0_reduction > 0) {
-            let xbg = d3.scaleLinear()
-                .range([margin.left, width - margin.right])
-                .domain([0, seirinput.duration])
+            bgrect = svg.selectAll(".bgrect")
+
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
             bgrect.classed("intervention-rect", true)
-                .attr("x", xbg(seirinput.Tintervention))
-                .attr("width", xbg(seirinput.Tintervention + bgwidth) - xbg(seirinput.Tintervention))
-                .attr("y", margin.bottom)
-                .attr("height", height - margin.top - margin.bottom)
-                .attr("y", margin.bottom)
-                .attr("height", height - margin.top - margin.bottom)
+                .attr("x", x(seirinput.Tintervention))
+                .attr("width", x(seirinput.Tintervention + bgwidth) - x(seirinput.Tintervention))
+                .attr("y", 0)
+                .attr("height", seirplot.height)
                 .attr("visibility", "visible")
             let bg = ["Intervention Period", d3.format("d")(seirinput.R0_reduction * 100) + "% Reduction"]
 
 
-            let bgtext = bggroup.selectAll("text").data(bg)
+            let bgtext = svg.selectAll(".bggroup").selectAll("text").data(bg)
             bgtext.enter().append("text")
                 .merge(bgtext)
-                .attr("x", xbg(seirinput.Tintervention + bgwidth) - 10)
-                .attr("y", (d, i) => margin.bottom + i * 16)
+                .attr("x", x(seirinput.Tintervention + bgwidth) - 10)
+                .attr("y", (d, i) => i * 16)
                 .attr("dy", "1em")
                 .attr("text-anchor", "end")
                 .attr("visibility", "visible")
@@ -1373,6 +1390,12 @@
 
 <script>
     MathJax.typeset()
+
+    window.addEventListener("resize", () => {
+        resizeSeir()
+        update_seir()
+    })
+
 </script>
 
 
