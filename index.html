@@ -819,9 +819,9 @@
             d3.select("#seirdata").node().getBoundingClientRect().width - 50
         seirplot.plot_height = d3.max([560, seirplot.plot_width / 2])
         seirplot.margin = {
-            top: 30,
+            top: 60,
             right: 30,
-            bottom: 60,
+            bottom: 30,
             left: 50
         };
         seirplot.width = seirplot.plot_width - seirplot.margin.left - seirplot.margin.right
@@ -903,7 +903,7 @@
             .range([0, seirplot.width])
             .domain([0, seirinput.duration])
         let y = d3.scaleLinear()
-            .rangeRound([seirplot.plot_height - 90, 0])
+            .rangeRound([seirplot.height, 0])
             .domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
 
         let pointsToPlot = 200;
@@ -933,15 +933,6 @@
                 .tickSize(-seirplot.width)
                 .tickFormat("")
             )
-
-        // text label for the x axis
-        svg.append("text")
-            .attr("transform",
-                "translate(" + (seirplot.width / 2) + " ," +
-                (seirplot.height + 36) + ")")
-            .style("text-anchor", "middle")
-            .attr("class", "xaxis-title")
-            .text("Days");
 
         let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal", "removed"]
 
