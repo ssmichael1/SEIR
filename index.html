@@ -308,9 +308,9 @@
             <div class="notestext" style="font-size: 18px;">
                 <p>
                     This page presents reported COVID-19 diagnoses and related deaths by country
-                    and US state. The data is then fit to a standard SEIR model.
-                    <span style="color: #f00">Note that the fitting application is not yet complete, but overlya of SEIR
-                        model to data ca be manually performed.</span>
+                    and US state. The data is then fit to a standard SEIR model. Note that the fitting application is
+                    not yet complete, but overlay of SEIR
+                    model to data ca be manually performed.
                 </p>
                 <br>
                 <br>
@@ -327,23 +327,11 @@
 
                 The SEIR model categorizes a population according to the following:
                 <br><br>
-                <div style="padding-left: 30px">
-                    \(\mathcal{S}\) : Suceptible population. Assumed initially to be 100%.
-                    <br>
-                    \(\mathcal{E}\) : Exposed population. Not-yet symptomatic or infectious.
-                    <br>
-                    \(\mathcal{I}\) : Infectious population. Able to expose susceptible population.
-                    <br>
-                    \(\mathcal{M}\) : Mild or asymptomatic population. Has virus, no longer infectious
-                    <br>
-                    \(\mathcal{H}\) : Hospitalized population
-                    <br>
-                    \(\mathcal{D}\) : Deaths
-                    <br>
-                    \(\mathcal{Re}\) : Removed population. This population has been exposed and experienced mild
-                    severe symptoms and recovered. Assumed to be no longer susceptible. Excludes deaths.
-                </div>
-                </p>
+                <div id="seirstatetable" style="padding-left: 30px;"></div>
+                <div style="padding-bottom: 20px;"></div>
+                The model includes the following tunable paramaters:
+                <br><br>
+                <div id="seirparamtable" style="padding-left: 30px;"></div>
             </div>
         </div>
     </div>
@@ -815,11 +803,8 @@
     var update_running = false
 
 
-    // Create a local scope
-    // will move later
-
-    let plot_width = 1200;
-    let plot_height = 560;
+    let plot_width = 1024;
+    let plot_height = 640;
     let svg = d3.select("#seirplot")
         .attr("width", plot_width)
         .append("svg")
@@ -1092,7 +1077,7 @@
         },
         {
             name: "Fatal",
-            label: "\\(\\mathcal{D}eath\\)",
+            label: "\\(\\mathcal{F}atal\\)",
             fieldname: "fatal"
         },
         {
@@ -1138,6 +1123,7 @@
             .attr("class", "row")
             .append("div")
             .attr("class", "column")
+            .attr("style", "padding-bottom: 10px;")
             .call(d => d
                 .append("input")
                 .attr("type", "checkbox")
@@ -1242,7 +1228,7 @@
             cols: 1,
             values: [[
                 {
-                    label: "\\(T_{start}\\)",
+                    label: "\\(T_{int}\\)",
                     args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"]
                 },
                 {
@@ -1301,12 +1287,93 @@
         })
     })
 
-    MathJax.typeset()
-
-
 </script>
 
+<script>
+    function paramtable(g, tdata, fcwidth = 60) {
+        tdata.forEach(rowdata => {
+            rdiv = g.append("div")
+                .classed("row", true)
+                .attr("style", "padding-bottom: 15px;")
+            firstcol = true
+            rowdata.forEach(col => {
+                cdiv = rdiv.append("div")
+                    .classed("column", true)
+                    .html(col)
+                if (firstcol) {
+                    cdiv.attr("style", "text-align: right;width: " + fcwidth + "px;")
+                    firstcol = false
+                }
+                else {
+                    cdiv.attr("style", "text-align: left;")
+                }
+            })
+        })
+    }
 
+    seirstatedata = [
+        ["\\(\\mathcal{S}\\):", "<strong>Susceptible</strong><br>Population susceptible to exposure, i.e. " +
+            "not immune from previous exposure.  Initially assumed to be 100%"
+        ],
+        ["\\(\\mathcal{E}\\):", "<strong>Exposed</strong><br>Population eposed to virus. " +
+            "Not yet symptomatic or infectious, but becoming infectious with 100% probability"
+        ],
+        ["\\(\\mathcal{I}\\):", "<strong>Infectious</strong><br>Population infectious after becoming " +
+            "exposed.  Will infect susceptible populatinon according to reproduction number \\(\\mathcal{R}_0\\)"
+        ],
+        ["\\(\\mathcal{M}\\):", "<strong>Mild</strong><br>Mildly symptomatic population.  No longer " +
+            "infectious.  May be asymptomatic.  Not hospitalized"
+        ],
+        ["\\(\\mathcal{H}\\):", "<strong>Hospitalized</strong><br>Hospitalized population.  No lonter " +
+            "infectious."
+        ],
+        ["\\(\\mathcal{F}\\):", "<strong>Fatal</strong><br>Population that has died due to virus"],
+        ["\\(\\mathcal{R}\\):", "<strong>Removed</strong><br>Population recovered from virus " +
+            "and no longer susceptible"]
+    ]
+    seirparamtabledata = [
+        ["\\(\\mathcal{R}_0\\) :", "<strong>Reproduction Number.</strong><br>The average number"
+            + " of people an infectious person will cause to be exposed, given a fully-susceptible poulation"],
+        ["\\(p_{mild}\\) :", "<strong>Mild Probability</strong><br>Probability that an exposed " +
+            "person will be asymptomatic or expeirience mild symptoms that do not require hospitalization"],
+        ["\\(\\mathcal{C}_{\\mathcal{H}}\\) :", "<strong>Hospital Capacity</strong><br>" +
+            "Hospital capacity, as percentage of population"],
+        ["\\(p_{fatal}\\) :", "<strong>Fatal Probability</strong><br>" +
+            "Probability of death given exposure"],
+        ["\\(\\Delta p_{fatal}\\) \\(| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
+            "<strong>Fatal Probability Increase</strong><br>" +
+            "Increase in fatal probability as percentage if hospitalizations exceed hospital capacity"],
+        ["\\(\\mathcal{T}_{inc}\\) :", "<strong>Incubation Period</strong><br>" +
+            "Period in days between exposure and person becoming infectious"],
+        ["\\(\\mathcal{T}_{inf}\\) :", "<strong>Infectious Period</strong><br>" +
+            "Average period in days that a person is infectious"],
+        ["\\(\\mathcal{T}_{mrec}\\) :", "<strong>Mild Recovery Period</strong><br>" +
+            "Average period in days for a person to recover from mild symptoms"],
+        ["\\(\\mathcal{T}_{hrec}\\) :", "<strong>Hospital Recovery Period</strong><br>" +
+            "Average period in days for a person to recover if hospitalized"],
+        ["\\(\\mathcal{T}_{fatal}\\) :", "<strong>Fatal period</strong><br>" +
+            "Average period in days a person with a fatal outcome will stay in hospital"],
+        ["\\(T_{int}\\) :", "<strong>Intervention Start</strong><br>" +
+            "Start of intervention period in which \\mathcal{R}_0 is reduced"],
+        ["\\(\\Delta_{int}\\) :", "<strong>Intervention Duration</strong><br>" +
+            "Length in days of intervention period"],
+        ["\\(\\Delta \\mathcal{R}_0\\) :", "<strong>Reproduction Number Reduction</strong><br>" +
+            "During intervention period, reduction in reproduction number as percentage"],
+        ["\\(\\Delta_{sim}\\) :", "<strong>Simulation Duration</strong><br>" +
+            "Simulation duration, in days"],
+        ["\\(T_{start}\\) :", "<strong>Simulation Start</strong><br>" +
+            "Simulation start shift in days, relative to Jan. 1 2020.  Used to when" +
+            " overlaying model data onto reported statistics"]
+
+
+    ]
+    paramtable(d3.selectAll("#seirstatetable"), seirstatedata)
+    paramtable(d3.selectAll("#seirparamtable"), seirparamtabledata, 100)
+</script>
+
+<script>
+    MathJax.typeset()
+</script>
 
 
 <script>
