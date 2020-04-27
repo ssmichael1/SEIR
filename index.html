@@ -962,9 +962,10 @@
             bgtext.attr("visibility", "visible")
         }
         else {
+            bgrect = svg.selectAll(".bgrect")
             bgrect.attr("visibility", "hidden")
-            let bgtext = bggroup.selectAll("text")
-            bgtext.exit().remove()
+            let bgtext = svg.selectAll(".bggroup").selectAll("text")
+            bgtext.attr("visibility", "hidden")
         }
 
         let group = svg.selectAll("g.layer")
