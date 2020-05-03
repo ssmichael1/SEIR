@@ -21,6 +21,12 @@ def seirplot():
     return send_from_directory(".", "seirplot.js")
 
 
+@app.route("/update_database")
+def update_database():
+    covid19_rawdata.update_git()
+    return "updated"
+
+
 @app.route("/seir/<string:seirdata>")
 def seirfunc(seirdata):
     seir = SEIR()

@@ -13,7 +13,9 @@ def _load_daily_reports():
         if ext != ".csv":
             continue
         date = datetime.datetime.strptime(name, "%m-%d-%Y").date()
-        daily_reports[date] = pandas.read_csv(world_dir + os.path.sep + file, header=0)
+        daily_reports[date] = pandas.read_csv(
+            world_dir + os.path.sep + file, header=0
+        )
     return daily_reports
 
 
@@ -33,12 +35,6 @@ def _load_data():
     )
 
     return (uid_table, us_deaths)
-
-
-daily_reports = _load_daily_reports()
-
-# OK, load the data
-(uid_table, us_deaths) = _load_data()
 
 
 def statelist():
@@ -135,6 +131,22 @@ def statedata(statename):
         "series": s,
     }
 
+
+def load_all_data():
+    daily_reports = _load_daily_reports()
+
+    # OK, load the data
+    (uid_table, us_deaths) = _load_data()
+    return (daily_reports, uid_table, us_deaths)
+
+
+def update_git():
+    os.system("./update_database.sh")
+    (daily_reports, uid_table, us_deaths) = load_all_data()
+
+
+(daily_reports, uid_table, us_deaths) = load_all_data()
+update_git()
 
 if __name__ == "__main__":
     print("testing loading of data")
