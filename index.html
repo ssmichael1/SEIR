@@ -337,6 +337,8 @@
                 <div id="seirparamtable" style="padding-left: 30px;"></div>
                 <div style="padding-bottom: 20px;"></div>
                 The model evolves according to the following set of differential equations:
+                <br><br>
+                <div id="seirequationtable" style="padding-left: 30px;"></div>
                 <div style="padding-top: 20px;">
                     <tspan style="font-style: italic">To do: Add documentation for differential
                         equations</tspan>
@@ -1314,7 +1316,7 @@
                     firstcol = false
                 }
                 else {
-                    cdiv.attr("style", "text-align: left;")
+                    cdiv.attr("style", "text-align: left;width: 800px;")
                 }
             })
         })
@@ -1373,11 +1375,20 @@
         ["\\(T_{start}\\) :", "<strong>Simulation Start</strong><br>" +
             "Simulation start shift in days, relative to Jan. 1 2020.  Used to when" +
             " overlaying model data onto reported statistics"]
+    ]
 
 
+    seirequationtable = [
+        ["\\(\\frac{dE}{dt} = \\frac{\\mathcal{R}_0}{\\mathcal{T}_{inc}} I S\\)",
+            "People become exposed via infectious population, reproduction number is scaled by " +
+            "<br>percentage of susceptible population"],
+        ["\\(\\frac{dI}{dt}\\) = \\(\\frac{E}{\\mathcal{T}_{inc}} - \\frac{\\mathcal{I}}{\\mathcal{T}_{inf}}\\)",
+            "Exposed people become infectious; infectous people exhibit mild symptoms or are" +
+            " asymptomatic, but no longer infectious"]
     ]
     paramtable(d3.selectAll("#seirstatetable"), seirstatedata)
     paramtable(d3.selectAll("#seirparamtable"), seirparamtabledata, 100)
+    paramtable(d3.selectAll("#seirequationtable"), seirequationtable, 200)
 </script>
 
 <script>
