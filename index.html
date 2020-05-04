@@ -572,11 +572,10 @@
         updatePlots(currentData)
     })
 
-    function draw_model_overlay(g, fieldname) {
+    function draw_model_overlay(pmain, datafunc) {
 
         let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
         let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(1, 'days')
-
         overlaydata =
             seirdata
                 .map((d, i, a) => {
@@ -584,31 +583,32 @@
                     if (plot_deltas) {
                         yp = 0
                         if (i > 0) {
-                            yp = (a[i][fieldname] - a[i - 1][fieldname]) /
+                            yp = (datafunc(a[i]) - datafunc(a[i - 1])) /
                                 (a[i].time - a[i - 1].time)
                         }
                     }
                     else {
-                        yp = d[fieldname]
+                        yp = datafunc(d)
                     }
                     xp = date0.clone().add(d.time, 'day')
                     return {
                         x: xp,
-                        y: yp
+                        y: d3.max([yp, 0])
                     }
                 })
                 .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
 
-
         const area = d3.area()
-            .x(d => dataplot.x(d.x))
-            .y1(d => dataplot.y(d3.max([d3.min([d.y, dataplot.y.domain()[1] - 1]), 0])))
+            .x(d => pmain.x(d.x))
+            .y1(d => pmain.y(d.y))
             .y0(dataplot.height)
 
-        g.selectAll(".seirarea")
+        pmain.g
+            .selectAll(".seirarea")
             .remove()
 
-        g.selectAll("#seirareagroup")
+        pmain.g
+            .selectAll("#seirareagroup")
             .append("path")
             .data([overlaydata])
             .classed("seirarea", true)
@@ -618,8 +618,8 @@
 
 
     function updatePlots(data) {
-        updatePlot(plot1.g, plot2.g, data, "COVID-19 Related Deaths", "deaths");
-        updatePlot(plot2.g, plot1.g, data, "COVID-19 Confirmed Cases", "confirmed")
+        updatePlot(plot1, plot2, data, "COVID-19 Related Deaths", "deaths");
+        updatePlot(plot2, plot1, data, "COVID-19 Confirmed Cases", "confirmed")
         d3.select("#namefield").text(d3.format(",")(data.population))
         d3.select("#deathsfield").html("&#8721<br>&#x394")
         d3.select("#casesfield").html("&#8721<br>&#x394")
@@ -630,22 +630,21 @@
             update_seir()
         }
         if (overlay_model) {
-            draw_model_overlay(plot1.g, "fatal")
-            draw_model_overlay(plot2.g, "infectious")
+            draw_overlays()
         }
 
     }
 
-    function updatePlot(grp, grp2, alldata, titlestring, fieldname) {
+    function updatePlot(pmain, pother, alldata, titlestring, fieldname) {
         // re-draw plot
-        grp.selectAll('*').remove();
+        pmain.g.selectAll('*').remove();
 
         let name = alldata['name'];
         let data = alldata['series'];
 
         // Add this group since we want seir bars to be
         // in the background
-        grp.append("g").attr("id", "seirareagroup")
+        pmain.g.append("g").attr("id", "seirareagroup")
 
         // Remove data before March 1
         // (months are zero based in moment)
@@ -667,39 +666,42 @@
             })
             title2 = 'Daily Change'
         }
-        dataplot.y = d3.scaleLinear()
+        pmain.y = d3.scaleLinear()
             .rangeRound([dataplot.height, 0]);
-        dataplot.x = d3.scaleLinear()
+        pmain.x = d3.scaleLinear()
             .range([0, dataplot.width])
             .domain([mindate, moment(data[data.length - 1].date)])
-        dataplot.y.domain([0, d3.max(plotdata, function (d) {
+        pmain.y.domain([0, d3.max(plotdata, function (d) {
             return d[fieldname];
         })]);
 
 
         // gridlines in y axis function
         function make_y_gridlines() {
-            return d3.axisLeft(dataplot.y)
+            return d3.axisLeft(pmain.y)
                 .ticks(10)
         }
 
         // add the Y gridlines
-        grp.append("g")
+        pmain.g
+            .append("g")
             .attr("class", "grid")
             .call(make_y_gridlines()
                 .tickSize(-dataplot.width)
                 .tickFormat("")
             )
-        grp.append("g")
+        pmain.g
+            .append("g")
             .attr("transform", "translate(0," + dataplot.height + ")")
             .attr("class", "axis")
-            .call(d3.axisBottom(dataplot.x)
+            .call(d3.axisBottom(pmain.x)
                 .tickFormat(d => { return (d.utc().get("month") + 1) + "/" + (d.utc().get("date")) })
                 .tickValues(data.map(d => moment(d.date)).filter(d => !(d.dayOfYear() % 7))))
 
-        yaxis = grp.append("g")
+        yaxis = pmain.g
+            .append("g")
             .attr("class", "axis")
-            .call(d3.axisLeft(dataplot.y).ticks(null, "s"))
+            .call(d3.axisLeft(pmain.y).ticks(null, "s"))
 
         yaxis
             .append("text")
@@ -728,7 +730,7 @@
             .text("Alabama");
 
 
-        let bwidth = dataplot.x(mindate.clone().add(1, 'day'))
+        let bwidth = pmain.x(mindate.clone().add(1, 'day'))
         let boffset = 0
         if (overlay_model) {
             bwidth = bwidth * .6
@@ -738,26 +740,28 @@
             boffset = bwidth * .08
             bwidth = bwidth * .84
         }
-        grp.selectAll(".bar")
+        pmain.g
+            .selectAll(".bar")
             .data(plotdata)
             .enter().append("rect")
             .attr("class", "bar")
             .attr("date", function (d) { return d.date; })
             .attr("x", function (d) {
-                return dataplot.x(moment(d.date) + boffset);
+                return pmain.x(moment(d.date) + boffset);
             })
             .attr("y", function (d) {
-                return dataplot.y(d[fieldname]);
+                return pmain.y(d[fieldname]);
             })
             .attr("width", bwidth)
             .attr("height", function (d) {
-                return dataplot.height - dataplot.y(Number(d[fieldname]));
+                return dataplot.height - pmain.y(Number(d[fieldname]));
             })
             .on("mouseover", function (d, i) {
                 d3.select(this).attr("myhover", true);
 
                 // Highlight same date in other plot
-                grp2.selectAll(".bar")
+                pother.g
+                    .selectAll(".bar")
                     .filter(function (d2) {
                         return (d2.date == d.date);
                     })
@@ -785,7 +789,8 @@
 
 
                 // Highlight same date in other plot
-                grp2.selectAll(".bar")
+                pother.g
+                    .selectAll(".bar")
                     .filter(function (d2) {
                         return (d2.date == d.date);
                     })
@@ -896,9 +901,8 @@
                 i++;
             }
         };
-        let data = Array.from(datagen(raw))
+        seirdata = Array.from(datagen(raw))
         raw = undefined
-        seirdata = data
         // Get maximum value on y axis
 
         let x = d3.scaleLinear()
@@ -906,14 +910,14 @@
             .domain([0, seirinput.duration])
         let y = d3.scaleLinear()
             .rangeRound([seirplot.height, 0])
-            .domain([0, d3.max(data, d => d3.sum(keys, k => +d[k]))]).nice()
+            .domain([0, d3.max(seirdata, d => d3.sum(keys, k => +d[k]))]).nice()
 
         let pointsToPlot = 200;
-        let skip = Math.ceil(data.length / pointsToPlot)
+        let skip = Math.ceil(seirdata.length / pointsToPlot)
 
         let svg = d3.selectAll("#seirplotarea")
 
-        date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
+        let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
 
         svg.selectAll(".x-axis")
             .call(d3.axisBottom(x).tickSizeOuter(0)
@@ -971,7 +975,7 @@
         }
 
         let group = svg.selectAll("g.layer")
-            .data(d3.stack().keys(keys)(data), d => d.key)
+            .data(d3.stack().keys(keys)(seirdata), d => d.key)
         group.exit().remove()
 
         group.enter().append("g")
@@ -1002,12 +1006,12 @@
                 })
                 d3.selectAll("#seir-day-text").html("Day: " + d.data.time)
 
-                let index = data.findIndex(dd => { return (dd.time == d.data.time) })
+                let index = seirdata.findIndex(dd => { return (dd.time == d.data.time) })
                 barnames.forEach(name => {
-                    let sumval = data[index][name]
+                    let sumval = seirdata[index][name]
                     let diffval = 0
                     if (index > 0)
-                        diffval = data[index][name] - data[index - 1][name]
+                        diffval = seirdata[index][name] - seirdata[index - 1][name]
                     ptext = d3.format(".2%")(sumval / seirinput.population)
                     d3.select("#" + name + "-text")
                         .html("&#8721 " + d3.format(',')(Math.floor(sumval)) + " ( " + ptext + " )"
@@ -1025,16 +1029,17 @@
             .html("Hospital Capacity: " + d3.format(",")(Math.floor(seirinput.population * seirinput.Hc)))
 
         if (overlay_model) {
-            draw_model_overlay(plot1.g, "fatal")
-            draw_model_overlay(plot2.g, "infectious")
+            draw_overlays()
         }
         update_running = false
 
     } // end of update_seir
 
 
-
-
+    function draw_overlays() {
+        draw_model_overlay(plot1, (d) => (d["fatal"]))
+        draw_model_overlay(plot2, (d) => (d["hospitalized"] + d["fatal"]))
+    }
 
     function create_slider(at, range, val, format, field, step) {
 
