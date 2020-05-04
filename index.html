@@ -459,7 +459,7 @@
 
 
     dataplot.plot_width = 500
-    dataplot.plot_height = 320
+    dataplot.plot_height = 360
     plot1.svg = d3.select("#deaths_plot")
         .attr("width", dataplot.plot_width)
         .append("svg")
@@ -575,7 +575,7 @@
     function draw_model_overlay(pmain, datafunc) {
 
         let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
-        let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(1, 'days')
+        let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(2, 'days')
         overlaydata =
             seirdata
                 .map((d, i, a) => {
@@ -670,7 +670,7 @@
             .rangeRound([dataplot.height, 0]);
         pmain.x = d3.scaleLinear()
             .range([0, dataplot.width])
-            .domain([mindate, moment(data[data.length - 1].date)])
+            .domain([mindate, moment(data[data.length - 1].date).clone().add(1, 'day')])
         pmain.y.domain([0, d3.max(plotdata, function (d) {
             return d[fieldname];
         })]);
@@ -820,6 +820,16 @@
 
     var update_running = false
 
+    function resizeDataPlot() {
+        dataplot.plot_width = d3.select("#deaths_plot").node().getBoundingClientRect().width
+        plot1.svg.attr("width", dataplot.plot_width)
+        plot2.svg.attr("width", dataplot.plot_width)
+        dataplot.plot_height = 360
+        dataplot.width = +plot1.svg.attr("width") - dataplot.margin.left - dataplot.margin.right
+        dataplot.height = +plot1.svg.attr("height") - dataplot.margin.top - dataplot.margin.bottom;
+
+    }
+
     function resizeSeir() {
 
         seirplot.plot_width = d3.select("#seirparent").node().getBoundingClientRect().width -
@@ -864,6 +874,7 @@
 
     }
     resizeSeir()
+    resizeDataPlot()
 
     function update_seir() {
         let keys = allkeys.filter(d => { return plotkeys.includes(d) })
@@ -1413,7 +1424,9 @@
 
     window.addEventListener("resize", () => {
         resizeSeir()
+        resizeDataPlot()
         update_seir()
+        updatePlots(currentData)
     })
 
 </script>
