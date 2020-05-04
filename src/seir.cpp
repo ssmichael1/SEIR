@@ -15,7 +15,7 @@
 #define min(a, b) (a < b ? a : b)
 #endif
 
-#define NSTATES 8
+#define NSTATES 9
 typedef std::array<double, NSTATES> StateType;
 
 // odeing namespace access
@@ -124,7 +124,8 @@ ResultsType SEIR::compute(void)
             // Removed population:
             // in: mild to recovered
             // in: hospitalized to recovered
-            auto dR = M / Tmrec_ + Hrec / Threc_;
+            auto dRm = M / Tmrec_;
+            auto dRh = Hrec / Threc_;
 
             statedot[0] = dS;
             statedot[1] = dE;
@@ -133,7 +134,8 @@ ResultsType SEIR::compute(void)
             statedot[4] = dHrec;
             statedot[5] = dHfat;
             statedot[6] = dF;
-            statedot[7] = dR;
+            statedot[7] = dRm;
+            statedot[8] = dRh;
         },
         state0, 0.0, (double)duration_, dt_,
         [this, &counter, &results](const StateType &s, double t) {

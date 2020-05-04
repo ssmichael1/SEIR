@@ -900,19 +900,21 @@
             // (i.e., 200 instead of 201)
             while (i < raw.size() - 1) {
                 r = {
-                    time: raw.get(i).get(8),
+                    time: raw.get(i).get(9),
                     exposed: d3.max([raw.get(i).get(1), 0]),
                     infectious: d3.max([raw.get(i).get(2), 0]),
                     mild: d3.max([raw.get(i).get(3), 0]),
                     hospitalized: d3.max([raw.get(i).get(4) + raw.get(i).get(5), 0]),
                     fatal: d3.max([raw.get(i).get(6), 0]),
-                    removed: d3.max([raw.get(i).get(7), 0])
+                    removed: d3.max([raw.get(i).get(7) + raw.get(i).get(8), 0]),
+                    recovered_hos: d3.max([raw.get(i).get(8), 0])
                 };
                 yield r;
                 i++;
             }
         };
         seirdata = Array.from(datagen(raw))
+        console.log(seirdata)
         raw = undefined
         // Get maximum value on y axis
 
@@ -1051,7 +1053,7 @@
 
     function draw_overlays() {
         draw_model_overlay(plot1, (d) => (d["fatal"]))
-        draw_model_overlay(plot2, (d) => (d["hospitalized"] + d["fatal"]))
+        draw_model_overlay(plot2, (d) => (d["hospitalized"] + d["fatal"] + d["recovered_hos"]))
     }
 
     function create_slider(at, range, val, format, field, step) {
@@ -1440,7 +1442,7 @@
         }
     }
 </script>
-<script src="/customjs/seirmodel4.js"></script>
+<script src="/customjs/seirmodel5.js"></script>
 
 
 
