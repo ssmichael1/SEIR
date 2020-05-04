@@ -427,14 +427,14 @@
     // Set some globals
     var seirinput = {
         R0: 2.8,
-        Tinc: 2.5,
+        Tinc: 4.2,
         Tinf: 5,
         Thos: 5,
         Tmrec: 12,
         Threc: 12,
         Tfat: 5,
         pMild: 0.8,
-        pFatal: 0.01,
+        pFatal: 0.005,
         duration: 200,
         population: 30000,
         dt: 1,
@@ -1005,6 +1005,8 @@
                     svg.selectAll("#" + k).selectAll("rect.vidx" + i).attr("fill", zhighlight(k))
                 })
                 d3.selectAll("#seir-day-text").html("Day: " + d.data.time)
+                thedate = date0.clone().add(d.data.time, 'day')
+                d3.selectAll("#seir-date-text").html(`Date: ${thedate.month() + 1}/${thedate.date()}`)
 
                 let index = seirdata.findIndex(dd => { return (dd.time == d.data.time) })
                 barnames.forEach(name => {
@@ -1128,6 +1130,16 @@
         .html("Day: ")
         .attr("style", "padding-bottom: 10px;")
         .attr("id", "seir-day-text")
+
+    d3.selectAll("#seirdata")
+        .append("div")
+        .classed("row", true)
+        .append("div")
+        .classed("column", true)
+        .html("Date: ")
+        .attr("style", "padding-bottom: 10px;")
+        .attr("id", "seir-date-text")
+
 
     plot_params.forEach(param => {
         let row = d3.selectAll("#seirdata")
