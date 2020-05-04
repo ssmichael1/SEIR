@@ -340,7 +340,7 @@
                 <br><br>
                 <div id="seirequationtable" style="padding-left: 30px;"></div>
                 <div style="padding-top: 20px;">
-                    <tspan style="font-style: italic">To do: Add documentation for differential
+                    <tspan style="font-style: italic">To do: Add more documentation for differential
                         equations</tspan>
                 </div>
 
@@ -1395,7 +1395,7 @@
         ["\\(\\mathcal{T}_{fatal}\\) :", "<strong>Fatal period</strong><br>" +
             "Average period in days a person with a fatal outcome will stay in hospital"],
         ["\\(T_{int}\\) :", "<strong>Intervention Start</strong><br>" +
-            "Start of intervention period in which \\mathcal{R}_0 is reduced"],
+            "Start of intervention period in which \\(\\mathcal{R}_0\\) is reduced"],
         ["\\(\\Delta_{int}\\) :", "<strong>Intervention Duration</strong><br>" +
             "Length in days of intervention period"],
         ["\\(\\Delta \\mathcal{R}_0\\) :", "<strong>Reproduction Number Reduction</strong><br>" +
@@ -1409,16 +1409,31 @@
 
 
     seirequationtable = [
-        ["\\(\\frac{dE}{dt} = \\frac{\\mathcal{R}_0}{\\mathcal{T}_{inc}} I S\\)",
+        ["\\(\\frac{dS}{dt}=-\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S\\)",
+            "Infectious people expose susceptible people"],
+        ["\\(\\frac{dE}{dt}=\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S\\)",
             "People become exposed via infectious population, reproduction number is scaled by " +
             "<br>percentage of susceptible population"],
         ["\\(\\frac{dI}{dt}\\) = \\(\\frac{E}{\\mathcal{T}_{inc}} - \\frac{\\mathcal{I}}{\\mathcal{T}_{inf}}\\)",
-            "Exposed people become infectious; infectous people exhibit mild symptoms or are" +
-            " asymptomatic, but no longer infectious"]
+            "Exposed people become infectious; infectous people become asymptomatic, "
+            + " exhibit mild symptoms, or are hospitalized.  For all of these," +
+            " they are no longer infectious."],
+        ["\\(\\frac{dM}{dt} = p_{mild} \\frac{I}{T_{inf}} - \\frac{M}{t_{mrec}}\\)",
+            "Infectious people who exibit mild or asymptomatic symptoms move into \"mild\" category,"
+            + "and poeple with mild symptoms recover"],
+        ["\\(\\frac{dHr}{dt} = (1-p_{mild})(1-p_{f|h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
+            "Persons going into hospital that will recover.  note that \\(p_{f|h}\\) is the " +
+            "probability of fatal outcome given hospitalized. Note that this increases when " +
+            "hospitalization capacity is exceeded.  See below for more details."],
+        ["\\(\\frac{dHf}{dt} = (1-p_{mild}) p_{f|h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
+            "Persons going into hospital that will not recover."],
+        ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}\\)", "Persons dying from COVID-19"],
+        ["\\(\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}\\)",
+            "People recovering from COVID-19 and removed from susceptibility"]
     ]
     paramtable(d3.selectAll("#seirstatetable"), seirstatedata)
     paramtable(d3.selectAll("#seirparamtable"), seirparamtabledata, 100)
-    paramtable(d3.selectAll("#seirequationtable"), seirequationtable, 200)
+    paramtable(d3.selectAll("#seirequationtable"), seirequationtable, 500)
 </script>
 
 <script>
