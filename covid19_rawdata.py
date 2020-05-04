@@ -140,13 +140,7 @@ def load_all_data():
     return (daily_reports, uid_table, us_deaths)
 
 
-def update_git():
-    os.system("./update_database.sh")
-    (daily_reports, uid_table, us_deaths) = load_all_data()
-
-
 (daily_reports, uid_table, us_deaths) = load_all_data()
-update_git()
 
 if __name__ == "__main__":
     print("testing loading of data")
