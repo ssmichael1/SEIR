@@ -385,11 +385,20 @@
     </div>
 </body>
 
+<!--
 <script src="/js/d3/dist/d3.min.js">
 </script>
 <script src="/js/moment/min/moment.min.js"></script>
 <script src="/js/mathjax/es5/tex-mml-chtml.js"></script>
 <script src="/js/d3-simple-slider/dist/d3-simple-slider.min.js"></script>
+-->
+
+<script src="/js/mathjax/es5/tex-mml-chtml.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="/js/d3-simple-slider/dist/d3-simple-slider.min.js"></script>
+
 <script>
     function LightenDarkenColor(col, amt) {
 
@@ -914,7 +923,6 @@
             }
         };
         seirdata = Array.from(datagen(raw))
-        console.log(seirdata)
         raw = undefined
         // Get maximum value on y axis
 
