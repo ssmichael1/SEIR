@@ -64,6 +64,12 @@ def countrydata(countryname):
     return jsonify(covid19_rawdata.countrydata(countryname))
 
 
+@app.route("/refresh")
+def refresh():
+    covid19_rawdata.refresh()
+    return "refreshed"
+
+
 # return list of states
 @app.route("/data/statelist")
 def statelist():

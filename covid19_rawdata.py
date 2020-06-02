@@ -132,6 +132,13 @@ def statedata(statename):
     }
 
 
+def refresh():
+    global daily_reports
+    global uid_table
+    global us_deaths
+    (daily_reports, uid_table, us_deaths) = load_all_data()
+
+
 def load_all_data():
     daily_reports = _load_daily_reports()
 
