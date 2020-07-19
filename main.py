@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 from flask import Flask, render_template, send_from_directory, jsonify
 import json
+import covid19_db
 import covid19_rawdata
 from seir import SEIR
 
@@ -52,34 +53,30 @@ def example(filename):
 # Serve data by state
 @app.route("/data/state/<statename>")
 def statedata(statename):
-    return jsonify(covid19_rawdata.statedata(statename))
-    print(statename)
-    stateinfo = list(covid19_rawdata.extract_state(statename))
-    return jsonify(stateinfo)
+    return jsonify(covid19_db.state_data(statename))
 
 
 # Serve data by country
 @app.route("/data/country/<countryname>")
 def countrydata(countryname):
+    return jsonify(covid19_db.country_data(countryname))
+
+
+@app.route("/data/country2/<countryname>")
+def countrydatas(countryname):
     return jsonify(covid19_rawdata.countrydata(countryname))
-
-
-@app.route("/refresh")
-def refresh():
-    covid19_rawdata.refresh()
-    return "refreshed"
 
 
 # return list of states
 @app.route("/data/statelist")
 def statelist():
-    return jsonify(covid19_rawdata.statelist())
+    return jsonify(covid19_db.state_list())
 
 
 # return list of countries
 @app.route("/data/countrylist")
 def countrylist():
-    return jsonify(covid19_rawdata.countrylist())
+    return jsonify(covid19_db.country_list())
 
 
 # Serve stock javascript files from the node_modules directory

@@ -403,6 +403,11 @@
                 Data source: Johns Hopkins Coronavirus Research Center: <a
                     href="https://github.com/CSSEGISandData/COVID-19">https://github.com/CSSEGISandData/COVID-19</a>
             </div>
+            <div class="notestext">
+                Site uses MongoDB representation of Johns Hopkins data at <a
+                    href="https://github.com/mongodb-developer/open-data-covid-19">
+                    https://github.com/mongodb-developer/open-data-covid-19</a>
+            </div>
             <div id="author" class="notestext">
                 <table class="notestext" sytle="border-top: 10px;">
                     <tr>
@@ -582,6 +587,7 @@
             .append("option")
             .attr("value", d => d)
             .text(d => d);
+        s.attr("text", "US")
         s.on("change", () => {
             UpdatePlotCountry(s.property("value"))
         });
@@ -612,6 +618,7 @@
     }
     function UpdatePlotCountry(countryname) {
         d3.json(baseurl + "/data/country/" + countryname).then(d => {
+            console.log(d)
             currentData = d
             updatePlots(d)
         }
@@ -750,8 +757,8 @@
             .attr("transform", "translate(0," + dataplot.height + ")")
             .attr("class", "axis")
             .call(d3.axisBottom(pmain.x)
-                .tickFormat(d => { return (d.utc().get("month") + 1) + "/" + (d.utc().get("date")) })
-                .tickValues(data.map(d => moment(d.date)).filter(d => !(d.dayOfYear() % 7))))
+                .tickFormat(d => { return (d.utc().format("MMM")) })
+                .tickValues(data.map(d => moment(d.date)).filter(d => (d.utc().date() == 1))))
 
         yaxis = pmain.g
             .append("g")
@@ -854,7 +861,7 @@
         namelabel.text(name);
     };
     // Default
-    UpdatePlotCountry("United States")
+    UpdatePlotCountry("US")
 
 </script>
 

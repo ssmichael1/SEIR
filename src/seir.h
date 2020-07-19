@@ -4,6 +4,8 @@
 
 using ResultsType = std::vector<std::vector<double>>;
 
+std::pair<double, double> R0TableType;
+
 struct SEIR {
   public:
     SEIR();
