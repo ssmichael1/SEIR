@@ -11,6 +11,7 @@ seir = SEIR()
 # keep everything local for simplicity
 app = Flask(__name__, static_folder="./", template_folder="./")
 
+
 # Default route
 @app.route("/")
 def base_route():

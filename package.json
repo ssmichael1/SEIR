@@ -1,15 +1,15 @@
 {
-  "name": "SEIR Model",
+  "name": "seirmodel",
   "version": "1.0.0",
   "description": "(S)usceptible, (E)xposed, (I)nfectious, (R)emoved model with overlay on data",
-  "main": "App.js",
+  "main": "main.py",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node App.js"
+    "start": "main.py"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StevenSamirMichael/SEIR.git"
+    "url": "https://github.com/StevenSamirMichael/SEIR.git"
   },
   "keywords": [
     "SEIR"

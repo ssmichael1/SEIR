@@ -7,14 +7,12 @@ const uri = "mongodb://127.0.0.1:27017";
 const dbService = {
     db: undefined,
     dbraw: undefined,
-    uri: "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19",
+    uri: uri,
     us: undefined,
     global: undefined,
     uid: undefined,
-    countrylist: undefined,
-    statelist: undefined,
     connect: callback => {
-        MongoClient.connect(dbService.uri, { useUnifiedTopology: true }, async function (err, data) {
+        MongoClient.connect(dbService.uri, { useUnifiedTopology: true }, function (err, data) {
 
             if (err) {
                 MongoClient.close()
@@ -26,21 +24,28 @@ const dbService = {
             dbService.us = dbService.db.collection("us_only")
             dbService.global = dbService.db.collection("countries_summary")
             dbService.uid = dbService.dbraw.collection("UID_ISO_FIPS_LookUp_Table")
-            // get a list of countires
-            /*
-            dbService.countrylist = dbService.global.distinct("country", {}, function (err, docs) {
-                dbService.countrylist = docs
-            })
-            dbService.statelist = dbService.us.distinct("state", {}, function (err, docs) {
-                dbService.statelist = docs
-                console.log(dbService.statelist)
-            })
-            */
-            dbService.countrylist = await dbService.global.distinct("country")
-            dbService.countrylist.unshift("United States")
-            dbService.statelist = await dbService.us.distinct("state")
             callback(null);
         });
+    },
+    countrylist: callback => {
+        dbService.global.distinct("country", function (err, result) {
+            if (err) {
+                callback(undefined)
+                return
+            }
+            result.unshift("United States")
+            callback(result)
+
+        })
+    },
+    statelist: callback => {
+        dbService.us.distinct("state", function (err, result) {
+            if (err) {
+                callback(undefined)
+                return
+            }
+            callback(result)
+        })
     },
     country_data: function (countryname, callback) {
         retdata = {

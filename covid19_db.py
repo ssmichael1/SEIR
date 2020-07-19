@@ -25,10 +25,11 @@ def country_list():
 
 
 def country_data(countryname):
+    searchcountryname = countryname
     if countryname == "United States":
-        countryname = "US"
+        searchcountryname = "US"
 
-    population = _uid.find({"Combined_Key": countryname})[0]["Population"]
+    population = _uid.find({"Combined_Key": searchcountryname})[0]["Population"]
     pipeline = [
         {"$match": {"country": countryname}},
         {"$sort": {"date": 1}},
@@ -97,30 +98,5 @@ def state_data(statename):
 
 
 if __name__ == "__main__":
-    # print(state_data("Massachusetts"))
-    # print(country_data("France"))
-    # population = _global.find({"country": ""}).sort("date", 1).limit(1)
-    # print(population[0]["population"])
     population = _uid.find({"Combined_Key": "France"})[0]["Population"]
     print(population)
-
-    # pipeline = [
-    #    {"$match": {"state": "Texas"}},
-    #    {
-    #        "$group": {
-    #            "_id": "$date",
-    #            "deaths": {"$sum": "$deaths"},
-    #            "confirmed": {"$sum": "$confirmed"},
-    #            "population": {"$sum": "$population"},
-    #        }
-    #    },
-    #    {"$sort": {"_id": -1}},
-    #    {"$limit": 1},
-    # ]
-    # print(list(_us.aggregate(pipeline))[0]["population"])
-    # population = (
-    #    _global.find({"country": "Australia", "state": []})
-    #    .limit(1)
-    #    .sort("date", 1)
-    # )
-    # print(list(population)[0])

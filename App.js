@@ -4,6 +4,7 @@ var path = require('path');
 
 // First, connect to the database
 dbService.connect(err => {
+    console.log("Connected")
     if (err) {
         console.log("Error: ", err)
         process.exit(1)
@@ -35,10 +36,14 @@ dbService.connect(err => {
         })
     })
     app.get('/data/statelist', function (req, res) {
-        res.send(dbService.statelist)
+        dbService.statelist(result => {
+            res.send(result)
+        })
     })
     app.get('/data/countrylist', function (req, res) {
-        res.send(dbService.countrylist)
+        dbService.countrylist(result => {
+            res.send(result)
+        })
     })
     //////////////////////////////////////////////////////////
 
