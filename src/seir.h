@@ -1,21 +1,24 @@
 #include <stdint.h>
 
 #include <vector>
+#include <utility>
+#include <list>
 
 using ResultsType = std::vector<std::vector<double>>;
 
-std::pair<double, double> R0TableType;
+using R0TableElement = std::pair<double, double>;
+using R0TableType = std::list<R0TableElement>;
 
 struct SEIR {
   public:
     SEIR();
     virtual ~SEIR(){};
 
-    inline double R0(void) const { return R0_; }
+    void SetR0(double R0, double time = -1);
 
     ResultsType compute(void);
 
-    double R0_;           // Reproduction number
+    R0TableType R0Table_; // Table of R0 vs time
     double Tinc_;         // Incubation period
     double Tinf_;         // Infectious time constant
     double Tfat_;         // Fatal time constant
@@ -26,11 +29,6 @@ struct SEIR {
     double duration_;     // Simulation duration
     uint32_t population_; // Simulation capacity
     double dt_;           // time period between simulation outputs
-
-    double Tintervention_;     // Time at start of intervention
-    double Tintervention_end_; // Time at end of intervention
-    double R0_reduction_;      // relative reduction of R0, in range [0, 1]
-
     double Hc_; // Hospital capacity, as fraction of total population, in range
                 // [0, 1]
     double pfat_increase_nohospital_; // Incrase in fatal probability if no

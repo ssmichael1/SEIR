@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <functional>
+#include <algorithm>
 #include <limits>
 
 #include <math.h>
@@ -22,11 +23,32 @@ typedef std::array<double, NSTATES> StateType;
 namespace odeint = boost::numeric::odeint;
 
 SEIR::SEIR()
-    : R0_(3.2), Tinc_(2.5), Tinf_(5.0), Tfat_(30), Tmrec_(12), Threc_(30),
+    : R0Table_(), Tinc_(2.5), Tinf_(5.0), Tfat_(30), Tmrec_(12), Threc_(30),
       pMild_(0.8), pFat_(0.01), duration_(300), population_(1000000), dt_(1),
-      Tintervention_(0), Tintervention_end_(0), R0_reduction_(0), Hc_(1),
-      pfat_increase_nohospital_(1.0)
+      Hc_(1), pfat_increase_nohospital_(1.0)
 {
+    SetR0(2.5);
+}
+
+static bool operator<(const R0TableElement &a, const R0TableElement &b)
+{
+    return (a.second < b.second);
+}
+
+static bool operator==(const R0TableElement &a, const R0TableElement &b)
+{
+    return (a.second == b.second);
+}
+
+void SEIR::SetR0(double R0, double time)
+{
+    if (time < 0) {
+        R0Table_.clear();
+        R0Table_.push_back(R0TableElement(R0, 0));
+        return;
+    }
+    R0Table_.push_back(R0TableElement(R0, time));
+    R0Table_.sort();
 }
 
 ResultsType SEIR::compute(void)
@@ -84,13 +106,13 @@ ResultsType SEIR::compute(void)
                 pfs = (Hc_ / H) * pfs_hos + (H - Hc_) / H * pfs_nohos;
             }
 
-            // Instantaneous R0
-            // (are we in the middle of an intervention period)
-            double R0 = R0_;
-            if ((Tintervention_ > 0) && (t > Tintervention_)
-                && (t < Tintervention_end_)) {
-                R0 = R0 * (1.0 - R0_reduction_);
-            }
+            // Get the current R0 from the table
+            auto upper = std::upper_bound(R0Table_.begin(), R0Table_.end(),
+                                          R0TableElement(0, t));
+            //[](const R0TableElement &a, double b) { return a.second < b; });
+            if (upper != R0Table_.begin())
+                upper--;
+            double R0 = upper->first;
 
             // Update time derivates:
 
