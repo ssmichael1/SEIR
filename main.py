@@ -2,7 +2,6 @@
 from flask import Flask, render_template, send_from_directory, jsonify
 import json
 import covid19_db
-import covid19_rawdata
 from seir import SEIR
 
 seir = SEIR()
@@ -61,11 +60,6 @@ def statedata(statename):
 @app.route("/data/country/<countryname>")
 def countrydata(countryname):
     return jsonify(covid19_db.country_data(countryname))
-
-
-@app.route("/data/country2/<countryname>")
-def countrydatas(countryname):
-    return jsonify(covid19_rawdata.countrydata(countryname))
 
 
 # return list of states
