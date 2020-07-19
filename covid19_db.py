@@ -31,7 +31,7 @@ def country_data(countryname):
 
     population = _uid.find({"Combined_Key": searchcountryname})[0]["Population"]
     pipeline = [
-        {"$match": {"country": countryname}},
+        {"$match": {"country": searchcountryname}},
         {"$sort": {"date": 1}},
         {
             "$project": {
