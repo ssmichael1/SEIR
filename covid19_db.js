@@ -7,7 +7,7 @@ const uri = "mongodb://127.0.0.1:27017";
 const dbService = {
     db: undefined,
     dbraw: undefined,
-    uri: "mongodb://127.0.0.1:27017",
+    uri: "mongodb+srv://readonly:readonly@covid-19.hip2i.mongodb.net/covid19",
     us: undefined,
     global: undefined,
     uid: undefined,
