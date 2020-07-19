@@ -1,10 +1,11 @@
 {
-  "name": "seir",
+  "name": "SEIR Model",
   "version": "1.0.0",
-  "description": "SEIR modeling",
-  "main": "webserver.js",
+  "description": "(S)usceptible, (E)xposed, (I)nfectious, (R)emoved model with overlay on data",
+  "main": "App.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node App.js"
   },
   "repository": {
     "type": "git",

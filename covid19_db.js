@@ -37,18 +37,19 @@ const dbService = {
             })
             */
             dbService.countrylist = await dbService.global.distinct("country")
+            dbService.countrylist.unshift("United States")
             dbService.statelist = await dbService.us.distinct("state")
             callback(null);
         });
     },
     country_data: function (countryname, callback) {
-        if (countryname == "United States")
-            countryname = "US"
         retdata = {
             name: countryname,
             population: undefined,
             series: undefined
         }
+        if (countryname == "United States")
+            countryname = "US"
         dbService.uid.find({ Combined_Key: countryname }).limit(1).toArray(function (err, result) {
             retdata.population = result[0].Population
             pipeline = [
