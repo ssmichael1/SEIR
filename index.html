@@ -436,19 +436,12 @@
     </div>
 </body>
 
-<!--
-<script src="/js/d3/dist/d3.min.js">
-</script>
-<script src="/js/moment/min/moment.min.js"></script>
-<script src="/js/mathjax/es5/tex-mml-chtml.js"></script>
-<script src="/js/d3-simple-slider/dist/d3-simple-slider.min.js"></script>
--->
 
-<script src="/js/mathjax/es5/tex-mml-chtml.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
-<script src="/js/d3-simple-slider/dist/d3-simple-slider.min.js"></script>
 
 <script>
     function LightenDarkenColor(col, amt) {
@@ -495,11 +488,11 @@
         Tfat: 5,
         pMild: 0.8,
         pFatal: 0.005,
-        duration: 200,
+        duration: 400,
         population: 30000,
         dt: 1,
         Tintervention: 100,
-        intervention_duration: 200,
+        intervention_duration: 350,
         R0_reduction: 0.67,
         Hc: 0.01,
         pfat_increase_nohos: 0.0,
@@ -1270,7 +1263,7 @@
             cols: 1,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
-                args: [[1, 8], seirinput.R0, ".3", "R0"]
+                args: [[1, 8], seirinput.R0, ".3", "R0", .05]
             }],
             [{
                 label: "\\(p_{mild}\\)",
@@ -1299,13 +1292,13 @@
                 },
                 {
                     label: "\\(\\Delta_{int}\\)",
-                    args: [[0, 200], seirinput.intervention_duration, 'd', "intervention_duration"]
+                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 5]
                 },
 
             ]]
         },
         {
-            title: "Simulation Start & Duration",
+            title: "Simulation Start",
             width: "33%",
             cols: 1,
             values: [[
@@ -1313,10 +1306,7 @@
                     label: "\\(T_{start}\\)",
                     args: [[-60, 60], seirinput.startdate, "d", "startdate", 1]
                 },
-                {
-                    label: "\\(\\Delta_{sim}\\)",
-                    args: [[200, 1000], seirinput.duration, "d", "duration", 200]
-                },
+
             ]]
         }
     ]
@@ -1337,7 +1327,7 @@
 
             {
                 label: "\\(\\Delta_{sim}\\)",
-                args: [[200, 1000], seirinput.duration, "d", "duration", 200]
+                args: [[200, 1000], seirinput.duration, "d", "duration", 400]
             },
 
         ],

@@ -17,26 +17,10 @@ def base_route():
     return render_template("index.html")
 
 
+# The seir plot javascript
 @app.route("/seirplot.js")
 def seirplot():
     return send_from_directory(".", "seirplot.js")
-
-
-@app.route("/update_database")
-def update_database():
-    return "updated"
-
-
-@app.route("/seir/<string:seirdata>")
-def seirfunc(seirdata):
-    seir = SEIR()
-    jdata = json.loads(seirdata)
-    for key, value in jdata.items():
-        print(key)
-        print(value)
-        setattr(seir, key, value)
-    data = seir.compute()
-    return data
 
 
 # Serve icon
@@ -45,6 +29,7 @@ def favicon():
     return send_from_directory(".", "favicon.ico")
 
 
+# The custom javascript with the SEIR model
 @app.route("/customjs/<filename>")
 def example(filename):
     return send_from_directory("./customjs", filename)
@@ -75,7 +60,7 @@ def countrylist():
 
 
 # Serve stock javascript files from the node_modules directory
-# craeated by npm
+# created by npm
 @app.route("/js/<path:filename>")
 def jsdownload(filename):
     return send_from_directory("node_modules", filename)
