@@ -32,12 +32,7 @@ SEIR::SEIR()
 
 static bool operator<(const R0TableElement &a, const R0TableElement &b)
 {
-    return (a.second < b.second);
-}
-
-static bool operator==(const R0TableElement &a, const R0TableElement &b)
-{
-    return (a.second == b.second);
+    return (a.time < b.time);
 }
 
 void SEIR::SetR0(double R0, double time)
@@ -107,12 +102,12 @@ ResultsType SEIR::compute(void)
             }
 
             // Get the current R0 from the table
-            auto upper = std::upper_bound(R0Table_.begin(), R0Table_.end(),
+            auto upper = std::lower_bound(R0Table_.begin(), R0Table_.end(),
                                           R0TableElement(0, t));
             //[](const R0TableElement &a, double b) { return a.second < b; });
             if (upper != R0Table_.begin())
                 upper--;
-            double R0 = upper->first;
+            double R0 = upper->R0;
 
             // Update time derivates:
 
@@ -174,11 +169,15 @@ ResultsType SEIR::compute(void)
     return results;
 }
 
-#if 1
+#if 0
 int main(int argc, char *argv[])
 {
     SEIR seir;
     seir.Hc_ = .001;
+    seir.R0Table_.clear();
+    seir.R0Table_.push_back(R0TableElement(4.5, 0));
+    seir.R0Table_.push_back(R0TableElement(1.5, 150));
+
     auto results = seir.compute();
     auto lr = results[results.size() - 1];
 #if 0

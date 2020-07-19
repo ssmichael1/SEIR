@@ -6,7 +6,14 @@
 
 using ResultsType = std::vector<std::vector<double>>;
 
-using R0TableElement = std::pair<double, double>;
+struct R0TableElement {
+  public:
+    R0TableElement(double sR0, double sTime) : R0(sR0), time(sTime) {}
+    R0TableElement(double sR0) : R0(sR0), time(0) {}
+    double R0;
+    double time;
+};
+
 using R0TableType = std::list<R0TableElement>;
 
 struct SEIR {
