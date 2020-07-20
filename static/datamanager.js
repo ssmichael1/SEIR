@@ -1,20 +1,20 @@
 
 function countrylist(callback) {
-    d3.json(window.location.origin + "/static/country_codes.json")
+    d3.json("static/country_codes.json")
         .then((data, err) => {
             callback(data.map(a => a.Name))
         })
 }
 
 function statelist(callback) {
-    d3.json(window.location.origin + "/static/states.json")
+    d3.json("static/states.json")
         .then((data, err) => {
             callback(data.map(a => a.name))
         })
 }
 
 function state_data(state, callback) {
-    d3.json(window.location.origin + "/static/states.json")
+    d3.json("static/states.json")
         .then((states, err) => {
             cval = states.filter(a => a.name == state)
             console.log(cval[0].abbreviation)
@@ -49,7 +49,7 @@ function state_data(state, callback) {
 
 function country_data(country, callback) {
 
-    d3.json(window.location.origin + "/static/country_codes.json")
+    d3.json("static/country_codes.json")
         .then((countries, err) => {
             cval = countries.filter(a => a.Name == country)
             console.log(cval[0].Code)
