@@ -19,9 +19,10 @@ dbService.connect(err => {
 
     // Custom javascript files
     app.use('/customjs', express.static('customjs'))
-
+    app.use('/static', express.static('static'))
+    app.use('/data', express.static('data'))
     // node.js files
-    app.use('/js', express.static('node_modules'))
+    // app.use('/js', express.static('node_modules'))
 
     /////////////////////////////////////////////////////////////
     // Database Queries

@@ -24,8 +24,11 @@
     "d3": "^5.15.1",
     "d3-simple-slider": "^1.6.5",
     "express": "^4.17.1",
+    "https-proxy-agent": "^5.0.0",
     "mathjax": "^3.0.5",
     "moment": "^2.24.0",
-    "mongodb": "^3.5.9"
-  }
+    "mongodb": "^3.5.9",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {}
 }
