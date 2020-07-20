@@ -1,238 +1,272 @@
 [
     {
         "name": "Alabama",
-        "abbreviation": "AL"
+        "abbreviation": "AL",
+        "population": 4903185
     },
     {
         "name": "Alaska",
-        "abbreviation": "AK"
+        "abbreviation": "AK",
+        "population": 731545
     },
     {
         "name": "American Samoa",
-        "abbreviation": "AS"
+        "abbreviation": "AS",
+        "population": 55641
     },
     {
         "name": "Arizona",
-        "abbreviation": "AZ"
+        "abbreviation": "AZ",
+        "population": 7278717
     },
     {
         "name": "Arkansas",
-        "abbreviation": "AR"
+        "abbreviation": "AR",
+        "population": 3017804
     },
     {
         "name": "California",
-        "abbreviation": "CA"
+        "abbreviation": "CA",
+        "population": 39512223
     },
     {
         "name": "Colorado",
-        "abbreviation": "CO"
+        "abbreviation": "CO",
+        "population": 5758736
     },
     {
         "name": "Connecticut",
-        "abbreviation": "CT"
+        "abbreviation": "CT",
+        "population": 3565287
     },
     {
         "name": "Delaware",
-        "abbreviation": "DE"
+        "abbreviation": "DE",
+        "population": 973764
     },
     {
         "name": "District Of Columbia",
-        "abbreviation": "DC"
-    },
-    {
-        "name": "Federated States Of Micronesia",
-        "abbreviation": "FM"
+        "abbreviation": "DC",
+        "population": 199
     },
     {
         "name": "Florida",
-        "abbreviation": "FL"
+        "abbreviation": "FL",
+        "population": 21477737
     },
     {
         "name": "Georgia",
-        "abbreviation": "GA"
+        "abbreviation": "GA",
+        "population": 10617423
     },
     {
         "name": "Guam",
-        "abbreviation": "GU"
+        "abbreviation": "GU",
+        "population": 164229
     },
     {
         "name": "Hawaii",
-        "abbreviation": "HI"
+        "abbreviation": "HI",
+        "population": 1415872
     },
     {
         "name": "Idaho",
-        "abbreviation": "ID"
+        "abbreviation": "ID",
+        "population": 1787065
     },
     {
         "name": "Illinois",
-        "abbreviation": "IL"
+        "abbreviation": "IL",
+        "population": 12671821
     },
     {
         "name": "Indiana",
-        "abbreviation": "IN"
+        "abbreviation": "IN",
+        "population": 6732219
     },
     {
         "name": "Iowa",
-        "abbreviation": "IA"
+        "abbreviation": "IA",
+        "population": 3155070
     },
     {
         "name": "Kansas",
-        "abbreviation": "KS"
+        "abbreviation": "KS",
+        "population": 2913314
     },
     {
         "name": "Kentucky",
-        "abbreviation": "KY"
+        "abbreviation": "KY",
+        "population": 4467673
     },
     {
         "name": "Louisiana",
-        "abbreviation": "LA"
+        "abbreviation": "LA",
+        "population": 4648794
     },
     {
         "name": "Maine",
-        "abbreviation": "ME"
-    },
-    {
-        "name": "Marshall Islands",
-        "abbreviation": "MH"
+        "abbreviation": "ME",
+        "population": 1344212
     },
     {
         "name": "Maryland",
-        "abbreviation": "MD"
+        "abbreviation": "MD",
+        "population": 6045680
     },
     {
         "name": "Massachusetts",
-        "abbreviation": "MA"
+        "abbreviation": "MA",
+        "population": 6921234
     },
     {
         "name": "Michigan",
-        "abbreviation": "MI"
+        "abbreviation": "MI",
+        "population": 9986857
     },
     {
         "name": "Minnesota",
-        "abbreviation": "MN"
+        "abbreviation": "MN",
+        "population": 5639632
     },
     {
         "name": "Mississippi",
-        "abbreviation": "MS"
+        "abbreviation": "MS",
+        "population": 2976149
     },
     {
         "name": "Missouri",
-        "abbreviation": "MO"
+        "abbreviation": "MO",
+        "population": 6626371
     },
     {
         "name": "Montana",
-        "abbreviation": "MT"
+        "abbreviation": "MT",
+        "population": 1068778
     },
     {
         "name": "Nebraska",
-        "abbreviation": "NE"
+        "abbreviation": "NE",
+        "population": 1934408
     },
     {
         "name": "Nevada",
-        "abbreviation": "NV"
+        "abbreviation": "NV",
+        "population": 3080156
     },
     {
         "name": "New Hampshire",
-        "abbreviation": "NH"
+        "abbreviation": "NH",
+        "population": 1359711
     },
     {
         "name": "New Jersey",
-        "abbreviation": "NJ"
+        "abbreviation": "NJ",
+        "population": 8882190
     },
     {
         "name": "New Mexico",
-        "abbreviation": "NM"
+        "abbreviation": "NM",
+        "population": 2096829
     },
     {
         "name": "New York",
-        "abbreviation": "NY"
+        "abbreviation": "NY",
+        "population": 26161672
     },
     {
         "name": "North Carolina",
-        "abbreviation": "NC"
+        "abbreviation": "NC",
+        "population": 10488084
     },
     {
         "name": "North Dakota",
-        "abbreviation": "ND"
-    },
-    {
-        "name": "Northern Mariana Islands",
-        "abbreviation": "MP"
+        "abbreviation": "ND",
+        "population": 762062
     },
     {
         "name": "Ohio",
-        "abbreviation": "OH"
+        "abbreviation": "OH",
+        "population": 11689100
     },
     {
         "name": "Oklahoma",
-        "abbreviation": "OK"
+        "abbreviation": "OK",
+        "population": 3956971
     },
     {
         "name": "Oregon",
-        "abbreviation": "OR"
-    },
-    {
-        "name": "Palau",
-        "abbreviation": "PW"
+        "abbreviation": "OR",
+        "population": 4217737
     },
     {
         "name": "Pennsylvania",
-        "abbreviation": "PA"
+        "abbreviation": "PA",
+        "population": 12801989
     },
     {
         "name": "Puerto Rico",
-        "abbreviation": "PR"
+        "abbreviation": "PR",
+        "population": 2933408
     },
     {
         "name": "Rhode Island",
-        "abbreviation": "RI"
+        "abbreviation": "RI",
+        "population": 1059361
     },
     {
         "name": "South Carolina",
-        "abbreviation": "SC"
+        "abbreviation": "SC",
+        "population": 5148714
     },
     {
         "name": "South Dakota",
-        "abbreviation": "SD"
+        "abbreviation": "SD",
+        "population": 884659
     },
     {
         "name": "Tennessee",
-        "abbreviation": "TN"
+        "abbreviation": "TN",
+        "population": 6829174
     },
     {
         "name": "Texas",
-        "abbreviation": "TX"
+        "abbreviation": "TX",
+        "population": 28995881
     },
     {
         "name": "Utah",
-        "abbreviation": "UT"
+        "abbreviation": "UT",
+        "population": 4095960
     },
     {
         "name": "Vermont",
-        "abbreviation": "VT"
-    },
-    {
-        "name": "Virgin Islands",
-        "abbreviation": "VI"
+        "abbreviation": "VT",
+        "population": 623989
     },
     {
         "name": "Virginia",
-        "abbreviation": "VA"
+        "abbreviation": "VA",
+        "population": 8535519
     },
     {
         "name": "Washington",
-        "abbreviation": "WA"
+        "abbreviation": "WA",
+        "population": 7614893
     },
     {
         "name": "West Virginia",
-        "abbreviation": "WV"
+        "abbreviation": "WV",
+        "population": 1792147
     },
     {
         "name": "Wisconsin",
-        "abbreviation": "WI"
+        "abbreviation": "WI",
+        "population": 5822434
     },
     {
         "name": "Wyoming",
-        "abbreviation": "WY"
+        "abbreviation": "WY",
+        "population": 578759
     }
 ]
