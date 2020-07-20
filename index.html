@@ -226,6 +226,47 @@
             transition: max-height 0.2s ease-out;
             background-color: white;
         }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 12px 0;
+            padding-left: 10px;
+            padding-right: 10px;
+            position: absolute;
+            z-index: 1;
+            font-size: 12px;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -317,7 +358,9 @@
 
         <!-- SEIR Model Parameters Set -->
         <div class="column fullwidth" id="modelparams">
-            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Parameters</div>
+            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Parameters &nbsp
+                <span style="font-size: 14px;">(hover over label for detail)</span>
+            </div>
         </div>
         <div class="column fullwidth">
             <div style="padding-left: 20px;padding-right: 20px;padding-bottom: 40px">
@@ -1263,15 +1306,18 @@
             cols: 1,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
-                args: [[1, 8], seirinput.R0, ".3", "R0", .05]
+                args: [[1, 8], seirinput.R0, ".3", "R0", .05],
+                tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person given a fully susceptible population</p>'
             }],
             [{
                 label: "\\(p_{mild}\\)",
-                args: [[0, 1], seirinput.pMild, ".0%", "pMild"]
+                args: [[0, 1], seirinput.pMild, ".0%", "pMild"],
+                tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
             }],
             [{
-                label: "\\(p_{fatal}\\)",
-                args: [[0, 0.05], seirinput.pFatal, ".2%", "pFatal"]
+                label: "\\(IFR\\)",
+                args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal"],
+                tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
             },
 
             ]]
@@ -1284,15 +1330,18 @@
             values: [[
                 {
                     label: "\\(T_{int}\\)",
-                    args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"]
+                    args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"],
+                    tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">Time of intervention to reduce \\(R_0\\) in days since start of simulation</p>'
                 },
                 {
                     label: "\\(\\Delta \\mathcal{R}_0\\)",
-                    args: [[0, 1], seirinput.R0_reduction, '.0%', "R0_reduction"]
+                    args: [[0, 1], seirinput.R0_reduction, '.0%', "R0_reduction"],
+                    tooltip: '<h3>Intervention Change in \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
                 },
                 {
                     label: "\\(\\Delta_{int}\\)",
-                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 5]
+                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 5],
+                    tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
                 },
 
             ]]
@@ -1304,7 +1353,8 @@
             values: [[
                 {
                     label: "\\(T_{start}\\)",
-                    args: [[-60, 60], seirinput.startdate, "d", "startdate", 1]
+                    args: [[-60, 60], seirinput.startdate, "d", "startdate", 1],
+                    tooltip: '<h3>Simulation Start</h3><br><p style="text-align: left">Shift in days to simulation start date relative to date of pandemic beginning (chosen as February 1, 2020)</p>'
                 },
 
             ]]
@@ -1356,7 +1406,7 @@
                 args: [[.001, .02], seirinput.Hc, '.2%', "Hc"]
             },
             {
-                label: "\\(\\Delta p_{fatal}\\) \\(| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
+                label: "\\(\\Delta IFR\\) \\(| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
                 args: [[0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"]
             },
         ]]
@@ -1399,7 +1449,12 @@
                     paramrow.append("div")
                         .attr("class", "column")
                         .attr("style", "align: right;text-align: right;padding-top: 10px;width: 12%;color: slategray;")
+                        .append("div")
+                        .attr("class", "tooltip")
                         .html(pcol.label)
+                        .append("span")
+                        .attr("class", "tooltiptext")
+                        .html(pcol.tooltip)
                     paramrow.append("div")
                         .attr("class", "column")
                         .attr("style", "width: 87%;")
@@ -1461,7 +1516,7 @@
             "person will be asymptomatic or expeirience mild symptoms that do not require hospitalization"],
         ["\\(\\mathcal{C}_{\\mathcal{H}}\\) :", "<strong>Hospital Capacity</strong><br>" +
             "Hospital capacity, as percentage of population"],
-        ["\\(p_{fatal}\\) :", "<strong>Fatal Probability</strong><br>" +
+        ["\\(IFR\\) :", "<strong>Infection Fatality rate</strong><br>" +
             "Probability of death given exposure"],
         ["\\(\\Delta p_{fatal}\\) \\(| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
             "<strong>Fatal Probability Increase</strong><br>" +
