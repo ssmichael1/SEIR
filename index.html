@@ -1135,7 +1135,7 @@
 
         let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal", "removed"]
 
-        if (seirinput.R0_reduction > 0) {
+        if (seirinput.intervention_duration > 0) {
             bgrect = svg.selectAll(".bgrect")
 
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
@@ -1145,7 +1145,7 @@
                 .attr("y", 0)
                 .attr("height", seirplot.height)
                 .attr("visibility", "visible")
-            let bg = ["Intervention Period", d3.format("d")(seirinput.R0_reduction * 100) + "% Reduction"]
+            let bg = ["Intervention Period"]
 
 
             let bgtext = svg.selectAll(".bggroup").selectAll("text").data(bg)

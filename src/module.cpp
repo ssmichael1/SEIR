@@ -29,8 +29,7 @@ ResultsType testfunc(const val &v)
     seir.R0Table_.push_back(R0TableElement(R0, 0));
 
     if (intervention_duration) {
-        double intervention_end = intervention_duration + in intervention_time
-                                  + v["intervention_duration"].as<double>();
+        double intervention_end = intervention_duration + intervention_time;
         seir.R0Table_.push_back(R0TableElement(
             v["R0_intervention"].as<double>(), intervention_time));
         seir.R0Table_.push_back(
