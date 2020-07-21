@@ -598,7 +598,7 @@
         R0_newnormal: 1.25,
         Hc: 0.01,
         pfat_increase_nohos: 0.0,
-        match_deaths: 10,
+        match_deaths: 100,
     };
     // Deep copy for use when determining what changes
     // for default when creating copy URL
@@ -760,6 +760,9 @@
 
     function draw_model_overlay(pmain, datafunc) {
 
+        if (currentData == null) {
+            return
+        }
         let date0 = moment(model_startdate)
         let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(2, 'days')
         overlaydata =
@@ -1421,12 +1424,12 @@
             },
             {
                 label: "\\(p_{mild}\\)",
-                args: [[0, 1], seirinput.pMild, ".0%", "pMild"],
+                args: [[0, 1], seirinput.pMild, ".0%", "pMild", .01],
                 tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
             }],
             [{
                 label: "\\(IFR\\)",
-                args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal"],
+                args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal", .0005],
                 tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
             },
             ]]
