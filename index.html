@@ -295,7 +295,7 @@
 
                 </div>
                 <div class="column" style="width: 50%;">
-                    <input type="radio" name="sourcetype" value="radio_states">&nbsp US States</input>
+                    <input type="radio" name="sourcetype" id="radio_states" value="radio_states">&nbsp US States</input>
                 </div>
 
             </div>
@@ -332,10 +332,14 @@
             </div>
 
             <div style="padding-top: 20px;">
-                <input type="checkbox" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative
+                <input type="checkbox" id="plot_deltas" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative
             </div>
             <div style="padding-top: 10px;">
-                <input type="checkbox" name="overlay_model">&nbsp Overlay SEIR Model
+                <input type="checkbox" id="overlay_model" name="overlay_model">&nbsp Overlay SEIR Model
+            </div>
+            <div style="padding-top: 10px;">
+                <button class="urlbtn">Save URL to Clipboard
+                </button>
             </div>
 
         </div>
@@ -492,6 +496,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="./static/datamanager.js"></script>
 
 
@@ -529,6 +535,48 @@
 
 <!-- <script src="/seirplot.js"></script>-->
 <script>
+
+
+    // Copy current state to clipboard
+    new ClipboardJS('.urlbtn', {
+        text: function (trigger) {
+            urlparams = {}
+
+            for (let key in seirinput_defaults) {
+                if (seirinput[key] != seirinput_defaults[key]) {
+                    urlparams[key] = seirinput[key]
+                }
+            }
+            delete urlparams['population']
+            if (document.getElementById("radio_states").checked) {
+                urlparams['state'] = document.getElementById("states_dropdown").value
+            }
+            else {
+                urlparams['country'] = document.getElementById('countries_dropdown').value
+            }
+            if (document.getElementById('overlay_model').checked) {
+                urlparams['overlay'] = true
+            }
+            if (document.getElementById('plot_deltas').checked) {
+                urlparams['plot_deltas'] = true
+            }
+            return window.location.origin + "?" + $.param(urlparams)
+        }
+    });
+
+    function getQueryParams(query = window.location.search) {
+        return query.replace(/^\?/, '').split('&').reduce((json, item) => {
+            if (item) {
+                item = item.split('=').map((value) => decodeURIComponent(value))
+                json[item[0]] = item[1]
+            }
+            return json
+        }, {})
+
+    }
+</script>
+
+<script>
     // Set some globals
     var seirinput = {
         R0: 2.8,
@@ -550,6 +598,19 @@
         pfat_increase_nohos: 0.0,
         startdate: 0
     };
+    // Deep copy for use when determining what changes
+    // for default when creating copy URL   
+    const seirinput_defaults = JSON.parse(JSON.stringify(seirinput))
+
+    //seirinput.update(getQueryParams())
+    var newparams = getQueryParams()
+    for (let key in newparams) {
+        if (key in seirinput) {
+            seirinput[key] = parseFloat(newparams[key])
+        }
+    }
+
+
     var runtime_initialized = false
 
     var plot_deltas = false
@@ -616,6 +677,7 @@
             .append("option")
             .attr("value", d => d)
             .text(d => d)
+
         s.on("change", () => {
             UpdatePlotState(s.property("value"))
         });
@@ -635,7 +697,6 @@
             .append("option")
             .attr("value", d => d)
             .text(d => d);
-        s.attr("text", "United Sta")
         s.on("change", () => {
             UpdatePlotCountry(s.property("value"))
         });
@@ -908,8 +969,6 @@
             });
         namelabel.text(name);
     };
-    // Default
-    UpdatePlotCountry("United States")
 
 </script>
 
@@ -1620,9 +1679,34 @@
         onRuntimeInitialized: function () {
             runtime_initialized = true
             update_seir()
+            if ('plot_deltas' in newparams) {
+                document.getElementById('plot_deltas').checked = true
+                plot_deltas = true
+            }
+            if ('overlay' in newparams) {
+                document.getElementById('overlay_model').checked = true
+                overlay_model = true
+            }
+            // Default
+            if ('state' in newparams) {
+                UpdatePlotState(newparams['state'])
+                document.getElementById('states_dropdown').value = newparams['state']
+                document.getElementById('states_dropdown').removeAttribute('disabled')
+                document.getElementById('countries_dropdown').setAttribute('disabled', true)
+                document.getElementById('radio_states').checked = true
+            }
+            else if ('country' in newparams) {
+                document.getElementById('countries_dropdown').value = newparams['country']
+                UpdatePlotCountry(newparams['country'])
+            }
+            else {
+                UpdatePlotCountry("United States")
+            }
         }
     }
+
 </script>
+
 <script src="customjs/seirmodel5.js"></script>
 
 </html>
