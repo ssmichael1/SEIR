@@ -25,12 +25,13 @@ ResultsType testfunc(const val &v)
     seir.R0Table_.clear();
     double R0 = v["R0"].as<double>();
     double intervention_r0 = R0 * (1.0 - v["R0_reduction"].as<double>());
+    double newnormal_r0 = R0 * (1.0 - v["R0_reduction_newnormal"].as<double>());
     double intervention_time = v["Tintervention"].as<double>();
     double intervention_end =
         intervention_time + v["intervention_duration"].as<double>();
     seir.R0Table_.push_back(R0TableElement(R0, 0));
     seir.R0Table_.push_back(R0TableElement(intervention_r0, intervention_time));
-    seir.R0Table_.push_back(R0TableElement(R0, intervention_end));
+    seir.R0Table_.push_back(R0TableElement(newnormal_r0, intervention_end));
 
     seir.Hc_ = v["Hc"].as<double>();
     seir.pfat_increase_nohospital_ = v["pfat_increase_nohos"].as<double>();
