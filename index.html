@@ -994,7 +994,7 @@
 <script>
     // Keys to plot
     var allkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed", "removed"]
-    var plotkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed"]
+    var plotkeys = ["fatal", "hospitalized", "mild", "infectious", "exposed", "removed"]
 
     let seircolors = ['#DA5319', '#0072BE', '#77AD30', '#EEB220', '#7E2F8E', '#888888']
 
@@ -1419,8 +1419,8 @@
             cols: 2,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
-                args: [[0, 5], seirinput.R0, ".3", "R0", .02],
-                tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person given a fully susceptible population</p>'
+                args: [[0, 5], seirinput.R0, ".3", "R0", .01],
+                tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
             },
             {
                 label: "\\(p_{mild}\\)",
@@ -1429,7 +1429,7 @@
             }],
             [{
                 label: "\\(IFR\\)",
-                args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal", .0005],
+                args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal", .00025],
                 tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
             },
             ]]
@@ -1442,12 +1442,12 @@
             values: [[
                 {
                     label: "\\(\\mathcal{R}_0\\)",
-                    args: [[0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .02],
+                    args: [[0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .01],
                     tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
                 },
                 {
                     label: "\\(T_{int}\\)",
-                    args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"],
+                    args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention", 1],
                     tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">Time of intervention to reduce \\(R_0\\) in days since start of simulation</p>'
                 }]]
         },
@@ -1458,12 +1458,12 @@
             values: [[
                 {
                     label: "\\({\\mathcal{R}_0}\\)",
-                    args: [[0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal"],
+                    args: [[0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .01],
                     tooltip: '<h3>New Normal \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number at new normal</p>'
                 },
                 {
                     label: "\\(\\Delta_{int}\\)",
-                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 5],
+                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 2],
                     tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
                 },
 
