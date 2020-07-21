@@ -492,7 +492,8 @@
 
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
@@ -593,13 +594,14 @@
         dt: 1,
         Tintervention: 100,
         intervention_duration: 350,
-        R0_reduction: 0.67,
+        R0_intervention: 0.75,
+        R0_newnormal: 1.25,
         Hc: 0.01,
         pfat_increase_nohos: 0.0,
         startdate: 0
     };
     // Deep copy for use when determining what changes
-    // for default when creating copy URL   
+    // for default when creating copy URL
     const seirinput_defaults = JSON.parse(JSON.stringify(seirinput))
 
     //seirinput.update(getQueryParams())
@@ -1133,7 +1135,7 @@
 
         let barnames = ["exposed", "infectious", "mild", "hospitalized", "fatal", "removed"]
 
-        if (seirinput.R0_reduction > 0) {
+        if (seirinput.intervention_duration > 0) {
             bgrect = svg.selectAll(".bgrect")
 
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
@@ -1143,7 +1145,7 @@
                 .attr("y", 0)
                 .attr("height", seirplot.height)
                 .attr("visibility", "visible")
-            let bg = ["Intervention Period", d3.format("d")(seirinput.R0_reduction * 100) + "% Reduction"]
+            let bg = ["Intervention Period"]
 
 
             let bgtext = svg.selectAll(".bggroup").selectAll("text").data(bg)
@@ -1240,7 +1242,7 @@
             .sliderBottom()
             .min(range[0])
             .max(range[1])
-            .width(240)
+            .width(200)
             .ticks(5)
             .default(val)
             .tickFormat(d3.format(format))
@@ -1383,14 +1385,14 @@
     model_params = [
         {
             title: "Infection Parameters",
-            width: "33%",
-            cols: 1,
+            width: "50%",
+            cols: 2,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
-                args: [[1, 8], seirinput.R0, ".3", "R0", .05],
+                args: [[0, 5], seirinput.R0, ".3", "R0", .02],
                 tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person given a fully susceptible population</p>'
-            }],
-            [{
+            },
+            {
                 label: "\\(p_{mild}\\)",
                 args: [[0, 1], seirinput.pMild, ".0%", "pMild"],
                 tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
@@ -1400,24 +1402,40 @@
                 args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal"],
                 tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
             },
+            {
+                label: "\\(T_{start}\\)",
+                args: [[-60, 60], seirinput.startdate, "d", "startdate", 1],
+                tooltip: '<h3>Simulation Start</h3><br><p style="text-align: left">Shift in days to simulation start date relative to date of pandemic beginning (chosen as February 1, 2020)</p>'
+            },
 
             ]]
         },
 
         {
             title: "Intervention",
-            width: "33%",
+            width: "25%",
             cols: 1,
             values: [[
+                {
+                    label: "\\(\\mathcal{R}_0\\)",
+                    args: [[0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .02],
+                    tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                },
                 {
                     label: "\\(T_{int}\\)",
                     args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention"],
                     tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">Time of intervention to reduce \\(R_0\\) in days since start of simulation</p>'
-                },
+                }]]
+        },
+        {
+            title: "New Normal",
+            width: "25%",
+            cols: 1,
+            values: [[
                 {
-                    label: "\\(\\Delta \\mathcal{R}_0\\)",
-                    args: [[0, 1], seirinput.R0_reduction, '.0%', "R0_reduction"],
-                    tooltip: '<h3>Intervention Change in \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                    label: "\\({\\mathcal{R}_0}\\)",
+                    args: [[0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal"],
+                    tooltip: '<h3>New Normal \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number at new normal</p>'
                 },
                 {
                     label: "\\(\\Delta_{int}\\)",
@@ -1427,19 +1445,7 @@
 
             ]]
         },
-        {
-            title: "Simulation Start",
-            width: "33%",
-            cols: 1,
-            values: [[
-                {
-                    label: "\\(T_{start}\\)",
-                    args: [[-60, 60], seirinput.startdate, "d", "startdate", 1],
-                    tooltip: '<h3>Simulation Start</h3><br><p style="text-align: left">Shift in days to simulation start date relative to date of pandemic beginning (chosen as February 1, 2020)</p>'
-                },
 
-            ]]
-        }
     ]
 
     advanced_params = [{
@@ -1639,11 +1645,11 @@
         ["\\(\\frac{dM}{dt} = p_{mild} \\frac{I}{T_{inf}} - \\frac{M}{t_{mrec}}\\)",
             "Infectious people who exibit mild or asymptomatic symptoms move into \"mild\" category,"
             + "and poeple with mild symptoms recover"],
-        ["\\(\\frac{dHr}{dt} = (1-p_{mild})(1-p_{f|h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
-            "Persons going into hospital that will recover.  note that \\(p_{f|h}\\) is the " +
+        ["\\(\\frac{dHr}{dt} = (1-p_{mild})(1-p_{f | h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
+            "Persons going into hospital that will recover.  note that \\(p_{f | h}\\) is the " +
             "probability of fatal outcome given hospitalized. Note that this increases when " +
             "hospitalization capacity is exceeded.  See below for more details."],
-        ["\\(\\frac{dHf}{dt} = (1-p_{mild}) p_{f|h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
+        ["\\(\\frac{dHf}{dt} = (1-p_{mild}) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
             "Persons going into hospital that will not recover."],
         ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}\\)", "Persons dying from COVID-19"],
         ["\\(\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}\\)",
@@ -1672,8 +1678,6 @@
 </script>
 
 <script>
-    MathJax.typeset()
-
     window.addEventListener("resize", () => {
         resizeSeir()
         resizeDataPlot()
