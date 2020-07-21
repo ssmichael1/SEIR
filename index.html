@@ -594,8 +594,8 @@
         dt: 1,
         Tintervention: 100,
         intervention_duration: 350,
-        R0_reduction: 0.67,
-        R0_reduction_newnormal: 0.5,
+        R0_intervention: 0.75,
+        R0_newnormal: 1.25,
         Hc: 0.01,
         pfat_increase_nohos: 0.0,
         startdate: 0
@@ -1389,7 +1389,7 @@
             cols: 2,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
-                args: [[1, 8], seirinput.R0, ".3", "R0", .05],
+                args: [[0, 5], seirinput.R0, ".3", "R0", .02],
                 tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person given a fully susceptible population</p>'
             },
             {
@@ -1417,9 +1417,9 @@
             cols: 1,
             values: [[
                 {
-                    label: "\\(\\Delta \\mathcal{R}_0\\)",
-                    args: [[0, 1], seirinput.R0_reduction, '.0%', "R0_reduction"],
-                    tooltip: '<h3>Intervention Change in \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                    label: "\\(\\mathcal{R}_0\\)",
+                    args: [[0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .02],
+                    tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
                 },
                 {
                     label: "\\(T_{int}\\)",
@@ -1433,9 +1433,9 @@
             cols: 1,
             values: [[
                 {
-                    label: "\\(\\Delta {\\mathcal{R}_0}\\)",
-                    args: [[0, 1], seirinput.R0_reduction_newnormal, '.0%', "R0_reduction_newnormal"],
-                    tooltip: '<h3>New Normal Change in \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number at new normal</p>'
+                    label: "\\({\\mathcal{R}_0}\\)",
+                    args: [[0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal"],
+                    tooltip: '<h3>New Normal \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number at new normal</p>'
                 },
                 {
                     label: "\\(\\Delta_{int}\\)",
