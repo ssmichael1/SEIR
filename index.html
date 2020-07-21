@@ -678,6 +678,10 @@
             .attr("value", d => d)
             .text(d => d)
 
+        if ('state' in newparams) {
+            document.getElementById('states_dropdown').value = newparams['state']
+            document.getElementById('states_dropdown').removeAttribute('disabled')
+        }
         s.on("change", () => {
             UpdatePlotState(s.property("value"))
         });
@@ -697,6 +701,12 @@
             .append("option")
             .attr("value", d => d)
             .text(d => d);
+        if ('country' in newparams) {
+            document.getElementById('countries_dropdown').value = newparams['country']
+        }
+        if ('state' in newparams) {
+            document.getElementById('countries_dropdown').setAttribute('disabled', true)
+        }
         s.on("change", () => {
             UpdatePlotCountry(s.property("value"))
         });
@@ -1690,13 +1700,9 @@
             // Default
             if ('state' in newparams) {
                 UpdatePlotState(newparams['state'])
-                document.getElementById('states_dropdown').value = newparams['state']
-                document.getElementById('states_dropdown').removeAttribute('disabled')
-                document.getElementById('countries_dropdown').setAttribute('disabled', true)
                 document.getElementById('radio_states').checked = true
             }
             else if ('country' in newparams) {
-                document.getElementById('countries_dropdown').value = newparams['country']
                 UpdatePlotCountry(newparams['country'])
             }
             else {
