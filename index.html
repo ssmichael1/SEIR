@@ -43,7 +43,8 @@
 
         .intervention-label {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
-            font-size: 14px;
+            font-size: 11px;
+            font-weight: bold;
             fill: darkslategrey;
         }
 
@@ -651,16 +652,15 @@
         .attr("width", dataplot.width)
         .attr("height", dataplot.height);
 
-
     // SVG for the confirmed cases plot
     plot2.svg = d3.select("#cases_plot").append("svg")
         .attr("width", dataplot.plot_width)
         .attr("height", dataplot.plot_height)
 
+
     // Main group holding the confirmed cases plot
     plot2.g = plot2.svg.append("g").attr("transform",
         "translate(" + dataplot.margin.left + "," + dataplot.margin.top + ")");
-
 
 
 
@@ -803,6 +803,47 @@
             .classed("seirarea", true)
             .attr("d", area)
 
+        if (seirinput.intervention_duration > 0) {
+            let bgrect = pmain.g.selectAll(".bgrect")
+            let startintervention = moment(model_startdate).add(seirinput.Tintervention, 'days')
+            let stopintervention = startintervention.clone().add(seirinput.intervention_duration, 'days')
+            console.log("        sim start: " + moment(model_startdate).format())
+            console.log("startintervention: " + startintervention.format())
+            console.log("stopintervention:  " + stopintervention.format())
+            //console.log(stopintervention)
+            console.log(seirinput.intervention_duration)
+
+            let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
+            bgrect.classed("intervention-rect", true)
+                .attr("x", pmain.x(startintervention))
+                .attr("width", pmain.x(stopintervention) - pmain.x(startintervention))
+                .attr("y", 0)
+                .attr("height", dataplot.height)
+                .attr("visibility", "visible")
+            console.log("x: " + pmain.x(startintervention))
+            console.log("width: " + (pmain.x(stopintervention) - pmain.x(startintervention)))
+
+
+            let bg = ["Intervention"]
+            let bgtext = pmain.g.selectAll(".bggroup").selectAll("text").data(bg)
+            bgtext.enter().append("text")
+                .merge(bgtext)
+                .attr("x", pmain.x(stopintervention) - 10)
+                .attr("y", (d, i) => i * 16)
+                .attr("dy", "1em")
+                .attr("text-anchor", "end")
+                .attr("visibility", "visible")
+                .classed("intervention-label", true)
+                .html(d => d)
+            bgtext.attr("visibility", "visible")
+        }
+        else {
+            bgrect = pmain.g.selectAll(".bgrect")
+            bgrect.attr("visibility", "hidden")
+            let bgtext = pmain.g.selectAll(".bggroup").selectAll("text")
+            bgtext.attr("visibility", "hidden")
+        }
+
     }
 
 
@@ -830,6 +871,16 @@
 
         let name = alldata['name'];
         let data = alldata['series'];
+
+
+        // Add group to the background
+        // This represents the intervention
+        pmain.g
+            .append("g")
+            .classed("bggroup", true)
+            .append("rect")
+            .classed("bgrect", true)
+
 
         // Add this group since we want seir bars to be
         // in the background
@@ -1082,7 +1133,6 @@
             // (note: month index below starts @ 0)
             model_startdate = new Date(Date.UTC(2020, 1, 1))
         }
-        console.log(model_startdate)
     }
 
     function update_seir() {
@@ -1167,7 +1217,6 @@
 
         if (seirinput.intervention_duration > 0) {
             bgrect = svg.selectAll(".bgrect")
-
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
             bgrect.classed("intervention-rect", true)
                 .attr("x", x(seirinput.Tintervention))
@@ -1175,7 +1224,7 @@
                 .attr("y", 0)
                 .attr("height", seirplot.height)
                 .attr("visibility", "visible")
-            let bg = ["Intervention Period"]
+            let bg = ["Intervention"]
 
 
             let bgtext = svg.selectAll(".bggroup").selectAll("text").data(bg)
