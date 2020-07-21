@@ -598,7 +598,7 @@
         R0_newnormal: 1.25,
         Hc: 0.01,
         pfat_increase_nohos: 0.0,
-        startdate: 0
+        match_deaths: 10,
     };
     // Deep copy for use when determining what changes
     // for default when creating copy URL
@@ -612,7 +612,8 @@
         }
     }
 
-
+    // Default, start model on February 1, 2020
+    var model_startdate = new Date(Date.UTC(2020, 1, 1))
     var runtime_initialized = false
 
     var plot_deltas = false
@@ -737,6 +738,7 @@
             currentData = d
             updatePlots(d)
         });
+        updateTimeShift()
     }
     function UpdatePlotCountry(countryname) {
         //d3.json(baseurl + "/data/country/" + countryname).then(d => {
@@ -744,6 +746,7 @@
             currentData = d
             updatePlots(d)
         })
+        updateTimeShift()
     }
 
     d3.selectAll("input[name='plot_deltas']").on("click", () => {
@@ -757,7 +760,7 @@
 
     function draw_model_overlay(pmain, datafunc) {
 
-        let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
+        let date0 = moment(model_startdate)
         let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(2, 'days')
         overlaydata =
             seirdata
@@ -1057,6 +1060,28 @@
     resizeSeir()
     resizeDataPlot()
 
+    function updateTimeShift() {
+        if (currentData == undefined) {
+            return
+        }
+        didx = currentData.series.findIndex(d => (d.deaths >= seirinput.match_deaths))
+        model_startdate = undefined
+        if (didx >= 0) {
+            let deaths = currentData.series[didx].deaths
+            sidx = seirdata.findIndex(d => d.fatal > deaths)
+            if (sidx >= 0) {
+                model_startdate = new Date(currentData.series[didx].date)
+                model_startdate.setDate(model_startdate.getDate() - seirdata[sidx].time)
+            }
+        }
+        if (model_startdate == undefined) {
+            // If not enough deaths, start model on February 2, 1010
+            // (note: month index below starts @ 0)
+            model_startdate = new Date(Date.UTC(2020, 1, 1))
+        }
+        console.log(model_startdate)
+    }
+
     function update_seir() {
         let keys = allkeys.filter(d => { return plotkeys.includes(d) })
 
@@ -1096,8 +1121,10 @@
         };
         seirdata = Array.from(datagen(raw))
         raw = undefined
-        // Get maximum value on y axis
+        // Compute simulation start time by matching deaths
+        updateTimeShift()
 
+        // Scale axes
         let x = d3.scaleLinear()
             .range([0, seirplot.width])
             .domain([0, seirinput.duration])
@@ -1110,7 +1137,7 @@
 
         let svg = d3.selectAll("#seirplotarea")
 
-        let date0 = moment([2020]).utc().add(seirinput.startdate, 'day')
+        let date0 = moment(model_startdate)
 
         svg.selectAll(".x-axis")
             .call(d3.axisBottom(x).tickSizeOuter(0)
@@ -1402,12 +1429,6 @@
                 args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal"],
                 tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
             },
-            {
-                label: "\\(T_{start}\\)",
-                args: [[-60, 60], seirinput.startdate, "d", "startdate", 1],
-                tooltip: '<h3>Simulation Start</h3><br><p style="text-align: left">Shift in days to simulation start date relative to date of pandemic beginning (chosen as February 1, 2020)</p>'
-            },
-
             ]]
         },
 
@@ -1692,7 +1713,6 @@
     var Module = {
         onRuntimeInitialized: function () {
             runtime_initialized = true
-            update_seir()
             if ('plot_deltas' in newparams) {
                 document.getElementById('plot_deltas').checked = true
                 plot_deltas = true
@@ -1712,6 +1732,7 @@
             else {
                 UpdatePlotCountry("United States")
             }
+            update_seir()
         }
     }
 
