@@ -53,7 +53,8 @@
         }
 
         .axis-label {
-            font: 14px sans-serif;
+            font: 11px sans-serif;
+            font-weight: bold;
             fill: steelblue;
         }
 
@@ -807,12 +808,8 @@
             let bgrect = pmain.g.selectAll(".bgrect")
             let startintervention = moment(model_startdate).add(seirinput.Tintervention, 'days')
             let stopintervention = startintervention.clone().add(seirinput.intervention_duration, 'days')
-            console.log("        sim start: " + moment(model_startdate).format())
-            console.log("startintervention: " + startintervention.format())
-            console.log("stopintervention:  " + stopintervention.format())
-            //console.log(stopintervention)
-            console.log(seirinput.intervention_duration)
-
+            // Can't go past today
+            stopintervention = moment.min(stopintervention, moment())
             let bgwidth = d3.min([seirinput.intervention_duration, seirinput.duration - seirinput.Tintervention])
             bgrect.classed("intervention-rect", true)
                 .attr("x", pmain.x(startintervention))
@@ -820,9 +817,6 @@
                 .attr("y", 0)
                 .attr("height", dataplot.height)
                 .attr("visibility", "visible")
-            console.log("x: " + pmain.x(startintervention))
-            console.log("width: " + (pmain.x(stopintervention) - pmain.x(startintervention)))
-
 
             let bg = ["Intervention"]
             let bgtext = pmain.g.selectAll(".bggroup").selectAll("text").data(bg)
@@ -1321,7 +1315,7 @@
             .sliderBottom()
             .min(range[0])
             .max(range[1])
-            .width(200)
+            .width(280)
             .ticks(5)
             .default(val)
             .tickFormat(d3.format(format))
@@ -1335,7 +1329,7 @@
 
         at
             .append("svg")
-            //.attr("width", 200)
+            .attr("width", 320)
             .attr("height", 64)
             .append("g")
             .attr("transform", "translate(20,20)")
@@ -1464,8 +1458,8 @@
     model_params = [
         {
             title: "Infection Parameters",
-            width: "50%",
-            cols: 2,
+            width: "33%",
+            cols: 1,
             values: [[{
                 label: "\\(\\mathcal{R}_0\\)",
                 args: [[0, 5], seirinput.R0, ".3", "R0", .01],
@@ -1475,8 +1469,8 @@
                 label: "\\(p_{mild}\\)",
                 args: [[0, 1], seirinput.pMild, ".0%", "pMild", .01],
                 tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
-            }],
-            [{
+            },
+            {
                 label: "\\(IFR\\)",
                 args: [[0, 0.02], seirinput.pFatal, ".1%", "pFatal", .00025],
                 tooltip: '<h3>Infection Fatality ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
@@ -1486,7 +1480,7 @@
 
         {
             title: "Intervention",
-            width: "25%",
+            width: "33%",
             cols: 1,
             values: [[
                 {
@@ -1498,22 +1492,22 @@
                     label: "\\(T_{int}\\)",
                     args: [[0, 200], seirinput.Tintervention, 'd', "Tintervention", 1],
                     tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">Time of intervention to reduce \\(R_0\\) in days since start of simulation</p>'
-                }]]
+                },
+                {
+                    label: "\\(\\Delta_{int}\\)",
+                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 2],
+                    tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
+                },]]
         },
         {
             title: "New Normal",
-            width: "25%",
+            width: "33%",
             cols: 1,
             values: [[
                 {
                     label: "\\({\\mathcal{R}_0}\\)",
                     args: [[0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .01],
                     tooltip: '<h3>New Normal \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number at new normal</p>'
-                },
-                {
-                    label: "\\(\\Delta_{int}\\)",
-                    args: [[0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 2],
-                    tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
                 },
 
             ]]
@@ -1528,7 +1522,8 @@
         values: [[
             {
                 label: "\\(\\mathcal{T}_{inc}\\)",
-                args: [[1, 14], seirinput.Tinc, 'd', "Tinc"]
+                args: [[1, 14], seirinput.Tinc, 'd', "Tinc"],
+                tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
             },
             {
                 label: "\\(\\mathcal{T}_{inf}\\)",
