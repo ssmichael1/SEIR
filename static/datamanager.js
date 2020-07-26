@@ -1,8 +1,7 @@
-
 function countrylist(callback) {
-    d3.json("static/country_codes.json")
+    d3.json("static/countries.json")
         .then((data, err) => {
-            callback(data.map(a => a.Name))
+            callback(data.map(a => a.Country).sort())
         })
 }
 
@@ -46,10 +45,18 @@ function state_data(state, callback) {
 
 function country_data(country, callback) {
 
-    d3.json("static/country_codes.json")
+    d3.json("static/countries.json")
         .then((countries, err) => {
-            cval = countries.filter(a => a.Name == country)
-            d3.json("https://corona-api.com/countries/" + cval[0].Code)
+            if (country == 'United States') {
+                country = 'United States of America'
+            }
+            cval = countries.filter(a => a.Country == country)
+            console.log("https://corona-api.com/countries/" +
+                String(cval[0].ISO2).toLowerCase()
+            )
+            d3.json("https://corona-api.com/countries/" +
+                    String(cval[0].ISO2).toLowerCase())
+
                 .then((cdata, err) => {
                     series = cdata.data.timeline.map(function (a) {
                         return {
