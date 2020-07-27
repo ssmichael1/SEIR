@@ -107,10 +107,13 @@
             width: 100%;
             font-size: 18px;
             color: #666;
+            border-bottom: 2px solid #999;
+
         }
 
-        .minorTitleColumn {
+        .MinorTitleColumn {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
+            font-size: 20px;
             border-bottom: 2px solid #999;
         }
 
@@ -119,7 +122,7 @@
             padding-top: 20px;
             margin-left: 10px;
             margin-right: 10px;
-            border-bottom: 2px solid #999
+            border-bottom: 2px solid #999;
         }
 
         select {
@@ -230,6 +233,14 @@
             background-color: white;
         }
 
+        ul {
+            margin-left: 32px;
+        }
+
+        li {
+            margin-top: 8px;
+        }
+
         .tooltip {
             position: relative;
             display: inline-block;
@@ -286,7 +297,8 @@
     <!-- Data Block -->
     <div class="row">
         <div class="column fullwidth">
-            <div class="MinorTitleColumn" style="font-size: 18px;">Reported COVID-19 Statistics</div>
+            <div class="MinorTitleColumn">Reported COVID-19
+                Statistics</div>
         </div>
     </div>
     <div class="row notestext" style="padding-left: 20px;padding-right: 20px;padding-top: 20px;">
@@ -294,11 +306,13 @@
             <div class="MinorTitleColumn">Location</div>
             <div class="row" style="padding-top: 10px;">
                 <div class="column" style="width: 50%;">
-                    <input type="radio" name="sourcetype" value="radio_country" checked>&nbsp Country</input>
+                    <input class="myradio" type="radio" name="sourcetype" value="radio_country" checked>&nbsp
+                    Country</input>
 
                 </div>
                 <div class="column" style="width: 50%;">
-                    <input type="radio" name="sourcetype" id="radio_states" value="radio_states">&nbsp US States</input>
+                    <input class="myradio" type="radio" name="sourcetype" id="radio_states" value="radio_states">&nbsp
+                    US States</input>
                 </div>
 
             </div>
@@ -364,7 +378,8 @@
 
         <!-- SEIR Model Parameters Set -->
         <div class="column fullwidth" id="modelparams">
-            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Parameters &nbsp
+            <div class="MinorTitleColumn">SEIR Model Parameters
+                &nbsp
                 <span style="font-size: 14px;">(hover over label for detail)</span>
             </div>
         </div>
@@ -384,7 +399,7 @@
     <div class="row">
         <!-- START of SEIR Plot-->
         <div class="column fullwidth" style="padding-bottom: 20px;">
-            <div class="MinorTitleColumn" style="font-size: 18px;">SEIR Model Plot</div>
+            <div class=" MinorTitleColumn">SEIR Model Plot</div>
             <div class="row" sytle="width: 100%;" id="seirparent">
                 <div class="column" style="min-width: 220px;max-width: 15%;" id="seirdata"></div>
                 <div class="column" style="flex: 1;flex-grow: 1;" id="seirplot"> </div>
@@ -402,27 +417,17 @@
             <div class="MinorTitleColumn">Description</div>
             <div class="notestext" style="font-size: 18px;">
                 <p>
-                    This page presents reported COVID-19 diagnoses and related deaths by country
-                    and US state. The data is then fit to a standard SEIR (<strong>S</strong>usceptible,
-                    <strong>E</strong>xposed, <strong>I</strong>nfectious, <strong>R</strong>emoved) model. Note that
-                    the
-                    fitting application is
-                    not yet complete, but overlay of SEIR
-                    model to data ca be manually performed.
-                </p>
-                <br>
-                <br>
-                <p>
+                    This page presents reported COVID-19 diagnoses and related deaths by country and US state. The data
+                    can be manually fit to a standard SEIR( <strong>S</strong>usceptible, <strong>E</strong> xposed,
+                    <strong>I</strong>nfectious, <strong>R</strong>emoved) model.
                     <br>
-                    4/25/2020 <strong>Still to Complete:</strong>
                     <br>
-                    1. Update SEIR color scheme (its terrible)
-                    <br>
-                    2. Complete Documentation below
-                </p>
-
-                <br><br>
-
+                    The SEIR model describes the evolution of COVID-19 within a population.
+                    A key parameter of the model is the reproduction
+                    number, <a id="r0"></a>, the average number of persons who contract the virus from a single
+                    infectous person <i> given a fully susceptible population </i>.
+                    <br><br>
+                </p> <br><br>
                 The SEIR model categorizes a population according to the following:
                 <br><br>
                 <div id="seirstatetable" style="padding-left: 30px;"></div>
@@ -434,10 +439,16 @@
                 The model evolves according to the following set of differential equations:
                 <br><br>
                 <div id="seirequationtable" style="padding-left: 30px;"></div>
-                <div style="padding-top: 20px;">
-                    <tspan style="font-style: italic">To do: Add more documentation for differential
-                        equations</tspan>
-                </div>
+
+                The model allows the user to set <a id="r0"></a> over three discrete time periods
+                <ul style="padding-bottom: 20px;">
+                    <li><b>Initial</b>: <a id="r0"></a> before pandemic is recognized</li>
+                    <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
+                        public reacts to reduce potentially infectious interactions.</li>
+                    <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
+                        reduce <a id="r0"></a> relative to the pre-pandemic period</li>
+                </ul>
+                The <a id="r0"></a> is assumed to change instantaneously at each period.
 
 
             </div>
@@ -504,6 +515,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
     integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 
+<!-- katex for rendering of latex equations -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
     integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
@@ -512,7 +524,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
     integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
-
 <script>
     function latex(code) {
         return katex.renderToString(code, {
@@ -521,8 +532,12 @@
             colorIsTextColor: true
         })
     }
+    d3.selectAll("#r0").html(latex("R_0"))
+</script>
 
 
+<!--<script src="static/description.js"></script>-->
+<script>
     function LightenDarkenColor(col, amt) {
 
         var usePound = false;
@@ -554,7 +569,6 @@
     }
 </script>
 
-<!-- <script src="/seirplot.js"></script>-->
 <script>
     // Copy current state to clipboard
     new ClipboardJS('.urlbtn', {
@@ -594,8 +608,11 @@
     }
 </script>
 
+
 <script>
     // Set some globals
+
+    // All the inputs to the SEIR model
     var seirinput = {
         R0: 2.8,
         Tinc: 4.2,
@@ -630,6 +647,7 @@
     }
 
     // Default, start model on February 1, 2020
+    // (month is 0-based, day is 1-based.  Strange??)
     var model_startdate = new Date(Date.UTC(2020, 1, 1))
     var runtime_initialized = false
 
@@ -644,6 +662,7 @@
     var mindate = moment([2020, 2, 1]);
 
 
+    // Plot widths and heights
     dataplot.plot_width = 500
     dataplot.plot_height = 360
     plot1.svg = d3.select("#deaths_plot")
@@ -651,8 +670,6 @@
         .append("svg")
         .attr("width", dataplot.plot_width)
         .attr("height", dataplot.plot_height)
-    //.attr('viewBox', '0 0 '+ width * 1.1 + ' ' + height * 1.2)
-    //.attr('preserveAspectRatio', 'xMinYMin');
     dataplot.margin = {
         top: 20,
         right: 30,
@@ -679,10 +696,8 @@
         "translate(" + dataplot.margin.left + "," + dataplot.margin.top + ")");
 
 
-
     // Get a list of states
     var baseurl = window.location.origin;
-    //d3.json(baseurl + "/data/statelist").then(function (stateslist) {
     statelist((data) => {
         let s = d3.select("#states")
             .insert("select")
@@ -706,7 +721,6 @@
         });
 
     });
-    //d3.json(baseurl + "/data/countrylist").then(function (countrylist) {
     countrylist((data) => {
         data.unshift("United States")
         let s = d3.select("#countries")
@@ -748,7 +762,6 @@
     });
 
     function UpdatePlotState(statename) {
-        //d3.json(baseurl + "/data/state/" + statename).then(d => {
         state_data(statename, (d) => {
             currentData = d
             updatePlots(d)
@@ -757,7 +770,6 @@
     }
 
     function UpdatePlotCountry(countryname) {
-        //d3.json(baseurl + "/data/country/" + countryname).then(d => {
         country_data(countryname, (d) => {
             currentData = d
             updatePlots(d)
@@ -1086,7 +1098,7 @@
 
         seirplot.plot_width = d3.select("#seirparent").node().getBoundingClientRect().width -
             d3.select("#seirdata").node().getBoundingClientRect().width - 50
-        seirplot.plot_height = d3.max([560, seirplot.plot_width / 2])
+        seirplot.plot_height = d3.min([560, seirplot.plot_width / 2])
         seirplot.margin = {
             top: 60,
             right: 30,
@@ -1125,8 +1137,7 @@
             .attr("class", "y-axis")
 
     }
-    resizeSeir()
-    resizeDataPlot()
+
 
     function updateTimeShift() {
         if (currentData == undefined) {
@@ -1444,7 +1455,6 @@
             .attr("class", "row")
             .append("div")
             .attr("class", "column")
-            .attr("style", "padding-bottom: 10px;")
             .call(d => d
                 .append("input")
                 .attr("type", "checkbox")
@@ -1468,13 +1478,13 @@
                 })
             )
             .call(d => d.append("label")
-                .attr("style", "color: " + zhighlight(param.fieldname) + ";")
-                .html(param.label))
+                .attr("style", "font-size: 10pt; color: " + zhighlight(param.fieldname) + ";")
+                .html("&nbsp &nbsp" + param.label))
         row.append("div")
             .classed("row", true)
             .append("div")
             .classed("column", true)
-            .attr("style", "height: 40px;")
+            .attr("style", "padding-bottom: 6px;")
             .append("text")
             .attr("id", param.fieldname + "-text")
             .attr("style", "color: " + zhighlight(param.fieldname) + ";")
@@ -1496,7 +1506,7 @@
                         tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
                     },
                     {
-                        label: latex("p_{mild}"),
+                        label: latex("p_m"),
                         args: [
                             [0, 1], seirinput.pMild, ".0%", "pMild", .01
                         ],
@@ -1639,7 +1649,6 @@
         .attr("style", "padding-bottom: 20px;")
         .append("div")
         .attr("class", "row")
-
     add_param_to_div(model_params, pdiv)
     pdiv = d3.select("#advancedmodelparams")
         .append("div")
@@ -1740,7 +1749,7 @@
         ]
     ]
     seirparamtabledata = [
-        [latex("R_0"), " < strong > Reproduction Number. < /strong><br>The average number" +
+        [latex("R_0"), " <strong> Reproduction Number</strong><br>The average number" +
             " of people an infectious person will cause to be exposed, given a fully-susceptible poulation"
         ],
         [latex("p_{mild}"), "<strong>Mild Probability</strong><br>Probability that an exposed " +
@@ -1876,6 +1885,8 @@
                 UpdatePlotCountry("United States")
             }
             update_seir()
+            resizeSeir()
+            resizeDataPlot()
         }
     }
 </script>
