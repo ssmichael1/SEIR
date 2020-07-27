@@ -418,13 +418,13 @@
             <div class="notestext" style="font-size: 18px;">
                 <p>
                     This page presents reported COVID-19 diagnoses and related deaths by country and US state. The data
-                    can be manually fit to a standard SEIR( <strong>S</strong>usceptible, <strong>E</strong> xposed,
+                    can be manually fit to a standard SEIR( <strong>S</strong>usceptible, <strong>E</strong>xposed,
                     <strong>I</strong>nfectious, <strong>R</strong>emoved) model.
                     <br>
                     <br>
                     The SEIR model describes the evolution of COVID-19 within a population.
                     A key parameter of the model is the reproduction
-                    number, <a id="r0"></a>, the average number of persons who contract the virus from a single
+                    number, \(R_0\), the average number of persons who contract the virus from a single
                     infectous person <i> given a fully susceptible population </i>.
                     <br><br>
                 </p> <br><br>
@@ -440,13 +440,13 @@
                 <br><br>
                 <div id="seirequationtable" style="padding-left: 30px;"></div>
 
-                The model allows the user to set <a id="r0"></a> over three discrete time periods
+                The model allows the user to set \(R_0\) over three discrete time periods
                 <ul style="padding-bottom: 20px;">
-                    <li><b>Initial</b>: <a id="r0"></a> before pandemic is recognized</li>
+                    <li><b>Initial</b>: \(R_0\) before pandemic is recognized</li>
                     <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
                         public reacts to reduce potentially infectious interactions.</li>
                     <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
-                        reduce <a id="r0"></a> relative to the pre-pandemic period</li>
+                        reduce \(R_0\) relative to the pre-pandemic period</li>
                 </ul>
                 The <a id="r0"></a> is assumed to change instantaneously at each period.
 
@@ -518,13 +518,21 @@
 <!-- katex for rendering of latex equations -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
     integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
     integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous">
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
     integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            throwOnError: false,
+            displayMode: false,
+            colorIsTextColor: true
+        });
+    });
+
     function latex(code) {
         return katex.renderToString(code, {
             throwOnError: false,
@@ -532,7 +540,6 @@
             colorIsTextColor: true
         })
     }
-    d3.selectAll("#r0").html(latex("R_0"))
 </script>
 
 
@@ -1379,32 +1386,31 @@
 
     plot_params = [{
             name: "Exposed",
-            label: latex("\\mathcal{E}xposed"),
+            label: "\\(\\mathcal{E}xposed\\)",
             fieldname: "exposed"
         },
         {
             name: "Infectious",
-            label: latex("\\mathcal{I}nfectious"),
+            label: "\\(\\mathcal{I}nfectious\\)",
             fieldname: "infectious"
         },
         {
             name: "Mild",
-            label: latex("\\mathcal{M}ild"),
+            label: "\\(\\mathcal{M}ild\\)",
             fieldname: "mild"
         },
         {
             name: "Hospitalized",
-            label: latex("\\mathcal{H}ospitalized"),
+            label: "\\(\\mathcal{H}ospitalized\\)",
             fieldname: "hospitalized"
         },
         {
             name: "Fatal",
-            label: latex("\\mathcal{F}atal"),
+            label: "\\(\\mathcal{F}atal\\)",
             fieldname: "fatal"
-        },
-        {
+        }, {
             name: "Removed",
-            label: latex("\\mathcal{R}emoved"),
+            label: "\\(\\mathcal{R}emoved\\)",
             fieldname: "removed"
         }
     ]
@@ -1499,21 +1505,21 @@
             cols: 1,
             values: [
                 [{
-                        label: latex("R_0"),
+                        label: "\\(R_0\\)",
                         args: [
                             [0, 5], seirinput.R0, ".3", "R0", .005
                         ],
                         tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
                     },
                     {
-                        label: latex("p_m"),
+                        label: "\\(p_m\\)",
                         args: [
                             [0, 1], seirinput.pMild, ".0%", "pMild", .01
                         ],
                         tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
                     },
                     {
-                        label: latex("IFR"),
+                        label: "\\(IFR\\)",
                         args: [
                             [0, 0.02], seirinput.pFatal, ".1%", "pFatal", .00025
                         ],
@@ -1529,23 +1535,23 @@
             cols: 1,
             values: [
                 [{
-                        label: latex('R_0'),
+                        label: '\\(R_0\\)',
                         args: [
                             [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
                         ],
-                        tooltip: '<h3>Intervention latex{R_0}</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                        tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
                     },
                     {
-                        label: latex("T_{int}"),
+                        label: "\\(T_{int}\\)",
                         args: [
                             [0, 200], seirinput.Tintervention, 'd', "Tintervention", .5
                         ],
                         tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">' +
-                            'Time of intervention to reduce' + latex('R_0') +
+                            'Time of intervention to reduce \\(R_0\\)' +
                             ' in days since start of simulation</p>'
                     },
                     {
-                        label: latex("\\Delta_{int}"),
+                        label: "\\(\\Delta_{int}\\)",
                         args: [
                             [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
                         ],
@@ -1553,20 +1559,19 @@
                     },
                 ]
             ]
-        },
-        {
+        }, {
             title: "New Normal",
             width: "33%",
             cols: 1,
             values: [
                 [{
-                        label: latex("{R_0}"),
+                        label: "\\({R_0}\\)",
                         args: [
                             [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
                         ],
-                        tooltip: '<h3>New Normal ' + latex("R_0") +
-                            '</h3> < br > < p style = "text-align: left" > Fractional reduction in' +
-                            'reproduction number at new normal < /p >'
+                        tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
+                            '<br> <p style="text-align: left"> Fractional reduction in' +
+                            'reproduction number at new normal </p>'
                     },
 
                 ]
@@ -1576,74 +1581,72 @@
     ]
 
     advanced_params = [{
-            title: "Time Constants",
-            width: "65%",
-            cols: 2,
-            values: [
-                [{
-                        label: latex("\\mathcal{T}_{inc}"),
-                        args: [
-                            [1, 14], seirinput.Tinc, 'd', "Tinc"
-                        ],
-                        tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
-                    },
-                    {
-                        label: latex("\\mathcal{T}_{inf}"),
-                        args: [
-                            [5, 28], seirinput.Tinf, 'd', "Tinf"
-                        ]
-                    },
+        title: "Time Constants",
+        width: "65%",
+        cols: 2,
+        values: [
+            [{
+                    label: "\\(\\mathcal{T}_{inc}\\)",
+                    args: [
+                        [1, 14], seirinput.Tinc, 'd', "Tinc"
+                    ],
+                    tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
+                },
+                {
+                    label: "\\(\\mathcal{T}_{inf}\\)",
+                    args: [
+                        [5, 28], seirinput.Tinf, 'd', "Tinf"
+                    ]
+                },
 
-                    {
-                        label: latex("\\Delta_{sim}"),
-                        args: [
-                            [200, 1000], seirinput.duration, "d", "duration", 400
-                        ]
-                    },
+                {
+                    label: "\\(\\Delta_{sim}\\)",
+                    args: [
+                        [200, 1000], seirinput.duration, "d", "duration", 400
+                    ]
+                },
 
-                ],
-                [{
-                        label: latex("\\mathcal{T}_{mrec}"),
-                        args: [
-                            [1, 21], seirinput.Tmrec, 'd', "Tmrec"
-                        ]
-                    },
-                    {
-                        label: latex("\\mathcal{T}_{hrec}"),
-                        args: [
-                            [1, 21], seirinput.Threc, 'd', "Threc"
-                        ]
-                    },
-                    {
-                        label: latex("\\mathcal{T}_{fatal}"),
-                        args: [
-                            [5, 28], seirinput.Tfat, 'd', "Tfat"
-                        ]
-                    },
-                ]
+            ],
+            [{
+                    label: "\\(\\mathcal{T}_{mrec}\\)",
+                    args: [
+                        [1, 21], seirinput.Tmrec, 'd', "Tmrec"
+                    ]
+                },
+                {
+                    label: "\\(\\mathcal{T}_{hrec}\\)",
+                    args: [
+                        [1, 21], seirinput.Threc, 'd', "Threc"
+                    ]
+                },
+                {
+                    label: "\\(\\mathcal{T}_{fatal}\\)",
+                    args: [
+                        [5, 28], seirinput.Tfat, 'd', "Tfat"
+                    ]
+                },
             ]
-        },
-        {
-            title: "Hospitalization",
-            width: "35%",
-            cols: 1,
-            values: [
-                [{
-                        label: latex("\\mathcal{C}_\\mathcal{H}"),
-                        args: [
-                            [.001, .02], seirinput.Hc, '.2%', "Hc"
-                        ]
-                    },
-                    {
-                        label: latex("\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}"),
-                        args: [
-                            [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
-                        ]
-                    },
-                ]
+        ]
+    }, {
+        title: "Hospitalization",
+        width: "35%",
+        cols: 1,
+        values: [
+            [{
+                    label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
+                    args: [
+                        [.001, .02], seirinput.Hc, '.2%', "Hc"
+                    ]
+                },
+                {
+                    label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
+                    args: [
+                        [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
+                    ]
+                },
             ]
-        }
-    ]
+        ]
+    }]
 
     let pdiv = d3.select("#modelparams")
         .attr("style", "padding-bottom: 20px;")
@@ -1728,71 +1731,71 @@
     }
 
     seirstatedata = [
-        [latex("\\mathcal{S}"), "<strong>Susceptible</strong><br>Population susceptible to exposure, i.e. " +
+        ['\\(\\mathcal{S}\\)', "<strong>Susceptible</strong><br>Population susceptible to exposure, i.e. " +
             "not immune from previous exposure.  Initially assumed to be 100%"
         ],
-        [latex("\\mathcal{E}"), "<strong>Exposed</strong><br>Population eposed to virus. " +
+        ["\\(\\mathcal{E}\\)", "<strong>Exposed</strong><br>Population eposed to virus. " +
             "Not yet symptomatic or infectious, but becoming infectious with 100% probability"
         ],
-        [latex("\\mathcal{I}"), "<strong>Infectious</strong><br>Population infectious after becoming " +
-            "exposed.  Will infect susceptible populatinon according to reproduction number \\(\\mathcal{R}_0\\)"
+        ["\\(\\mathcal{I}\\)", "<strong>Infectious</strong><br>Population infectious after becoming " +
+            "exposed.  Will infect susceptible population according to reproduction number \\(R_0\\)"
         ],
-        [latex("\\mathcal{M}"), "<strong>Mild</strong><br>Mildly symptomatic population.  No longer " +
+        ["\\(\\mathcal{M}\\)", "<strong>Mild</strong><br>Mildly symptomatic population.  No longer " +
             "infectious.  May be asymptomatic.  Not hospitalized"
         ],
-        [latex("\\mathcal{H}"), "<strong>Hospitalized</strong><br>Hospitalized population.  No lonter " +
+        ["\\(\\mathcal{H}\\)", "<strong>Hospitalized</strong><br>Hospitalized population.  No lonter " +
             "infectious."
         ],
-        [latex("\\mathcal{F}"), "<strong>Fatal</strong><br>Population that has died due to virus"],
-        [latex("\\mathcal{R}"), "<strong>Removed</strong><br>Population recovered from virus " +
+        ["\\(\\mathcal{F}\\)", "<strong>Fatal</strong><br>Population that has died due to virus"],
+        ["\\(\\mathcal{R}\\)", "<strong>Removed</strong><br>Population recovered from virus " +
             "and no longer susceptible"
         ]
     ]
     seirparamtabledata = [
-        [latex("R_0"), " <strong> Reproduction Number</strong><br>The average number" +
+        ["\\(R_0\\)", " <strong> Reproduction Number</strong><br>The average number" +
             " of people an infectious person will cause to be exposed, given a fully-susceptible poulation"
         ],
-        [latex("p_{mild}"), "<strong>Mild Probability</strong><br>Probability that an exposed " +
+        ["\\(p_{mild}\\)", "<strong>Mild Probability</strong><br>Probability that an exposed " +
             "person will be asymptomatic or expeirience mild symptoms that do not require hospitalization"
         ],
-        [latex("\\mathcal{C}_{\\mathcal{H}}"), "<strong>Hospital Capacity</strong><br>" +
+        ["\\(\\mathcal{C}_{\\mathcal{H}}\\)", "<strong>Hospital Capacity</strong><br>" +
             "Hospital capacity, as percentage of population"
         ],
-        [latex("IFR"), "<strong>Infection Fatality rate</strong><br>" +
+        ["\\(IFR\\)", "<strong>Infection Fatality rate</strong><br>" +
             "Probability of death given exposure"
         ],
-        [latex("\\Delta p_f | \\mathcal{H} > \\mathcal{C}_\\mathcal{H}"),
+        ["\\(\\Delta p_f | \\mathcal{H} > \\mathcal{C}_\\mathcal{H}\\)",
             "<strong>Fatal Probability Increase</strong><br>" +
             "Increase in fatal probability as percentage if hospitalizations exceed hospital capacity"
         ],
-        [latex("\\mathcal{T}_{inc}"), "<strong>Incubation Period</strong><br>" +
+        ["\\(\\mathcal{T}_{inc}\\)", "<strong>Incubation Period</strong><br>" +
             "Period in days between exposure and person becoming infectious"
         ],
-        [latex("\\mathcal{T}_{inf}"), "<strong>Infectious Period</strong><br>" +
+        ["\\(\\mathcal{T}_{inf}\\)", "<strong>Infectious Period</strong><br>" +
             "Average period in days that a person is infectious"
         ],
-        [latex("\\mathcal{T}_{mrec}"), "<strong>Mild Recovery Period</strong><br>" +
+        ["\\(\\mathcal{T}_{mrec}\\)", "<strong>Mild Recovery Period</strong><br>" +
             "Average period in days for a person to recover from mild symptoms"
         ],
-        [latex("\\mathcal{T}_{hrec}"), "<strong>Hospital Recovery Period</strong><br>" +
+        ["\\(\\mathcal{T}_{hrec}\\)", "<strong>Hospital Recovery Period</strong><br>" +
             "Average period in days for a person to recover if hospitalized"
         ],
-        [latex("\\mathcal{T}_{fatal}"), "<strong>Fatal period</strong><br>" +
+        ["\\(\\mathcal{T}_{fatal}\\)", "<strong>Fatal period</strong><br>" +
             "Average period in days a person with a fatal outcome will stay in hospital"
         ],
-        [latex("T_{int}"), "<strong>Intervention Start</strong><br>" +
+        ["\\(T_{int}\\)", "<strong>Intervention Start</strong><br>" +
             "Start of intervention period in which \\(\\mathcal{R}_0\\) is reduced"
         ],
-        [latex("\\Delta_{int}"), "<strong>Intervention Duration</strong><br>" +
+        ["\\(\\Delta_{int}\\)", "<strong>Intervention Duration</strong><br>" +
             "Length in days of intervention period"
         ],
-        [latex("\\Delta \\mathcal{R}_0"), "<strong>Reproduction Number Reduction</strong><br>" +
+        ["\\(\\Delta \\mathcal{R}_0\\)", "<strong>Reproduction Number Reduction</strong><br>" +
             "During intervention period, reduction in reproduction number as percentage"
         ],
-        [latex("\\Delta_{sim}"), "<strong>Simulation Duration</strong><br>" +
+        ["\\(\\Delta_{sim}\\)", "<strong>Simulation Duration</strong><br>" +
             "Simulation duration, in days"
         ],
-        [latex("T_{start}"), "<strong>Simulation Start</strong><br>" +
+        ["\\(T_{start}\\)", "<strong>Simulation Start</strong><br>" +
             "Simulation start shift in days, relative to Jan. 1 2020.  Used to when" +
             " overlaying model data onto reported statistics"
         ]
@@ -1800,34 +1803,32 @@
 
 
     seirequationtable = [
-        [latex("\\frac{dS}{dt}=-\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S"),
+        ["\\(\\frac{dS}{dt}=-\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S\\)",
             "Infectious people expose susceptible people"
         ],
-        [latex("\\frac{dE}{dt}=\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S"),
+        ["\\(\\frac{dE}{dt}=\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S\\)",
             "People become exposed via infectious population, reproduction number is scaled by " +
             "<br>percentage of susceptible population"
         ],
-        [latex(
-                "\\frac{dI}{dt} = \\frac{E}{\\mathcal{T}_{inc}} - \\frac{\\mathcal{I}}{\\mathcal{T}_{inf}}"
-            ),
+        ["\\(\\frac{dI}{dt} = \\frac{E}{\\mathcal{T}_{inc}} - \\frac{\\mathcal{I}}{\\mathcal{T}_{inf}}\\)",
             "Exposed people become infectious; infectous people become asymptomatic, " +
             " exhibit mild symptoms, or are hospitalized.  For all of these," +
             " they are no longer infectious."
         ],
-        [latex("\\frac{dM}{dt} = p_m \\frac{I}{T_{inf}} - \\frac{M}{t_{mrec}}"),
+        ["\\(\\frac{dM}{dt} = p_m \\frac{I}{T_{inf}} - \\frac{M}{t_{mrec}}\\)",
             "Infectious people who exibit mild or asymptomatic symptoms move into \"mild\" category," +
             "and poeple with mild symptoms recover"
         ],
-        [latex("\\frac{dHr}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}"),
+        ["\\(\\frac{dHr}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
             "Persons going into hospital that will recover.  note that \\(p_{f | h}\\) is the " +
             "probability of fatal outcome given hospitalized. Note that this increases when " +
             "hospitalization capacity is exceeded.  See below for more details."
         ],
-        [latex("\\frac{dHf}{dt} = (1-p_{mild}) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}"),
+        ["\\(\\frac{dHf}{dt} = (1-p_{mild}) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
             "Persons going into hospital that will not recover."
         ],
-        [latex("\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}"), "Persons dying from COVID-19"],
-        [latex("\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}"),
+        ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}\\)", "Persons dying from COVID-19"],
+        ["\\(\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}\\)",
             "People recovering from COVID-19 and removed from susceptibility"
         ]
     ]
