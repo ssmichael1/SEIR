@@ -2,10 +2,9 @@
   "name": "seirmodel",
   "version": "1.0.0",
   "description": "(S)usceptible, (E)xposed, (I)nfectious, (R)emoved model with overlay on data",
-  "main": "main.py",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "main.py"
+    "start": "node ./App.js"
   },
   "repository": {
     "type": "git",
@@ -21,14 +20,12 @@
   },
   "homepage": "https://github.com/StevenSamirMichael/SEIR#readme",
   "dependencies": {
-    "d3": "^5.15.1",
-    "d3-simple-slider": "^1.6.5",
-    "express": "^4.17.1",
-    "https-proxy-agent": "^5.0.0",
-    "mathjax": "^3.0.5",
-    "moment": "^2.24.0",
-    "mongodb": "^3.5.9",
-    "request": "^2.88.2"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11"
   },
   "devDependencies": {}
 }
