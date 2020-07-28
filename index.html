@@ -520,7 +520,7 @@
     integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
     integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous">
-    </script>
+</script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
     integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
@@ -802,24 +802,24 @@
         let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(2, 'days')
         overlaydata =
             seirdata
-                .map((d, i, a) => {
+            .map((d, i, a) => {
+                yp = 0
+                if (plot_deltas) {
                     yp = 0
-                    if (plot_deltas) {
-                        yp = 0
-                        if (i > 0) {
-                            yp = (datafunc(a[i]) - datafunc(a[i - 1])) /
-                                (a[i].time - a[i - 1].time)
-                        }
-                    } else {
-                        yp = datafunc(d)
+                    if (i > 0) {
+                        yp = (datafunc(a[i]) - datafunc(a[i - 1])) /
+                            (a[i].time - a[i - 1].time)
                     }
-                    xp = date0.clone().add(d.time, 'day')
-                    return {
-                        x: xp,
-                        y: d3.max([yp, 0])
-                    }
-                })
-                .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
+                } else {
+                    yp = datafunc(d)
+                }
+                xp = date0.clone().add(d.time, 'day')
+                return {
+                    x: xp,
+                    y: d3.max([yp, 0])
+                }
+            })
+            .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
 
         const area = d3.area()
             .x(d => pmain.x(d.x))
@@ -1055,7 +1055,7 @@
                     "<br>&#x394 " +
                     d3.format(",")(deltaDeaths))
                 d3.select("#casesfield").html("&#8721  " + d3.format(",")(data[i].confirmed) + "  ( " + (data[i]
-                    .confirmed / alldata.population * 100.0).toPrecision(2) + "% )" +
+                        .confirmed / alldata.population * 100.0).toPrecision(2) + "% )" +
                     "<br>&#x394 " + d3.format(",")(deltaConfirmed))
             })
             .on("mouseout", function (d) {
@@ -1385,34 +1385,34 @@
     }
 
     plot_params = [{
-        name: "Exposed",
-        label: "\\(\\mathcal{E}xposed\\)",
-        fieldname: "exposed"
-    },
-    {
-        name: "Infectious",
-        label: "\\(\\mathcal{I}nfectious\\)",
-        fieldname: "infectious"
-    },
-    {
-        name: "Mild",
-        label: "\\(\\mathcal{M}ild\\)",
-        fieldname: "mild"
-    },
-    {
-        name: "Hospitalized",
-        label: "\\(\\mathcal{H}ospitalized\\)",
-        fieldname: "hospitalized"
-    },
-    {
-        name: "Fatal",
-        label: "\\(\\mathcal{F}atal\\)",
-        fieldname: "fatal"
-    }, {
-        name: "Removed",
-        label: "\\(\\mathcal{R}emoved\\)",
-        fieldname: "removed"
-    }
+            name: "Exposed",
+            label: "\\(\\mathcal{E}xposed\\)",
+            fieldname: "exposed"
+        },
+        {
+            name: "Infectious",
+            label: "\\(\\mathcal{I}nfectious\\)",
+            fieldname: "infectious"
+        },
+        {
+            name: "Mild",
+            label: "\\(\\mathcal{M}ild\\)",
+            fieldname: "mild"
+        },
+        {
+            name: "Hospitalized",
+            label: "\\(\\mathcal{H}ospitalized\\)",
+            fieldname: "hospitalized"
+        },
+        {
+            name: "Fatal",
+            label: "\\(\\mathcal{F}atal\\)",
+            fieldname: "fatal"
+        }, {
+            name: "Removed",
+            label: "\\(\\mathcal{R}emoved\\)",
+            fieldname: "removed"
+        }
     ]
     d3.selectAll("#seirdata")
         .append("div")
@@ -1500,83 +1500,83 @@
 
 
     model_params = [{
-        title: "Infection Parameters",
-        width: "33%",
-        cols: 1,
-        values: [
-            [{
-                label: "\\(R_0\\)",
-                args: [
-                    [0, 5], seirinput.R0, ".3", "R0", .005
-                ],
-                tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
-            },
-            {
-                label: "\\(p_m\\)",
-                args: [
-                    [0, 1], seirinput.pMild, ".1%", "pMild", .001
-                ],
-                tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
-            },
-            {
-                label: "\\(IFR\\)",
-                args: [
-                    [0, 0.02], seirinput.pFatal, ".1%", "pFatal", .00025
-                ],
-                tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
-            },
+            title: "Infection Parameters",
+            width: "33%",
+            cols: 1,
+            values: [
+                [{
+                        label: "\\(R_0\\)",
+                        args: [
+                            [0, 5], seirinput.R0, ".3", "R0", .005
+                        ],
+                        tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
+                    },
+                    {
+                        label: "\\(p_m\\)",
+                        args: [
+                            [0, 1], seirinput.pMild, ".1%", "pMild", .001
+                        ],
+                        tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
+                    },
+                    {
+                        label: "\\(IFR\\)",
+                        args: [
+                            [0, 0.02], seirinput.pFatal, ".2%", "pFatal", .00025
+                        ],
+                        tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
+                    },
+                ]
             ]
-        ]
-    },
+        },
 
-    {
-        title: "Intervention",
-        width: "33%",
-        cols: 1,
-        values: [
-            [{
-                label: '\\(R_0\\)',
-                args: [
-                    [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
-                ],
-                tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
-            },
-            {
-                label: "\\(T_{int}\\)",
-                args: [
-                    [0, 200], seirinput.Tintervention, 'd', "Tintervention", .5
-                ],
-                tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">' +
-                    'Time of intervention to reduce \\(R_0\\)' +
-                    ' in days since start of simulation</p>'
-            },
-            {
-                label: "\\(\\Delta_{int}\\)",
-                args: [
-                    [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
-                ],
-                tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
-            },
+        {
+            title: "Intervention",
+            width: "33%",
+            cols: 1,
+            values: [
+                [{
+                        label: '\\(R_0\\)',
+                        args: [
+                            [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
+                        ],
+                        tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                    },
+                    {
+                        label: "\\(T_{int}\\)",
+                        args: [
+                            [0, 200], seirinput.Tintervention, 'd', "Tintervention", .5
+                        ],
+                        tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">' +
+                            'Time of intervention to reduce \\(R_0\\)' +
+                            ' in days since start of simulation</p>'
+                    },
+                    {
+                        label: "\\(\\Delta_{int}\\)",
+                        args: [
+                            [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
+                        ],
+                        tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
+                    },
+                ]
             ]
-        ]
-    }, {
-        title: "New Normal",
-        width: "33%",
-        cols: 1,
-        values: [
-            [{
-                label: "\\({R_0}\\)",
-                args: [
-                    [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
-                ],
-                tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
-                    '<br> <p style="text-align: left"> Fractional reduction in' +
-                    'reproduction number at new normal </p>'
-            },
+        }, {
+            title: "New Normal",
+            width: "33%",
+            cols: 1,
+            values: [
+                [{
+                        label: "\\({R_0}\\)",
+                        args: [
+                            [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
+                        ],
+                        tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
+                            '<br> <p style="text-align: left"> Fractional reduction in' +
+                            'reproduction number at new normal </p>'
+                    },
 
+                ]
             ]
-        ]
-    },
+        },
 
     ]
 
@@ -1586,45 +1586,45 @@
         cols: 2,
         values: [
             [{
-                label: "\\(\\mathcal{T}_{inc}\\)",
-                args: [
-                    [1, 14], seirinput.Tinc, 'd', "Tinc"
-                ],
-                tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
-            },
-            {
-                label: "\\(\\mathcal{T}_{inf}\\)",
-                args: [
-                    [5, 28], seirinput.Tinf, 'd', "Tinf"
-                ]
-            },
+                    label: "\\(\\mathcal{T}_{inc}\\)",
+                    args: [
+                        [1, 14], seirinput.Tinc, 'd', "Tinc"
+                    ],
+                    tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
+                },
+                {
+                    label: "\\(\\mathcal{T}_{inf}\\)",
+                    args: [
+                        [5, 28], seirinput.Tinf, 'd', "Tinf"
+                    ]
+                },
 
-            {
-                label: "\\(\\Delta_{sim}\\)",
-                args: [
-                    [200, 1000], seirinput.duration, "d", "duration", 400
-                ]
-            },
+                {
+                    label: "\\(\\Delta_{sim}\\)",
+                    args: [
+                        [200, 1000], seirinput.duration, "d", "duration", 400
+                    ]
+                },
 
             ],
             [{
-                label: "\\(\\mathcal{T}_{mrec}\\)",
-                args: [
-                    [1, 21], seirinput.Tmrec, 'd', "Tmrec"
-                ]
-            },
-            {
-                label: "\\(\\mathcal{T}_{hrec}\\)",
-                args: [
-                    [1, 21], seirinput.Threc, 'd', "Threc"
-                ]
-            },
-            {
-                label: "\\(\\mathcal{T}_{fatal}\\)",
-                args: [
-                    [5, 28], seirinput.Tfat, 'd', "Tfat"
-                ]
-            },
+                    label: "\\(\\mathcal{T}_{mrec}\\)",
+                    args: [
+                        [1, 21], seirinput.Tmrec, 'd', "Tmrec"
+                    ]
+                },
+                {
+                    label: "\\(\\mathcal{T}_{hrec}\\)",
+                    args: [
+                        [1, 21], seirinput.Threc, 'd', "Threc"
+                    ]
+                },
+                {
+                    label: "\\(\\mathcal{T}_{fatal}\\)",
+                    args: [
+                        [5, 28], seirinput.Tfat, 'd', "Tfat"
+                    ]
+                },
             ]
         ]
     }, {
@@ -1633,17 +1633,17 @@
         cols: 1,
         values: [
             [{
-                label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
-                args: [
-                    [.001, .02], seirinput.Hc, '.2%', "Hc"
-                ]
-            },
-            {
-                label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
-                args: [
-                    [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
-                ]
-            },
+                    label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
+                    args: [
+                        [.001, .02], seirinput.Hc, '.2%', "Hc"
+                    ]
+                },
+                {
+                    label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
+                    args: [
+                        [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
+                    ]
+                },
             ]
         ]
     }]
@@ -1697,7 +1697,7 @@
                         .attr("style", "width: 87%;")
                         .call(create_slider, pcol.args[0], pcol.args[1], pcol.args[2],
                             pcol
-                                .args[3], pcol.args[4])
+                            .args[3], pcol.args[4])
 
                 })
             })
