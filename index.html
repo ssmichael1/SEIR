@@ -1593,14 +1593,14 @@
         cols: 2,
         values: [
             [{
-                    label: "\\(\\mathcal{T}_{inc}\\)",
+                    label: "\\(\\tau_{inc}\\)",
                     args: [
                         [1, 14], seirinput.Tinc, 'd', "Tinc"
                     ],
                     tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
                 },
                 {
-                    label: "\\(\\mathcal{T}_{inf}\\)",
+                    label: "\\(\\tau_{inf}\\)",
                     args: [
                         [5, 28], seirinput.Tinf, 'd', "Tinf"
                     ],
@@ -1618,7 +1618,7 @@
 
             ],
             [{
-                    label: "\\(\\mathcal{T}_{mrec}\\)",
+                    label: "\\(\\tau_{mrec}\\)",
                     args: [
                         [1, 21], seirinput.Tmrec, 'd', "Tmrec"
                     ],
@@ -1627,7 +1627,7 @@
 
                 },
                 {
-                    label: "\\(\\mathcal{T}_{hrec}\\)",
+                    label: "\\(\\tau_{hrec}\\)",
                     args: [
                         [1, 21], seirinput.Threc, 'd', "Threc"
                     ],
@@ -1635,7 +1635,7 @@
                         'Duration in days for a hospitalized person to recover</p>'
                 },
                 {
-                    label: "\\(\\mathcal{T}_{fatal}\\)",
+                    label: "\\(\\tau_{fatal}\\)",
                     args: [
                         [5, 28], seirinput.Tfat, 'd', "Tfat"
                     ],
@@ -1776,7 +1776,7 @@
         ["\\(R_0\\)", " <strong> Reproduction Number</strong><br>The average number" +
             " of people an infectious person will cause to be exposed, given a fully-susceptible poulation"
         ],
-        ["\\(p_{mild}\\)", "<strong>Mild Probability</strong><br>Probability that an exposed " +
+        ["\\(p_m\\)", "<strong>Mild Probability</strong><br>Probability that an exposed " +
             "person will be asymptomatic or expeirience mild symptoms that do not require hospitalization"
         ],
         ["\\(\\mathcal{C}_{\\mathcal{H}}\\)", "<strong>Hospital Capacity</strong><br>" +
@@ -1789,19 +1789,19 @@
             "<strong>Fatal Probability Increase</strong><br>" +
             "Increase in fatal probability as percentage if hospitalizations exceed hospital capacity"
         ],
-        ["\\(\\mathcal{T}_{inc}\\)", "<strong>Incubation Period</strong><br>" +
+        ["\\(\\tau_{inc}\\)", "<strong>Incubation Period</strong><br>" +
             "Period in days between exposure and person becoming infectious"
         ],
-        ["\\(\\mathcal{T}_{inf}\\)", "<strong>Infectious Period</strong><br>" +
+        ["\\(\\tau_{inf}\\)", "<strong>Infectious Period</strong><br>" +
             "Average period in days that a person is infectious"
         ],
-        ["\\(\\mathcal{T}_{mrec}\\)", "<strong>Mild Recovery Period</strong><br>" +
+        ["\\(\\tau_{mrec}\\)", "<strong>Mild Recovery Period</strong><br>" +
             "Average period in days for a person to recover from mild symptoms"
         ],
-        ["\\(\\mathcal{T}_{hrec}\\)", "<strong>Hospital Recovery Period</strong><br>" +
+        ["\\(\\tau_{hrec}\\)", "<strong>Hospital Recovery Period</strong><br>" +
             "Average period in days for a person to recover if hospitalized"
         ],
-        ["\\(\\mathcal{T}_{fatal}\\)", "<strong>Fatal period</strong><br>" +
+        ["\\(\\tau_{fatal}\\)", "<strong>Fatal period</strong><br>" +
             "Average period in days a person with a fatal outcome will stay in hospital"
         ],
         ["\\(T_{int}\\)", "<strong>Intervention Start</strong><br>" +
@@ -1821,29 +1821,29 @@
 
 
     seirequationtable = [
-        ["\\(\\frac{dS}{dt}=-\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S\\)",
+        ["\\(\\frac{dS}{dt}=-\\frac{\\mathcal{R}_0}{\\tau_{inf}} I S\\)",
             "Infectious people expose susceptible people"
         ],
-        ["\\(\\frac{dE}{dt}=\\frac{\\mathcal{R}_0}{\\mathcal{T}_{inf}} I S~-~\\frac{E}{\\mathcal{T}_{inc}}\\)",
+        ["\\(\\frac{dE}{dt}=\\frac{\\mathcal{R}_0}{\\tau_{inf}} I S~-~\\frac{E}{\\tau_{inc}}\\)",
             "People become exposed via infectious population, reproduction number is scaled by " +
-            "<br>percentage of susceptible population"
+            "percentage of susceptible population.  Exposed people become infectious."
         ],
-        ["\\(\\frac{dI}{dt} = \\frac{E}{\\mathcal{T}_{inc}} - \\frac{\\mathcal{I}}{\\mathcal{T}_{inf}}\\)",
+        ["\\(\\frac{dI}{dt} = \\frac{E}{\\tau_{inc}} - \\frac{\\mathcal{I}}{\\tau_{inf}}\\)",
             "Exposed people become infectious; infectous people become asymptomatic, " +
             " exhibit mild symptoms, or are hospitalized.  For all of these," +
             " they are no longer infectious."
         ],
-        ["\\(\\frac{dM}{dt} = p_m \\frac{I}{T_{inf}} - \\frac{M}{t_{mrec}}\\)",
+        ["\\(\\frac{dM}{dt} = p_m \\frac{I}{\\tau_{inf}} - \\frac{M}{\\tau_{mrec}}\\)",
             "Infectious people who exibit mild or asymptomatic symptoms move into \"mild\" category," +
-            "and poeple with mild symptoms recover"
+            "and people with mild symptoms recover"
         ],
-        ["\\(\\frac{dHr}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{T_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
-            "Persons going into hospital that will recover.  note that \\(p_{f | h}\\) is the " +
+        ["\\(\\frac{dHr}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{\\tau_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
+            "People going into hospital that will recover.   \\(p_{f | h}\\) is the " +
             "probability of fatal outcome given hospitalized. Note that this increases when " +
             "hospitalization capacity is exceeded.  See below for more details."
         ],
-        ["\\(\\frac{dHf}{dt} = (1-p_{mild}) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
-            "Persons going into hospital that will not recover."
+        ["\\(\\frac{dHf}{dt} = (1-p_m) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
+            "Persons going into hospital that will have a fatal outcome."
         ],
         ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}\\)", "Persons dying from COVID-19"],
         ["\\(\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}\\)",
