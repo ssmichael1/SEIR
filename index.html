@@ -23,6 +23,10 @@
         }
 
 
+        .minorline {
+            height: 0px;
+            border-bottom: 1px solid #ccc;
+        }
 
         .bar {
             fill: lightsteelblue;
@@ -63,6 +67,8 @@
             font-family: sans-serif;
             font-size: 14px;
             color: darkslategray;
+            height: 24px;
+            vertical-align: middle;
         }
 
         .axis {
@@ -126,7 +132,8 @@
         }
 
         select {
-            font-size: 11px;
+            font-size: 12px;
+            width: 12rem;
         }
 
         select[disabled=true] {
@@ -305,29 +312,29 @@
         <div class="column left">
             <div class="MinorTitleColumn">Location</div>
             <div class="row" style="padding-top: 10px;">
-                <div class="column" style="width: 50%;">
+                <div class="column" style="width: 34%;">
                     <input class="myradio" type="radio" name="sourcetype" value="radio_country" checked>&nbsp
                     Country</input>
-
                 </div>
-                <div class="column" style="width: 50%;">
-                    <input class="myradio" type="radio" name="sourcetype" id="radio_states" value="radio_states">&nbsp
-                    US States</input>
+                <div class="column" style="width: 65%;">
+                    <div id="countries"></div>
                 </div>
 
             </div>
             <div class="row" style="padding-top: 10px;">
-                <div class="column" style="width: 50%;">
-                    <div id="countries"></div>
+                <div class="column" style="width: 34%;">
+                    <input class="myradio" type="radio" name="sourcetype" id="radio_states" value="radio_states">&nbsp
+                    US States</input>
                 </div>
-                <div class="column" style="width: 50%;">
+                <div class="column" style="width: 65%;">
                     <div id="states"></div>
                 </div>
 
             </div>
 
 
-            <div>
+            <div style="margin-left: 20px;">
+                <div class="minorline"></div>
                 <table style="padding-top: 10px" cellspacing="10">
                     <tr>
                         <td align="right">Population: </td>
@@ -346,17 +353,20 @@
                         <td align="left" id="casesfield"></td>
                     </tr>
                 </table>
-            </div>
 
-            <div style="padding-top: 20px;">
-                <input type="checkbox" id="plot_deltas" name="plot_deltas">&nbsp Plot Daily Change instead of Cumulative
-            </div>
-            <div style="padding-top: 10px;">
-                <input type="checkbox" id="overlay_model" name="overlay_model">&nbsp Overlay SEIR Model
-            </div>
-            <div style="padding-top: 10px;">
-                <button class="urlbtn">Save View to Clipboard
-                </button>
+                <div class="minorline"></div>
+
+                <div style="padding-top: 20px;">
+                    <input type="checkbox" id="plot_deltas" name="plot_deltas">&nbsp Plot Daily Change instead of
+                    Cumulative
+                </div>
+                <div style="padding-top: 10px;">
+                    <input type="checkbox" id="overlay_model" name="overlay_model">&nbsp Overlay SEIR Model
+                </div>
+                <div style="padding-top: 10px;">
+                    <button class="urlbtn">Save View to Clipboard
+                    </button>
+                </div>
             </div>
 
         </div>
