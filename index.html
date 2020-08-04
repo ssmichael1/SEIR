@@ -1837,16 +1837,16 @@
             "Infectious people who exibit mild or asymptomatic symptoms move into \"mild\" category," +
             "and people with mild symptoms recover"
         ],
-        ["\\(\\frac{dHr}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{\\tau_{inf}} - \\frac{H_r}{T_{hrec}}\\)",
+        ["\\(\\frac{dH_r}{dt} = (1-p_m)(1-p_{f | h}) \\frac{I}{\\tau_{inf}} - \\frac{H_r}{\\tau_{hrec}}\\)",
             "People going into hospital that will recover.   \\(p_{f | h}\\) is the " +
             "probability of fatal outcome given hospitalized. Note that this increases when " +
-            "hospitalization capacity is exceeded.  See below for more details."
+            "hospitalization capacity is exceeded."
         ],
-        ["\\(\\frac{dHf}{dt} = (1-p_m) p_{f | h}~\\frac{I}{T_{inf}}~-~\\frac{H_f}{T_{fat}}\\)",
+        ["\\(\\frac{dH_f}{dt} = (1-p_m) p_{f | h}~\\frac{I}{\\tau_{inf}}~-~\\frac{H_f}{\\tau_{fat}}\\)",
             "Persons going into hospital that will have a fatal outcome."
         ],
-        ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{T_{fat}}\\)", "Persons dying from COVID-19"],
-        ["\\(\\frac{dR}{dt}~=~\\frac{M}{T_{mrec}}~+~\\frac{Hr}{T_{hrec}}\\)",
+        ["\\(\\frac{dF}{dt}~=~\\frac{H_f}{\\tau_{fat}}\\)", "Persons dying from COVID-19"],
+        ["\\(\\frac{dR}{dt}~=~\\frac{M}{\\tau_{mrec}}~+~\\frac{H_r}{\\tau_{hrec}}\\)",
             "People recovering from COVID-19 and removed from susceptibility"
         ]
     ]
