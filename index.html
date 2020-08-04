@@ -44,7 +44,7 @@
 
         .intervention-label {
             font-family: nyt-franklin, helvetica, arial, sans-serif;
-            font-size: 11px;
+            font-size: 14px;
             font-weight: bold;
             fill: darkslategrey;
         }
@@ -54,7 +54,7 @@
         }
 
         .axis-label {
-            font: 11px sans-serif;
+            font: 13px sans-serif;
             font-weight: bold;
             fill: steelblue;
         }
@@ -395,7 +395,7 @@
 
     </div>
 
-
+    <br><br>
     <div class="row">
         <!-- START of SEIR Plot-->
         <div class="column fullwidth" style="padding-bottom: 20px;">
@@ -410,7 +410,7 @@
     <!-- END of SEIR plot-->
 
 
-
+    <br><br>
     <!-- Description -->
     <div class="row">
         <div class="column fullwidth" style="padding-bottom: 25px;">
@@ -418,16 +418,27 @@
             <div class="notestext" style="font-size: 18px;">
                 <p>
                     This page presents reported COVID-19 diagnoses and related deaths by country and US state. The data
-                    can be manually fit to a standard SEIR( <strong>S</strong>usceptible, <strong>E</strong>xposed,
+                    can be manually fit to a standard SEIR (<strong>S</strong>usceptible, <strong>E</strong>xposed,
                     <strong>I</strong>nfectious, <strong>R</strong>emoved) model.
                     <br>
                     <br>
                     The SEIR model describes the evolution of COVID-19 within a population.
                     A key parameter of the model is the reproduction
                     number, \(R_0\), the average number of persons who contract the virus from a single
-                    infectous person <i> given a fully susceptible population </i>.
+                    infectous person <i> given a fully susceptible population</i>.
                     <br><br>
+
+                    The model allows the user to set \(R_0\) over three discrete time periods:
+                    <ul style="padding-bottom: 20px;">
+                        <li><b>Initial</b>: \(R_0\) before pandemic is recognized and society responds</li>
+                        <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
+                            public reacts to reduce potentially infectious interactions.</li>
+                        <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
+                            reduce \(R_0\) relative to the pre-pandemic period</li>
+                    </ul>
+                    The \(R_0\) is assumed to change instantaneously at each period.
                 </p> <br><br>
+
                 The SEIR model categorizes a population according to the following:
                 <br><br>
                 <div id="seirstatetable" style="padding-left: 30px;"></div>
@@ -440,22 +451,13 @@
                 <br><br>
                 <div id="seirequationtable" style="padding-left: 30px;"></div>
 
-                The model allows the user to set \(R_0\) over three discrete time periods
-                <ul style="padding-bottom: 20px;">
-                    <li><b>Initial</b>: \(R_0\) before pandemic is recognized</li>
-                    <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
-                        public reacts to reduce potentially infectious interactions.</li>
-                    <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
-                        reduce \(R_0\) relative to the pre-pandemic period</li>
-                </ul>
-                The <a id="r0"></a> is assumed to change instantaneously at each period.
-
 
             </div>
         </div>
     </div>
 
     <!-- Notes Block -->
+    <br><br>
     <div class="row">
         <div class="column fullwidth">
             <div class="MinorTitleColumn">Notes</div>
@@ -847,8 +849,8 @@
             bgrect.classed("intervention-rect", true)
                 .attr("x", pmain.x(startintervention))
                 .attr("width", pmain.x(stopintervention) - pmain.x(startintervention))
-                .attr("y", 0)
-                .attr("height", dataplot.height)
+                .attr("y", "-16px")
+                .attr("height", dataplot.height + 16)
                 .attr("visibility", "visible")
 
             let bg = ["Intervention"]
@@ -857,7 +859,7 @@
                 .merge(bgtext)
                 .attr("x", pmain.x(stopintervention) - 10)
                 .attr("y", (d, i) => i * 16)
-                .attr("dy", "1em")
+                .attr("dy", "-0.4em")
                 .attr("text-anchor", "end")
                 .attr("visibility", "visible")
                 .classed("intervention-label", true)
@@ -976,7 +978,6 @@
         yaxis
             .append("text")
             .attr("class", "axis-label")
-            //.attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", "0.71em")
             .attr("dx", "1.0em")
@@ -1509,21 +1510,25 @@
                         args: [
                             [0, 5], seirinput.R0, ".3", "R0", .005
                         ],
-                        tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">Mean number of persons infected by an infectous person <it>given a fully susceptible population</it></p>'
+                        tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">' +
+                            'Mean number of persons infected by a single infectous person ' +
+                            ' <it>given a fully susceptible population</it></p>'
                     },
                     {
                         label: "\\(p_m\\)",
                         args: [
                             [0, 1], seirinput.pMild, ".1%", "pMild", .001
                         ],
-                        tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">Probability of an asymptomatic and undocumented (but still infectious) case</p>'
+                        tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">' +
+                            'Probability of an asymptomatic and undocumented (but still infectious) case</p>'
                     },
                     {
                         label: "\\(IFR\\)",
                         args: [
-                            [0, 0.02], seirinput.pFatal, ".2%", "pFatal", .0001 
+                            [0, 0.02], seirinput.pFatal, ".2%", "pFatal", .0001
                         ],
-                        tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">Fraction of infected persons with fatal outcome</p>'
+                        tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">' +
+                            'Fraction of infected persons with fatal outcome</p>'
                     },
                 ]
             ]
@@ -1539,7 +1544,8 @@
                         args: [
                             [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
                         ],
-                        tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">Fractional reduction in reproduction number during intervention</p>'
+                        tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">' +
+                            'Reproduction number during intervention</p>'
                     },
                     {
                         label: "\\(T_{int}\\)",
@@ -1555,7 +1561,8 @@
                         args: [
                             [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
                         ],
-                        tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">Duration of intervention, in days</p>'
+                        tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">' +
+                            'Duration of intervention, in days</p>'
                     },
                 ]
             ]
@@ -1570,8 +1577,8 @@
                             [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
                         ],
                         tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
-                            '<br> <p style="text-align: left"> Fractional reduction in' +
-                            'reproduction number at new normal </p>'
+                            '<br> <p style="text-align: left"> Reproduction number once intervention ceases, ' +
+                            'but new norms of behaviour are established </p>'
                     },
 
                 ]
@@ -1596,14 +1603,17 @@
                     label: "\\(\\mathcal{T}_{inf}\\)",
                     args: [
                         [5, 28], seirinput.Tinf, 'd', "Tinf"
-                    ]
+                    ],
+                    tooltip: '<h3>Infectious Period</h3><br><p style="text-align: left;">' +
+                        'Duration in days that an infectious person can expose others</p>'
                 },
 
                 {
                     label: "\\(\\Delta_{sim}\\)",
                     args: [
                         [200, 1000], seirinput.duration, "d", "duration", 400
-                    ]
+                    ],
+                    tooltip: 'Length of simulation, in days'
                 },
 
             ],
@@ -1611,19 +1621,26 @@
                     label: "\\(\\mathcal{T}_{mrec}\\)",
                     args: [
                         [1, 21], seirinput.Tmrec, 'd', "Tmrec"
-                    ]
+                    ],
+                    tooltip: '<h3>Mild Recovery Period</h3><br><p style="text-align: left;">' +
+                        'Duration in days for a person with mild / asymptomatic case to recover</p>'
+
                 },
                 {
                     label: "\\(\\mathcal{T}_{hrec}\\)",
                     args: [
                         [1, 21], seirinput.Threc, 'd', "Threc"
-                    ]
+                    ],
+                    tooltip: '<h3>Hospital Recovery Period</h3><br><p style="text-align: left;">' +
+                        'Duration in days for a hospitalized person to recover</p>'
                 },
                 {
                     label: "\\(\\mathcal{T}_{fatal}\\)",
                     args: [
                         [5, 28], seirinput.Tfat, 'd', "Tfat"
-                    ]
+                    ],
+                    tooltip: '<h3>Fatal Outcome Time Peirod</h3><br><p style="text-align: left;">' +
+                        'Duration in days for a hospitalized person to succumb to disease</p>'
                 },
             ]
         ]
@@ -1636,13 +1653,17 @@
                     label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
                     args: [
                         [.001, .02], seirinput.Hc, '.2%', "Hc"
-                    ]
+                    ],
+                    tooltip: '<h3>Hospital Capacity</h3><br><p style="text-align: left;">' +
+                        'Hospital capacity, as fraction of total population</p>'
                 },
                 {
                     label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
                     args: [
                         [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
-                    ]
+                    ],
+                    tooltip: '<h3>Change in IFR</h3><br><p style="text-align: left;">' +
+                        'Fractional change in infection fatality ratio for an individual without access to hospitalization'
                 },
             ]
         ]
@@ -1795,10 +1816,7 @@
         ["\\(\\Delta_{sim}\\)", "<strong>Simulation Duration</strong><br>" +
             "Simulation duration, in days"
         ],
-        ["\\(T_{start}\\)", "<strong>Simulation Start</strong><br>" +
-            "Simulation start shift in days, relative to Jan. 1 2020.  Used to when" +
-            " overlaying model data onto reported statistics"
-        ]
+
     ]
 
 
@@ -1847,8 +1865,10 @@
             var content = this.nextElementSibling;
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
+                content.style.overflow = 'hidden'
             } else {
                 content.style.maxHeight = content.scrollHeight + "px";
+                content.style.overflow = 'visible'
             }
         });
     }
