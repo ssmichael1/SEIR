@@ -446,7 +446,7 @@
                         <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
                             reduce \(R_0\) relative to the pre-pandemic period</li>
                     </ul>
-                    The \(R_0\) is assumed to change instantaneously at each period.
+                    The model changes \(R_0\) instantaneously at boundary of each time period.
                 </p> <br><br>
 
                 The SEIR model categorizes a population according to the following:
@@ -1755,7 +1755,7 @@
                     cdiv.attr("style", "text-align: right;width: " + fcwidth + "px;")
                     firstcol = false
                 } else {
-                    cdiv.attr("style", "text-align: left;width: 800px;")
+                    cdiv.attr("style", "text-align: left;width: 600px;")
                 }
             })
         })
@@ -1777,14 +1777,18 @@
         ["\\(\\mathcal{H}\\)", "<strong>Hospitalized</strong><br>Hospitalized population.  No lonter " +
             "infectious."
         ],
-        ["\\(\\mathcal{F}\\)", "<strong>Fatal</strong><br>Population that has died due to virus"],
+        ["\\(\\mathcal{F}\\)",
+            "<strong>Fatal</strong><br>Previously hospitalized population that has died due to virus."
+        ],
         ["\\(\\mathcal{R}\\)", "<strong>Removed</strong><br>Population recovered from virus " +
             "and no longer susceptible"
         ]
     ]
     seirparamtabledata = [
         ["\\(R_0\\)", " <strong> Reproduction Number</strong><br>The average number" +
-            " of people an infectious person will cause to be exposed, given a fully-susceptible poulation"
+            " of people an infectious person will cause to be exposed, given a fully-susceptible poulation." +
+            "  \\(R_0\\) may be set separately for 3 time periods: " +
+            "<b>initial</b>, <b>intervention</b>, and <b>new normal</b>."
         ],
         ["\\(p_m\\)", "<strong>Mild Probability</strong><br>Probability that an exposed " +
             "person will be asymptomatic or expeirience mild symptoms that do not require hospitalization"
@@ -1860,8 +1864,8 @@
             "People recovering from COVID-19 and removed from susceptibility"
         ]
     ]
-    paramtable(d3.selectAll("#seirstatetable"), seirstatedata)
-    paramtable(d3.selectAll("#seirparamtable"), seirparamtabledata, 180)
+    paramtable(d3.selectAll("#seirstatetable"), seirstatedata, 360)
+    paramtable(d3.selectAll("#seirparamtable"), seirparamtabledata, 360)
     paramtable(d3.selectAll("#seirequationtable"), seirequationtable, 360)
 </script>
 
