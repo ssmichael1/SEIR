@@ -1,272 +1,56 @@
 [
-    {
-        "name": "Alabama",
-        "abbreviation": "AL",
-        "population": 4903185
-    },
-    {
-        "name": "Alaska",
-        "abbreviation": "AK",
-        "population": 731545
-    },
-    {
-        "name": "American Samoa",
-        "abbreviation": "AS",
-        "population": 55641
-    },
-    {
-        "name": "Arizona",
-        "abbreviation": "AZ",
-        "population": 7278717
-    },
-    {
-        "name": "Arkansas",
-        "abbreviation": "AR",
-        "population": 3017804
-    },
-    {
-        "name": "California",
-        "abbreviation": "CA",
-        "population": 39512223
-    },
-    {
-        "name": "Colorado",
-        "abbreviation": "CO",
-        "population": 5758736
-    },
-    {
-        "name": "Connecticut",
-        "abbreviation": "CT",
-        "population": 3565287
-    },
-    {
-        "name": "Delaware",
-        "abbreviation": "DE",
-        "population": 973764
-    },
-    {
-        "name": "District Of Columbia",
-        "abbreviation": "DC",
-        "population": 199
-    },
-    {
-        "name": "Florida",
-        "abbreviation": "FL",
-        "population": 21477737
-    },
-    {
-        "name": "Georgia",
-        "abbreviation": "GA",
-        "population": 10617423
-    },
-    {
-        "name": "Guam",
-        "abbreviation": "GU",
-        "population": 164229
-    },
-    {
-        "name": "Hawaii",
-        "abbreviation": "HI",
-        "population": 1415872
-    },
-    {
-        "name": "Idaho",
-        "abbreviation": "ID",
-        "population": 1787065
-    },
-    {
-        "name": "Illinois",
-        "abbreviation": "IL",
-        "population": 12671821
-    },
-    {
-        "name": "Indiana",
-        "abbreviation": "IN",
-        "population": 6732219
-    },
-    {
-        "name": "Iowa",
-        "abbreviation": "IA",
-        "population": 3155070
-    },
-    {
-        "name": "Kansas",
-        "abbreviation": "KS",
-        "population": 2913314
-    },
-    {
-        "name": "Kentucky",
-        "abbreviation": "KY",
-        "population": 4467673
-    },
-    {
-        "name": "Louisiana",
-        "abbreviation": "LA",
-        "population": 4648794
-    },
-    {
-        "name": "Maine",
-        "abbreviation": "ME",
-        "population": 1344212
-    },
-    {
-        "name": "Maryland",
-        "abbreviation": "MD",
-        "population": 6045680
-    },
-    {
-        "name": "Massachusetts",
-        "abbreviation": "MA",
-        "population": 6921234
-    },
-    {
-        "name": "Michigan",
-        "abbreviation": "MI",
-        "population": 9986857
-    },
-    {
-        "name": "Minnesota",
-        "abbreviation": "MN",
-        "population": 5639632
-    },
-    {
-        "name": "Mississippi",
-        "abbreviation": "MS",
-        "population": 2976149
-    },
-    {
-        "name": "Missouri",
-        "abbreviation": "MO",
-        "population": 6626371
-    },
-    {
-        "name": "Montana",
-        "abbreviation": "MT",
-        "population": 1068778
-    },
-    {
-        "name": "Nebraska",
-        "abbreviation": "NE",
-        "population": 1934408
-    },
-    {
-        "name": "Nevada",
-        "abbreviation": "NV",
-        "population": 3080156
-    },
-    {
-        "name": "New Hampshire",
-        "abbreviation": "NH",
-        "population": 1359711
-    },
-    {
-        "name": "New Jersey",
-        "abbreviation": "NJ",
-        "population": 8882190
-    },
-    {
-        "name": "New Mexico",
-        "abbreviation": "NM",
-        "population": 2096829
-    },
-    {
-        "name": "New York",
-        "abbreviation": "NY",
-        "population": 26161672
-    },
-    {
-        "name": "North Carolina",
-        "abbreviation": "NC",
-        "population": 10488084
-    },
-    {
-        "name": "North Dakota",
-        "abbreviation": "ND",
-        "population": 762062
-    },
-    {
-        "name": "Ohio",
-        "abbreviation": "OH",
-        "population": 11689100
-    },
-    {
-        "name": "Oklahoma",
-        "abbreviation": "OK",
-        "population": 3956971
-    },
-    {
-        "name": "Oregon",
-        "abbreviation": "OR",
-        "population": 4217737
-    },
-    {
-        "name": "Pennsylvania",
-        "abbreviation": "PA",
-        "population": 12801989
-    },
-    {
-        "name": "Puerto Rico",
-        "abbreviation": "PR",
-        "population": 2933408
-    },
-    {
-        "name": "Rhode Island",
-        "abbreviation": "RI",
-        "population": 1059361
-    },
-    {
-        "name": "South Carolina",
-        "abbreviation": "SC",
-        "population": 5148714
-    },
-    {
-        "name": "South Dakota",
-        "abbreviation": "SD",
-        "population": 884659
-    },
-    {
-        "name": "Tennessee",
-        "abbreviation": "TN",
-        "population": 6829174
-    },
-    {
-        "name": "Texas",
-        "abbreviation": "TX",
-        "population": 28995881
-    },
-    {
-        "name": "Utah",
-        "abbreviation": "UT",
-        "population": 4095960
-    },
-    {
-        "name": "Vermont",
-        "abbreviation": "VT",
-        "population": 623989
-    },
-    {
-        "name": "Virginia",
-        "abbreviation": "VA",
-        "population": 8535519
-    },
-    {
-        "name": "Washington",
-        "abbreviation": "WA",
-        "population": 7614893
-    },
-    {
-        "name": "West Virginia",
-        "abbreviation": "WV",
-        "population": 1792147
-    },
-    {
-        "name": "Wisconsin",
-        "abbreviation": "WI",
-        "population": 5822434
-    },
-    {
-        "name": "Wyoming",
-        "abbreviation": "WY",
-        "population": 578759
-    }
+{"Abbrev":"AK","Name":"Alaska","Population":"731545","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"AL","Name":"Alabama","Population":"4903185","R0":"1.69","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.933","pFatal":"0.004","Tintervention":"94","intervention_duration":"40","R0_intervention":"1.01","R0_newnormal":"1.35","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:41:00"},
+{"Abbrev":"AR","Name":"Arkansas","Population":"3017804","R0":"1.385","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.877","pFatal":"0.003","Tintervention":"127","intervention_duration":"14","R0_intervention":"1.12","R0_newnormal":"1.205","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:12:12"},
+{"Abbrev":"AS","Name":"American Samoa","Population":"55641","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"AZ","Name":"Arizona","Population":"7278717","R0":"1.735","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.954","pFatal":"0.0024","Tintervention":"91","intervention_duration":"54","R0_intervention":"1.125","R0_newnormal":"1.605","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 23:09:08"},
+{"Abbrev":"CA","Name":"California","Population":"39512223","R0":"1.885","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.931","pFatal":"0.003","Tintervention":"89.5","intervention_duration":"44","R0_intervention":"1.03","R0_newnormal":"1.275","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:33:12"},
+{"Abbrev":"CO","Name":"Colorado","Population":"5758736","R0":"2.045","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.933","pFatal":"0.004","Tintervention":"70","intervention_duration":"53","R0_intervention":"0.945","R0_newnormal":"1.175","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:39:23"},
+{"Abbrev":"CT","Name":"Connecticut","Population":"3565287","R0":"2.065","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.951","pFatal":"0.0049","Tintervention":"78","intervention_duration":"29","R0_intervention":"0.95","R0_newnormal":"1.11","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:04:33"},
+{"Abbrev":"DC","Name":"District Of Columbia","Population":"199","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"DE","Name":"Delaware","Population":"973764","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"FL","Name":"Florida","Population":"21477737","R0":"1.885","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.936","pFatal":"0.0032","Tintervention":"87","intervention_duration":"48","R0_intervention":"0.98","R0_newnormal":"1.48","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:20:35"},
+{"Abbrev":"GA","Name":"Georgia","Population":"10617423","R0":"1.725","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.948","pFatal":"0.003","Tintervention":"105.5","intervention_duration":"48","R0_intervention":"0.96","R0_newnormal":"1.45","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:47:34"},
+{"Abbrev":"GU","Name":"Guam","Population":"164229","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"HI","Name":"Hawaii","Population":"1415872","R0":"2.075","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.907","pFatal":"0.0025","Tintervention":"47.5","intervention_duration":"59","R0_intervention":"0.705","R0_newnormal":"1.375","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:19:43"},
+{"Abbrev":"IA","Name":"Iowa","Population":"3155070","R0":"1.67","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.884","pFatal":"0.003","Tintervention":"97","intervention_duration":"52","R0_intervention":"1.02","R0_newnormal":"1.16","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:06:56"},
+{"Abbrev":"ID","Name":"Idaho","Population":"1787065","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"IL","Name":"Illinois","Population":"12671821","R0":"2.045","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.931","pFatal":"0.005","Tintervention":"76","intervention_duration":"95","R0_intervention":"1.1","R0_newnormal":"1.33","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:04:04"},
+{"Abbrev":"IN","Name":"Indiana","Population":"6732219","R0":"1.885","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.948","pFatal":"0.0049","Tintervention":"86","intervention_duration":"38","R0_intervention":"0.885","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:08:04"},
+{"Abbrev":"KS","Name":"Kansas","Population":"2913314","R0":"1.67","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.888","pFatal":"0.0028","Tintervention":"94","intervention_duration":"46","R0_intervention":"0.85","R0_newnormal":"1.26","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:38:30"},
+{"Abbrev":"KY","Name":"Kentucky","Population":"4467673","R0":"2.135","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.935","pFatal":"0.0048","Tintervention":"57.5","intervention_duration":"40","R0_intervention":"0.945","R0_newnormal":"1.205","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:44:02"},
+{"Abbrev":"LA","Name":"Louisiana","Population":"4648794","R0":"2.045","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.952","pFatal":"0.0041","Tintervention":"77.5","intervention_duration":"58","R0_intervention":"0.925","R0_newnormal":"1.8","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:59:17"},
+{"Abbrev":"MA","Name":"Massachusetts","Population":"6921234","R0":"2.08","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"8.62661","pMild":"0.935","pFatal":"0.005","Tintervention":"78.5","intervention_duration":"89","R0_intervention":"1.03","R0_newnormal":"1.615","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 23:10:20"},
+{"Abbrev":"MD","Name":"Maryland","Population":"6045680","R0":"1.885","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.931","pFatal":"0.005","Tintervention":"86","intervention_duration":"79","R0_intervention":"1.06","R0_newnormal":"1.39","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:34:15"},
+{"Abbrev":"ME","Name":"Maine","Population":"1344212","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"MI","Name":"Michigan","Population":"9986857","R0":"2.42","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"10.023","pMild":"0.959","pFatal":"0.005","Tintervention":"64.5","intervention_duration":"30","R0_intervention":"0.64","R0_newnormal":"1.26","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:41:51"},
+{"Abbrev":"MN","Name":"Minnesota","Population":"5639632","R0":"1.705","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.918","pFatal":"0.0036","Tintervention":"100","intervention_duration":"51","R0_intervention":"0.965","R0_newnormal":"1.205","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:16:18"},
+{"Abbrev":"MO","Name":"Missouri","Population":"6626371","R0":"1.76","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.95","pFatal":"0.003","Tintervention":"90.5","intervention_duration":"63","R0_intervention":"0.975","R0_newnormal":"1.4","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:23:30"},
+{"Abbrev":"MS","Name":"Mississippi","Population":"2976149","R0":"1.705","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.945","pFatal":"0.0028","Tintervention":"94.5","intervention_duration":"61","R0_intervention":"1.08","R0_newnormal":"1.51","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:20:17"},
+{"Abbrev":"MT","Name":"Montana","Population":"1068778","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"NC","Name":"North Carolina","Population":"10488084","R0":"1.955","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.932","pFatal":"0.0034","Tintervention":"74.5","intervention_duration":"25","R0_intervention":"0.99","R0_newnormal":"1.215","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:17:12"},
+{"Abbrev":"ND","Name":"North Dakota","Population":"762062","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"NE","Name":"Nebraska","Population":"1934408","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"NH","Name":"New Hampshire","Population":"1359711","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"NJ","Name":"New Jersey","Population":"8882190","R0":"2.51","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.947","pFatal":"0.0049","Tintervention":"63","intervention_duration":"61","R0_intervention":"1.065","R0_newnormal":"1.49","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:11:24"},
+{"Abbrev":"NM","Name":"New Mexico","Population":"2096829","R0":"1.635","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.947","pFatal":"0.0026","Tintervention":"102.5","intervention_duration":"44","R0_intervention":"0.985","R0_newnormal":"1.26","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:29:51"},
+{"Abbrev":"NV","Name":"Nevada","Population":"3080156","R0":"1.955","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.952","pFatal":"0.003","Tintervention":"70.5","intervention_duration":"47","R0_intervention":"0.92","R0_newnormal":"1.435","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:08:58"},
+{"Abbrev":"NY","Name":"New York","Population":"26161672","R0":"2.97","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.927","pFatal":"0.005","Tintervention":"53.5","intervention_duration":"38","R0_intervention":"0.8","R0_newnormal":"1.11","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:22:30"},
+{"Abbrev":"OH","Name":"Ohio","Population":"11689100","R0":"1.67","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.959","pFatal":"0.003","Tintervention":"114.5","intervention_duration":"48","R0_intervention":"0.95","R0_newnormal":"1.305","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:23:59"},
+{"Abbrev":"OK","Name":"Oklahoma","Population":"3956971","R0":"1.76","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.96","pFatal":"0.0024","Tintervention":"86.5","intervention_duration":"43","R0_intervention":"0.905","R0_newnormal":"1.365","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:02:21"},
+{"Abbrev":"OR","Name":"Oregon","Population":"4217737","R0":"1.725","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"7.88732","pMild":"0.902","pFatal":"0.0048","Tintervention":"77.5","intervention_duration":"28","R0_intervention":"0.875","R0_newnormal":"1.165","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:47:05"},
+{"Abbrev":"PA","Name":"Pennsylvania","Population":"12801989","R0":"1.955","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.947","pFatal":"0.0049","Tintervention":"88.5","intervention_duration":"44","R0_intervention":"0.865","R0_newnormal":"1.225","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:15:13"},
+{"Abbrev":"PR","Name":"Puerto Rico","Population":"2933408","R0":"1.865","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.937","pFatal":"0.0034","Tintervention":"69","intervention_duration":"29","R0_intervention":"0.835","R0_newnormal":"1.24","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 11:26:52"},
+{"Abbrev":"RI","Name":"Rhode Island","Population":"1059361","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"SC","Name":"South Carolina","Population":"5148714","R0":"1.6","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.941","pFatal":"0.003","Tintervention":"106.5","intervention_duration":"40","R0_intervention":"1.015","R0_newnormal":"1.365","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:20:36"},
+{"Abbrev":"SD","Name":"South Dakota","Population":"884659","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"TN","Name":"Tennessee","Population":"6829174","R0":"1.545","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.834","pFatal":"0.0041","Tintervention":"104","intervention_duration":"45","R0_intervention":"1.05","R0_newnormal":"1.205","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:32:58"},
+{"Abbrev":"TX","Name":"Texas","Population":"28995881","R0":"1.705","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.927","pFatal":"0.0027","Tintervention":"104.5","intervention_duration":"34","R0_intervention":"0.995","R0_newnormal":"1.29","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 00:52:52"},
+{"Abbrev":"UT","Name":"Utah","Population":"4095960","R0":"1.76","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"5","pMild":"0.834","pFatal":"0.0023","Tintervention":"75.5","intervention_duration":"13","R0_intervention":"1.01","R0_newnormal":"1.125","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:51:37"},
+{"Abbrev":"VA","Name":"Virginia","Population":"8535519","R0":"1.67","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.929","pFatal":"0.0037","Tintervention":"109.5","intervention_duration":"23","R0_intervention":"0.87","R0_newnormal":"1.165","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:26:55"},
+{"Abbrev":"VT","Name":"Vermont","Population":"623989","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"WA","Name":"Washington","Population":"7614893","R0":"1.67","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.938","pFatal":"0.0037","Tintervention":"104.5","intervention_duration":"48","R0_intervention":"0.9","R0_newnormal":"1.205","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:29:00"},
+{"Abbrev":"WI","Name":"Wisconsin","Population":"5822434","R0":"1.69","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"5.29643","Threc":"12","Tfat":"12.2409","pMild":"0.931","pFatal":"0.005","Tintervention":"92","intervention_duration":"18","R0_intervention":"0.945","R0_newnormal":"1.18","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-12 01:36:41"},
+{"Abbrev":"WV","Name":"West Virginia","Population":"1792147","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"},
+{"Abbrev":"WY","Name":"Wyoming","Population":"578759","R0":"2.8","Tinc":"1","Tinf":"5","Thos":"5","Tmrec":"12","Threc":"12","Tfat":"5","pMild":"0.8","pFatal":"0.005","Tintervention":"100","intervention_duration":"350","R0_intervention":"0.75","R0_newnormal":"1.25","H_c":"0.01","pfat_increase_nohos":"0","Date":"2020-08-11 18:29:50"}
 ]

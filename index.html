@@ -669,7 +669,11 @@
     };
     // Deep copy for use when determining what changes
     // for default when creating copy URL
-    const seirinput_defaults = JSON.parse(JSON.stringify(seirinput))
+    var seirinput_defaults = JSON.parse(JSON.stringify(seirinput))
+    const seirinput_country_defaults = JSON.parse(JSON.stringify(seirinput))
+    // Will populate with sliders later
+    var sliders = {}
+
 
     //seirinput.update(getQueryParams())
     var newparams = getQueryParams()
@@ -798,8 +802,23 @@
         state_data(statename, (d) => {
             currentData = d
             updatePlots(d)
+            // Update the seir params
+            seirinput_defaults = JSON.parse(JSON.stringify(seirinput_country_defaults))
+            seirinput = JSON.parse(JSON.stringify(seirinput_defaults))
+            Object.keys(d.seirparams).forEach((key) => {
+                seirinput[key] = d.seirparams[key]
+            })
+            console.log(seirinput)
+            Object.keys(sliders).forEach((key) => {
+                sliders[key].value(seirinput[key])
+            })
+
+            update_seir()
+            updatePlots(d)
+
         });
         updateTimeShift()
+
     }
 
     function UpdatePlotCountry(countryname) {
@@ -1394,6 +1413,7 @@
                 seirinput[field] = value
                 update_seir()
             })
+        sliders[field] = slider
         if (!(step == undefined)) {
             slider.step(step)
         }
@@ -1635,7 +1655,7 @@
                 {
                     label: "\\(\\Delta_{sim}\\)",
                     args: [
-                        [200, 1000], seirinput.duration, "d", "duration", 400
+                        [200, 1000], seirinput.duration, "d", "duration", 200
                     ],
                     tooltip: 'Length of simulation, in days'
                 },

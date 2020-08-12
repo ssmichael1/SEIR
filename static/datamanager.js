@@ -8,16 +8,16 @@ function countrylist(callback) {
 function statelist(callback) {
     d3.json("static/states.json")
         .then((data, err) => {
-            callback(data.map(a => a.name))
+            callback(data.map(a => a.Name))
         })
 }
 
 function state_data(state, callback) {
     d3.json("static/states.json")
         .then((states, err) => {
-            cval = states.filter(a => a.name == state)
+            cval = states.filter(a => (a.Name == state))
             url = "https://covidtracking.com/api/v1/states/" +
-                cval[0].abbreviation.toLowerCase() +
+                cval[0].Abbrev.toLowerCase() +
                 "/daily.json"
             d3.json(url)
                 .then((cdata, err) => {
@@ -35,7 +35,25 @@ function state_data(state, callback) {
 
                     retdata = {
                         name: state,
-                        population: cval[0].population,
+                        population: parseInt(cval[0].Population),
+                        seirparams: {
+                            R0: parseFloat(cval[0].R0),
+                            Tinc: parseFloat(cval[0].Tinc),
+                            Tinf: parseFloat(cval[0].Tinf),
+                            Thos: parseFloat(cval[0].Thos),
+                            Tmrec: parseFloat(cval[0].Tmrec),
+                            Threc: parseFloat(cval[0].Threc),
+                            Tfat: parseFloat(cval[0].Tfat),
+                            pMild: parseFloat(cval[0].pMild),
+                            pFatal: parseFloat(cval[0].pFatal),
+                            Tintervention: parseFloat(cval[0].Tintervention),
+                            intervention_duration: parseFloat(cval[0].intervention_duration),
+                            R0_intervention: parseFloat(cval[0].R0_intervention),
+                            R0_newnormal: parseFloat(cval[0].R0_newnormal),
+                            Hc: parseFloat(cval[0].H_c),
+                            pfat_increase_nohos: parseFloat(cval[0].pfat_increase_nohos),
+                        },
+                        seirparamdate: cval[0].Date,
                         series: series
                     }
                     callback(retdata)
@@ -51,9 +69,6 @@ function country_data(country, callback) {
                 country = 'United States of America'
             }
             cval = countries.filter(a => a.Country == country)
-            console.log("https://corona-api.com/countries/" +
-                String(cval[0].ISO2).toLowerCase()
-            )
             d3.json("https://corona-api.com/countries/" +
                     String(cval[0].ISO2).toLowerCase())
 
