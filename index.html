@@ -809,6 +809,11 @@
                 seirinput[key] = d.seirparams[key]
             })
             console.log(seirinput)
+            for (let key in newparams) {
+                if (key in seirinput) {
+                    seirinput[key] = parseFloat(newparams[key])
+                }
+            }
             Object.keys(sliders).forEach((key) => {
                 sliders[key].value(seirinput[key])
             })
