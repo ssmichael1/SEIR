@@ -16,7 +16,7 @@ function state_data(state, callback) {
     d3.json("static/states.json")
         .then((states, err) => {
             cval = states.filter(a => (a.Name == state))
-            url = "https://covidtracking.com/api/v1/states/" +
+            url = "https://api.covidtracking.com/v1/states/" +
                 cval[0].Abbrev.toLowerCase() +
                 "/daily.json"
             d3.json(url)
@@ -70,7 +70,7 @@ function country_data(country, callback) {
             }
             cval = countries.filter(a => a.Country == country)
             d3.json("https://corona-api.com/countries/" +
-                    String(cval[0].ISO2).toLowerCase())
+                String(cval[0].ISO2).toLowerCase())
 
                 .then((cdata, err) => {
                     series = cdata.data.timeline.map(function (a) {
