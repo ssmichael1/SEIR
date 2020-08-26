@@ -453,14 +453,14 @@
                     <br><br>
 
                     The model allows the user to set \(R_0\) over three discrete time periods:
-                    <ul style="padding-bottom: 20px;">
-                        <li><b>Initial</b>: \(R_0\) before pandemic is recognized and society responds</li>
-                        <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
-                            public reacts to reduce potentially infectious interactions.</li>
-                        <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
-                            reduce \(R_0\) relative to the pre-pandemic period</li>
-                    </ul>
-                    The model changes \(R_0\) instantaneously at boundary of each time period.
+                <ul style="padding-bottom: 20px;">
+                    <li><b>Initial</b>: \(R_0\) before pandemic is recognized and society responds</li>
+                    <li><b>Intervention</b>: Period of "social distancing". The pandemic is recognized, and the
+                        public reacts to reduce potentially infectious interactions.</li>
+                    <li><b>New Normal</b>: Social distancing policies are relaxed, but new norms of behaviour
+                        reduce \(R_0\) relative to the pre-pandemic period</li>
+                </ul>
+                The model changes \(R_0\) instantaneously at boundary of each time period.
                 </p> <br><br>
 
                 The SEIR model categorizes a population according to the following:
@@ -546,7 +546,7 @@
     integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"
     integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous">
-</script>
+    </script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
     integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
@@ -798,8 +798,8 @@
         }
     });
 
-    function UpdatePlotState(statename) {
-        state_data(statename, (d) => {
+    function UpdatePlotLocale(localename, localefunc) {
+        localefunc(localename, (d) => {
             currentData = d
             updatePlots(d)
             // Update the seir params
@@ -808,7 +808,6 @@
             Object.keys(d.seirparams).forEach((key) => {
                 seirinput[key] = d.seirparams[key]
             })
-            console.log(seirinput)
             for (let key in newparams) {
                 if (key in seirinput) {
                     seirinput[key] = parseFloat(newparams[key])
@@ -820,18 +819,15 @@
 
             update_seir()
             updatePlots(d)
-
-        });
-        updateTimeShift()
-
+            updateTimeShift()
+        })
     }
 
+    function UpdatePlotState(statename) {
+        UpdatePlotLocale(statename, state_data)
+    }
     function UpdatePlotCountry(countryname) {
-        country_data(countryname, (d) => {
-            currentData = d
-            updatePlots(d)
-        })
-        updateTimeShift()
+        UpdatePlotLocale(countryname, country_data)
     }
 
     d3.selectAll("input[name='plot_deltas']").on("click", () => {
@@ -852,24 +848,24 @@
         let maxdate = moment(currentData.series[currentData.series.length - 1].date).add(2, 'days')
         overlaydata =
             seirdata
-            .map((d, i, a) => {
-                yp = 0
-                if (plot_deltas) {
+                .map((d, i, a) => {
                     yp = 0
-                    if (i > 0) {
-                        yp = (datafunc(a[i]) - datafunc(a[i - 1])) /
-                            (a[i].time - a[i - 1].time)
+                    if (plot_deltas) {
+                        yp = 0
+                        if (i > 0) {
+                            yp = (datafunc(a[i]) - datafunc(a[i - 1])) /
+                                (a[i].time - a[i - 1].time)
+                        }
+                    } else {
+                        yp = datafunc(d)
                     }
-                } else {
-                    yp = datafunc(d)
-                }
-                xp = date0.clone().add(d.time, 'day')
-                return {
-                    x: xp,
-                    y: d3.max([yp, 0])
-                }
-            })
-            .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
+                    xp = date0.clone().add(d.time, 'day')
+                    return {
+                        x: xp,
+                        y: d3.max([yp, 0])
+                    }
+                })
+                .filter(d => ((d.x > mindate) && (d.x <= maxdate)))
 
         const area = d3.area()
             .x(d => pmain.x(d.x))
@@ -1104,7 +1100,7 @@
                     "<br>&#x394 " +
                     d3.format(",")(deltaDeaths))
                 d3.select("#casesfield").html("&#8721  " + d3.format(",")(data[i].confirmed) + "  ( " + (data[i]
-                        .confirmed / alldata.population * 100.0).toPrecision(2) + "% )" +
+                    .confirmed / alldata.population * 100.0).toPrecision(2) + "% )" +
                     "<br>&#x394 " + d3.format(",")(deltaConfirmed))
             })
             .on("mouseout", function (d) {
@@ -1435,34 +1431,34 @@
     }
 
     plot_params = [{
-            name: "Exposed",
-            label: "\\(\\mathcal{E}xposed\\)",
-            fieldname: "exposed"
-        },
-        {
-            name: "Infectious",
-            label: "\\(\\mathcal{I}nfectious\\)",
-            fieldname: "infectious"
-        },
-        {
-            name: "Mild",
-            label: "\\(\\mathcal{M}ild\\)",
-            fieldname: "mild"
-        },
-        {
-            name: "Hospitalized",
-            label: "\\(\\mathcal{H}ospitalized\\)",
-            fieldname: "hospitalized"
-        },
-        {
-            name: "Fatal",
-            label: "\\(\\mathcal{F}atal\\)",
-            fieldname: "fatal"
-        }, {
-            name: "Removed",
-            label: "\\(\\mathcal{R}emoved\\)",
-            fieldname: "removed"
-        }
+        name: "Exposed",
+        label: "\\(\\mathcal{E}xposed\\)",
+        fieldname: "exposed"
+    },
+    {
+        name: "Infectious",
+        label: "\\(\\mathcal{I}nfectious\\)",
+        fieldname: "infectious"
+    },
+    {
+        name: "Mild",
+        label: "\\(\\mathcal{M}ild\\)",
+        fieldname: "mild"
+    },
+    {
+        name: "Hospitalized",
+        label: "\\(\\mathcal{H}ospitalized\\)",
+        fieldname: "hospitalized"
+    },
+    {
+        name: "Fatal",
+        label: "\\(\\mathcal{F}atal\\)",
+        fieldname: "fatal"
+    }, {
+        name: "Removed",
+        label: "\\(\\mathcal{R}emoved\\)",
+        fieldname: "removed"
+    }
     ]
     d3.selectAll("#seirdata")
         .append("div")
@@ -1550,89 +1546,89 @@
 
 
     model_params = [{
-            title: "Infection Parameters",
-            width: "33%",
-            cols: 1,
-            values: [
-                [{
-                        label: "\\(R_0\\)",
-                        args: [
-                            [0, 5], seirinput.R0, ".3", "R0", .005
-                        ],
-                        tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">' +
-                            'Mean number of persons infected by a single infectous person ' +
-                            ' <it>given a fully susceptible population</it></p>'
-                    },
-                    {
-                        label: "\\(p_m\\)",
-                        args: [
-                            [0, 1], seirinput.pMild, ".1%", "pMild", .001
-                        ],
-                        tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">' +
-                            'Probability of an asymptomatic and undocumented (but still infectious) case</p>'
-                    },
-                    {
-                        label: "\\(IFR\\)",
-                        args: [
-                            [0, 0.02], seirinput.pFatal, ".2%", "pFatal", .0001
-                        ],
-                        tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">' +
-                            'Fraction of infected persons with fatal outcome</p>'
-                    },
-                ]
+        title: "Infection Parameters",
+        width: "33%",
+        cols: 1,
+        values: [
+            [{
+                label: "\\(R_0\\)",
+                args: [
+                    [0, 5], seirinput.R0, ".3", "R0", .005
+                ],
+                tooltip: '<h3>Reproduction Number</h3><br><p style="text-align: left">' +
+                    'Mean number of persons infected by a single infectous person ' +
+                    ' <it>given a fully susceptible population</it></p>'
+            },
+            {
+                label: "\\(p_m\\)",
+                args: [
+                    [0, 1], seirinput.pMild, ".1%", "pMild", .001
+                ],
+                tooltip: '<h3>Mild Probability</h3><br><p style="text-align: left">' +
+                    'Probability of an asymptomatic and undocumented (but still infectious) case</p>'
+            },
+            {
+                label: "\\(IFR\\)",
+                args: [
+                    [0, 0.02], seirinput.pFatal, ".2%", "pFatal", .0001
+                ],
+                tooltip: '<h3>Infection Fatality Ratio</h3><br><p style="text-align: left">' +
+                    'Fraction of infected persons with fatal outcome</p>'
+            },
             ]
-        },
+        ]
+    },
 
-        {
-            title: "Intervention",
-            width: "33%",
-            cols: 1,
-            values: [
-                [{
-                        label: '\\(R_0\\)',
-                        args: [
-                            [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
-                        ],
-                        tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">' +
-                            'Reproduction number during intervention</p>'
-                    },
-                    {
-                        label: "\\(T_{int}\\)",
-                        args: [
-                            [0, 200], seirinput.Tintervention, 'd', "Tintervention", .5
-                        ],
-                        tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">' +
-                            'Time of intervention to reduce \\(R_0\\)' +
-                            ' in days since start of simulation</p>'
-                    },
-                    {
-                        label: "\\(\\Delta_{int}\\)",
-                        args: [
-                            [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
-                        ],
-                        tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">' +
-                            'Duration of intervention, in days</p>'
-                    },
-                ]
+    {
+        title: "Intervention",
+        width: "33%",
+        cols: 1,
+        values: [
+            [{
+                label: '\\(R_0\\)',
+                args: [
+                    [0, 5], seirinput.R0_intervention, ".3", "R0_intervention", .005
+                ],
+                tooltip: '<h3>Intervention \\(R_0\\)</h3><br><p style="text-align: left">' +
+                    'Reproduction number during intervention</p>'
+            },
+            {
+                label: "\\(T_{int}\\)",
+                args: [
+                    [0, 200], seirinput.Tintervention, 'd', "Tintervention", .5
+                ],
+                tooltip: '<h3>Intervention Time</h3><br><p style="text-align: left">' +
+                    'Time of intervention to reduce \\(R_0\\)' +
+                    ' in days since start of simulation</p>'
+            },
+            {
+                label: "\\(\\Delta_{int}\\)",
+                args: [
+                    [0, 600], seirinput.intervention_duration, 'd', "intervention_duration", 1
+                ],
+                tooltip: '<h3>Intervention Duration</h3><br><p style="text-align: left">' +
+                    'Duration of intervention, in days</p>'
+            },
             ]
-        }, {
-            title: "New Normal",
-            width: "33%",
-            cols: 1,
-            values: [
-                [{
-                        label: "\\({R_0}\\)",
-                        args: [
-                            [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
-                        ],
-                        tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
-                            '<br> <p style="text-align: left"> Reproduction number once intervention ceases, ' +
-                            'but new norms of behaviour are established </p>'
-                    },
+        ]
+    }, {
+        title: "New Normal",
+        width: "33%",
+        cols: 1,
+        values: [
+            [{
+                label: "\\({R_0}\\)",
+                args: [
+                    [0, 5], seirinput.R0_newnormal, '.3', "R0_newnormal", .005
+                ],
+                tooltip: '<h3>New Normal \\(R_0\\)</h3>' +
+                    '<br> <p style="text-align: left"> Reproduction number once intervention ceases, ' +
+                    'but new norms of behaviour are established </p>'
+            },
 
-                ]
             ]
-        },
+        ]
+    },
 
     ]
 
@@ -1642,55 +1638,55 @@
         cols: 2,
         values: [
             [{
-                    label: "\\(\\tau_{inc}\\)",
-                    args: [
-                        [1, 14], seirinput.Tinc, 'd', "Tinc"
-                    ],
-                    tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
-                },
-                {
-                    label: "\\(\\tau_{inf}\\)",
-                    args: [
-                        [5, 28], seirinput.Tinf, 'd', "Tinf"
-                    ],
-                    tooltip: '<h3>Infectious Period</h3><br><p style="text-align: left;">' +
-                        'Duration in days that an infectious person can expose others</p>'
-                },
+                label: "\\(\\tau_{inc}\\)",
+                args: [
+                    [1, 14], seirinput.Tinc, 'd', "Tinc"
+                ],
+                tooltip: '<h3>Incubation Period</h3><br><p style="text-align: left">Incubation period in days, after which exposed person becomes infectious</p>'
+            },
+            {
+                label: "\\(\\tau_{inf}\\)",
+                args: [
+                    [5, 28], seirinput.Tinf, 'd', "Tinf"
+                ],
+                tooltip: '<h3>Infectious Period</h3><br><p style="text-align: left;">' +
+                    'Duration in days that an infectious person can expose others</p>'
+            },
 
-                {
-                    label: "\\(\\Delta_{sim}\\)",
-                    args: [
-                        [200, 1000], seirinput.duration, "d", "duration", 200
-                    ],
-                    tooltip: 'Length of simulation, in days'
-                },
+            {
+                label: "\\(\\Delta_{sim}\\)",
+                args: [
+                    [200, 1000], seirinput.duration, "d", "duration", 200
+                ],
+                tooltip: 'Length of simulation, in days'
+            },
 
             ],
             [{
-                    label: "\\(\\tau_{mrec}\\)",
-                    args: [
-                        [1, 21], seirinput.Tmrec, 'd', "Tmrec"
-                    ],
-                    tooltip: '<h3>Mild Recovery Period</h3><br><p style="text-align: left;">' +
-                        'Duration in days for a person with mild / asymptomatic case to recover</p>'
+                label: "\\(\\tau_{mrec}\\)",
+                args: [
+                    [1, 21], seirinput.Tmrec, 'd', "Tmrec"
+                ],
+                tooltip: '<h3>Mild Recovery Period</h3><br><p style="text-align: left;">' +
+                    'Duration in days for a person with mild / asymptomatic case to recover</p>'
 
-                },
-                {
-                    label: "\\(\\tau_{hrec}\\)",
-                    args: [
-                        [1, 21], seirinput.Threc, 'd', "Threc"
-                    ],
-                    tooltip: '<h3>Hospital Recovery Period</h3><br><p style="text-align: left;">' +
-                        'Duration in days for a hospitalized person to recover</p>'
-                },
-                {
-                    label: "\\(\\tau_{fatal}\\)",
-                    args: [
-                        [5, 28], seirinput.Tfat, 'd', "Tfat"
-                    ],
-                    tooltip: '<h3>Fatal Outcome Time Peirod</h3><br><p style="text-align: left;">' +
-                        'Duration in days for a hospitalized person to succumb to disease</p>'
-                },
+            },
+            {
+                label: "\\(\\tau_{hrec}\\)",
+                args: [
+                    [1, 21], seirinput.Threc, 'd', "Threc"
+                ],
+                tooltip: '<h3>Hospital Recovery Period</h3><br><p style="text-align: left;">' +
+                    'Duration in days for a hospitalized person to recover</p>'
+            },
+            {
+                label: "\\(\\tau_{fatal}\\)",
+                args: [
+                    [5, 28], seirinput.Tfat, 'd', "Tfat"
+                ],
+                tooltip: '<h3>Fatal Outcome Time Peirod</h3><br><p style="text-align: left;">' +
+                    'Duration in days for a hospitalized person to succumb to disease</p>'
+            },
             ]
         ]
     }, {
@@ -1699,21 +1695,21 @@
         cols: 1,
         values: [
             [{
-                    label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
-                    args: [
-                        [.001, .02], seirinput.Hc, '.2%', "Hc"
-                    ],
-                    tooltip: '<h3>Hospital Capacity</h3><br><p style="text-align: left;">' +
-                        'Hospital capacity, as fraction of total population</p>'
-                },
-                {
-                    label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
-                    args: [
-                        [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
-                    ],
-                    tooltip: '<h3>Change in IFR</h3><br><p style="text-align: left;">' +
-                        'Fractional change in infection fatality ratio for an individual without access to hospitalization'
-                },
+                label: "\\(\\mathcal{C}_\\mathcal{H}\\)",
+                args: [
+                    [.001, .02], seirinput.Hc, '.2%', "Hc"
+                ],
+                tooltip: '<h3>Hospital Capacity</h3><br><p style="text-align: left;">' +
+                    'Hospital capacity, as fraction of total population</p>'
+            },
+            {
+                label: "\\(\\frac{\\Delta IFR}{| \\mathcal{H} > \\mathcal{C}_\\mathcal{H}}\\)",
+                args: [
+                    [0, 5], seirinput.pfat_increase_nohos, ".0%", "pfat_increase_nohos"
+                ],
+                tooltip: '<h3>Change in IFR</h3><br><p style="text-align: left;">' +
+                    'Fractional change in infection fatality ratio for an individual without access to hospitalization'
+            },
             ]
         ]
     }]
@@ -1767,7 +1763,7 @@
                         .attr("style", "width: 87%;")
                         .call(create_slider, pcol.args[0], pcol.args[1], pcol.args[2],
                             pcol
-                            .args[3], pcol.args[4])
+                                .args[3], pcol.args[4])
 
                 })
             })
@@ -1949,6 +1945,9 @@
                 document.getElementById('overlay_model').checked = true
                 overlay_model = true
             }
+            //update_seir()
+            resizeSeir()
+            resizeDataPlot()
             // Default
             if ('state' in newparams) {
                 UpdatePlotState(newparams['state'])
@@ -1958,9 +1957,7 @@
             } else {
                 UpdatePlotCountry("United States")
             }
-            update_seir()
-            resizeSeir()
-            resizeDataPlot()
+
         }
     }
 </script>

@@ -1,7 +1,7 @@
 function countrylist(callback) {
     d3.json("static/countries.json")
         .then((data, err) => {
-            callback(data.map(a => a.Country).sort())
+            callback(data.map(a => a.Name).sort())
         })
 }
 
@@ -35,23 +35,23 @@ function state_data(state, callback) {
 
                     retdata = {
                         name: state,
-                        population: parseInt(cval[0].Population),
+                        population: cval[0].Population,
                         seirparams: {
-                            R0: parseFloat(cval[0].R0),
-                            Tinc: parseFloat(cval[0].Tinc),
-                            Tinf: parseFloat(cval[0].Tinf),
-                            Thos: parseFloat(cval[0].Thos),
-                            Tmrec: parseFloat(cval[0].Tmrec),
-                            Threc: parseFloat(cval[0].Threc),
-                            Tfat: parseFloat(cval[0].Tfat),
-                            pMild: parseFloat(cval[0].pMild),
-                            pFatal: parseFloat(cval[0].pFatal),
-                            Tintervention: parseFloat(cval[0].Tintervention),
-                            intervention_duration: parseFloat(cval[0].intervention_duration),
-                            R0_intervention: parseFloat(cval[0].R0_intervention),
-                            R0_newnormal: parseFloat(cval[0].R0_newnormal),
-                            Hc: parseFloat(cval[0].H_c),
-                            pfat_increase_nohos: parseFloat(cval[0].pfat_increase_nohos),
+                            R0: cval[0].R0,
+                            Tinc: cval[0].Tinc,
+                            Tinf: cval[0].Tinf,
+                            Thos: cval[0].Thos,
+                            Tmrec: cval[0].Tmrec,
+                            Threc: cval[0].Threc,
+                            Tfat: cval[0].Tfat,
+                            pMild: cval[0].pMild,
+                            pFatal: cval[0].pFatal,
+                            Tintervention: cval[0].Tintervention,
+                            intervention_duration: cval[0].intervention_duration,
+                            R0_intervention: cval[0].R0_intervention,
+                            R0_newnormal: cval[0].R0_newnormal,
+                            Hc: cval[0].H_c,
+                            pfat_increase_nohos: cval[0].pfat_increase_nohos,
                         },
                         seirparamdate: cval[0].Date,
                         series: series
@@ -65,12 +65,9 @@ function country_data(country, callback) {
 
     d3.json("static/countries.json")
         .then((countries, err) => {
-            if (country == 'United States') {
-                country = 'United States of America'
-            }
-            cval = countries.filter(a => a.Country == country)
+            cval = countries.filter(a => a.Name == country)
             d3.json("https://corona-api.com/countries/" +
-                String(cval[0].ISO2).toLowerCase())
+                String(cval[0].Abbrev).toLowerCase())
 
                 .then((cdata, err) => {
                     series = cdata.data.timeline.map(function (a) {
@@ -87,6 +84,24 @@ function country_data(country, callback) {
                     retdata = {
                         name: country,
                         population: cdata.data.population,
+                        seirparams: {
+                            R0: cval[0].R0,
+                            Tinc: cval[0].Tinc,
+                            Tinf: cval[0].Tinf,
+                            Thos: cval[0].Thos,
+                            Tmrec: cval[0].Tmrec,
+                            Threc: cval[0].Threc,
+                            Tfat: cval[0].Tfat,
+                            pMild: cval[0].pMild,
+                            pFatal: cval[0].pFatal,
+                            Tintervention: cval[0].Tintervention,
+                            intervention_duration: cval[0].intervention_duration,
+                            R0_intervention: cval[0].R0_intervention,
+                            R0_newnormal: cval[0].R0_newnormal,
+                            Hc: cval[0].H_c,
+                            pfat_increase_nohos: cval[0].pfat_increase_nohos,
+                        },
+                        seirparamdate: cval[0].Date,
                         series: series
                     }
                     callback(retdata)
