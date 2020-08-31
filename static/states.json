@@ -485,7 +485,7 @@
     {
         "Abbrev": "MA",
         "Name": "Massachusetts",
-        "Population": 6921234,
+        "Population": 6892503,
         "R0": 2.08,
         "Tinc": 1,
         "Tinf": 5,
@@ -569,7 +569,7 @@
     {
         "Abbrev": "MO",
         "Name": "Missouri",
-        "Population": 6626371,
+        "Population": 6138428,
         "R0": 1.76,
         "Tinc": 1,
         "Tinf": 5,
@@ -863,7 +863,7 @@
     {
         "Abbrev": "PR",
         "Name": "Puerto Rico",
-        "Population": 2933408,
+        "Population": 3193694,
         "R0": 1.865,
         "Tinc": 1,
         "Tinf": 5,
@@ -989,7 +989,7 @@
     {
         "Abbrev": "UT",
         "Name": "Utah",
-        "Population": 4095960,
+        "Population": 3205958,
         "R0": 1.76,
         "Tinc": 1,
         "Tinf": 5,
