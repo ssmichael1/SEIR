@@ -8,10 +8,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Boost REQUIRED)
 
+add_subdirectory(MATLAB)
 
-add_executable(seir seir.cpp seir.h)
+#add_executable(seir seir.cpp seir.h)
 
-target_include_directories(seir PUBLIC 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${Boost_INCLUDE_DIRS}
-    )
+#target_include_directories(seir PUBLIC 
+#    ${CMAKE_CURRENT_SOURCE_DIR}/include
+#    ${Boost_INCLUDE_DIRS}
+#    )
+

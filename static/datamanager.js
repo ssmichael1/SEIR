@@ -66,15 +66,15 @@ function country_data(country, callback) {
     d3.json("static/countries.json")
         .then((countries, err) => {
             cval = countries.filter(a => a.Name == country)
-            d3.json("https://corona-api.com/countries/" +
-                String(cval[0].Abbrev).toLowerCase())
+            d3.json("https://covidapi.info/api/v1/country/" +
+                String(cval[0].ISO3))
 
                 .then((cdata, err) => {
-                    series = cdata.data.timeline.map(function (a) {
+                    series = Object.keys(cdata.result).map(function (key) {
                         return {
-                            date: new Date(a.date),
-                            deaths: a.deaths,
-                            confirmed: a.confirmed
+                            date: new Date(key),
+                            deaths: cdata.result[key].deaths,
+                            confirmed: cdata.result[key].confirmed
                         }
                     })
                     series = series.sort((a, b) => a.date - b.date)
@@ -83,7 +83,7 @@ function country_data(country, callback) {
 
                     retdata = {
                         name: country,
-                        population: cdata.data.population,
+                        population: cval[0].Population,
                         seirparams: {
                             R0: cval[0].R0,
                             Tinc: cval[0].Tinc,
