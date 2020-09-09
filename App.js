@@ -13,6 +13,6 @@ app.get('/favicon.ico', function (req, res) { res.sendFile(path.join(__dirname +
 app.use('/customjs', express.static('customjs'))
 app.use('/static', express.static('static'))
 app.use('/data', express.static('data'))
-
+app.use('/js', express.static('node_modules'))
 //////////////////////////////////////////////////////////
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
