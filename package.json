@@ -21,6 +21,8 @@
   "homepage": "https://github.com/StevenSamirMichael/SEIR#readme",
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "d3": "^6.1.1",
+    "d3-simple-slider": "^2.0.0-rc.1",
     "debug": "~2.6.9",
     "express": "^4.16.4",
     "http-errors": "~1.6.3",
