@@ -315,6 +315,23 @@
         </div>
     </div>
 
+    <!-- Note Block -->
+    <div class="row">
+        <div class="h3 column third">
+
+            <div style="background-color: #ffdddd;width: 100%;">
+                Note: this page is no longer being updated with recent COVID statistics. The source for state data does
+                not include updates after March 2021. The COVID epidemic has grown in complexity far beyond what a
+                simple SEIR model could predict, with multiple variants, changing protection policies,
+                re-infections, immunizations, and boosters all resulting in a complex evolution of the disease and
+                it's effects. Nevertheless, this page showing data through early March 2021 can still provide the
+                user with a simplified intuition for the differential equations that describe the dynamics of disease
+                evolution.
+            </div>
+            <div style="padding-bottom: 25px;"></div>
+        </div>
+    </div>
+
     <!-- Data Block -->
     <div class="row">
         <div class="column fullwidth">
@@ -325,6 +342,7 @@
     <div class="row notestext" style="padding-left: 20px;padding-right: 20px;padding-top: 20px;">
         <div class="column left">
             <div class="MinorTitleColumn">Location</div>
+            <!--
             <div class="row" style="padding-top: 10px;">
                 <div class="column" style="width: 34%;">
                     <input class="myradio" type="radio" name="sourcetype" value="radio_country" checked>&nbsp
@@ -345,9 +363,11 @@
                 </div>
 
             </div>
-
-
-            <div style="margin-left: 20px;">
+            -->
+            <div style="padding-top: 10px;padding-bottom: 10px;margin-left: auto;margin-right: auto;">
+                <div id="states"></div>
+            </div>
+            <div <div style="margin-left: 20px;">
                 <div class="minorline"></div>
                 <table style="padding-top: 10px" cellspacing="10">
                     <tr>
@@ -503,14 +523,16 @@
                     </tr>
                     <br>
                     <br>
+                    <!--
                     <tr>
                         <td align="right" height="50px">Country Data Source:</td>
-                        <!--<td><a href="https://about-corona.net">https://about-corona.net/</a>-->
                         <td><a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins University CSSE</a>, via
                             web API provided by:
                             <a href="https://covidapi.info">https://covidapi.info</a>
                         </td>
                     </tr>
+                    -->
+
                     <tr>
                         <td align="right" height="50px">US States Data Source:</td>
                         <td><a href="https://covidtracking.com">https://covidtracking.com/</a>
@@ -745,7 +767,6 @@
 
         s
             .attr("id", "states_dropdown")
-            .attr("disabled", true)
             .selectAll("option")
             .data(data)
             .enter()
@@ -762,6 +783,8 @@
         });
 
     });
+
+    /*
     countrylist((data) => {
         data.unshift("United States")
         let s = d3.select("#countries")
@@ -785,6 +808,7 @@
             UpdatePlotCountry(s.property("value"))
         });
     });
+    
 
 
 
@@ -801,6 +825,7 @@
             UpdatePlotCountry(cntry.property("value"))
         }
     });
+    */
 
     function UpdatePlotLocale(localename, localefunc) {
         localefunc(localename, (d) => {
@@ -1959,7 +1984,7 @@
             } else if ('country' in newparams) {
                 UpdatePlotCountry(newparams['country'])
             } else {
-                UpdatePlotCountry("United States")
+                UpdatePlotState("Alabama")
             }
 
         }
